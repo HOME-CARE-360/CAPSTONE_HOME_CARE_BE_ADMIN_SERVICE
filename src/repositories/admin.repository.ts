@@ -606,8 +606,6 @@ export class AdminRepository {
   async deleteRole(id: number, adminId?: number) {
     this._validateId(id);
     await this._assertRoleExists(id);
-
-    // Business rule: Check if role is in use
     const usageCount = await prisma.user.count({
       where: {
         Role_UserRoles: {
@@ -679,7 +677,6 @@ export class AdminRepository {
 
     await this._assertRoleExists(roleId);
 
-    // Business rule: Validate all permission IDs exist
     const existingPermissions = await prisma.permission.findMany({
       where: {
         id: { in: permissionIds },
@@ -948,7 +945,6 @@ export class AdminRepository {
       );
     }
 
-    // Additional password strength validation
     if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
       throw new AppError(
         'Password must contain at least one lowercase letter, one uppercase letter, and one number',
@@ -1119,9 +1115,7 @@ export class AdminRepository {
     }
   }
 
-  // Validate if user can be deleted (add business rules as needed)
   private async _validateUserDeletion(id: number) {
-    // Example: Prevent deletion if user is already deleted
     const user = await prisma.user.findUnique({
       where: { id },
       select: { deletedAt: true }
@@ -1134,10 +1128,8 @@ export class AdminRepository {
         400
       );
     }
-    // Add more business rules here if needed
   }
 
-  // Assert that the user is currently blocked
   private async _assertUserBlockedStatus(id: number) {
     const user = await prisma.user.findUnique({
       where: { id },
