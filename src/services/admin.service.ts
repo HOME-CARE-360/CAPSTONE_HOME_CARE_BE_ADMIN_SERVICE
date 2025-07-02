@@ -152,7 +152,7 @@ export class AdminService {
   }
 
   async restoreDeletedUser(id: number, adminId: number) {
-    return this.adminRepository.restoreUser(id, adminId); // updatedById
+    return this.adminRepository.restoreUser(id, adminId); 
   }
 
   // =================== PRIVATE ===================

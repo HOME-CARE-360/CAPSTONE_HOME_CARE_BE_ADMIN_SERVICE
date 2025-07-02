@@ -1223,14 +1223,18 @@ export class AdminRepository {
     return prisma.user.update({
       where: { id },
       data: {
-        deletedAt: null,
+        User_User_deletedByIdToUser: {
+          disconnect: true
+        }, deletedAt: null,
         updatedAt: new Date(),
         ...(adminId && {
-          User_Role_updatedByIdToUser: {
+          User_User_updatedByIdToUser: {
             connect: { id: adminId }
           }
         }),
       },
+      include: AdminRepository.USER_INCLUDE,
     });
   }
+
 }
