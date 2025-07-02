@@ -15,6 +15,7 @@ export const UpdateUserSchema = z.object({
     email: z.string().email().optional(),
     name: z.string().optional(),
     phone: z.string().optional(),
+    password: z.string().min(6, 'Password must be at least 6 characters').optional(),
     avatar: z.string().url().optional(),
     status: z.nativeEnum(UserStatus).optional(),
     roleIds: z.array(z.number().int().positive()).optional(),
@@ -41,4 +42,8 @@ export const GetUsersQuerySchema = z.object({
     status: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']).optional(),
     sortBy: z.enum(allowedUserSortFields).optional(),
     sortOrder: z.enum(['asc', 'desc']).optional(),
+});
+
+export const AdminIdSchema = z.object({
+  adminId: z.number().int().positive()
 });

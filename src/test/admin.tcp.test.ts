@@ -7,119 +7,142 @@ interface TCPResponse<T = any> {
     error?: string;
 }
 
-interface UserResponse {
-    id: number;
-    email: string;
-    name: string;
-    phone: string;
-    status: string;
-    Role_UserRoles: { id: number; name: string }[];
-}
+class AdminUserTCPTest {
+    private testUserId?: number;
+    private testEmail = `test.admin.${Date.now()}@example.com`;
 
-interface AdminUserTestConfig {
-    userId?: number;
-    email: string;
-}
-
-class AdminUserTest {
-    private config: AdminUserTestConfig;
-
-    constructor(config: AdminUserTestConfig) {
-        this.config = config;
-    }
-
-    private async send<T = any>(type: string, data: any): Promise<TCPResponse<T>> {
+    private async send<T>(type: string, data: any): Promise<TCPResponse<T>> {
         const res = (await sendTCPRequest({ type, data })) as TCPResponse<T>;
-        const logPrefix = res.statusCode >= 400 ? '❌' : '✅';
-        console.log(`${logPrefix} [${type}] - ${res.message || res.error}`);
+        const prefix = res.statusCode >= 400 ? '❌' : '✅';
+        console.log(`${prefix} [${type}] - ${res.message || res.error}`);
         if (res.data) console.dir(res.data, { depth: null });
         return res;
     }
 
-    async getAllUsers() {
-        const testCases = [
-            { desc: 'Default (no params)', payload: {} },
-            { desc: 'Pagination: page 2, limit 1', payload: { page: 2, limit: 1 } },
-            { desc: 'Search by email', payload: { search: 'test.manager' } },
-            { desc: 'Filter by status INACTIVE', payload: { status: 'INACTIVE' } },
-            { desc: 'Sort by createdAt asc', payload: { sortBy: 'createdAt', sortOrder: 'asc' } },
-            { desc: 'Sort by name desc', payload: { sortBy: 'name', sortOrder: 'desc' } },
-        ];
+    async run() {
+        console.log('\n🚀 Running Admin TCP Test Suite');
 
-        for (const testCase of testCases) {
-            console.log(`\n🔍 [Test] ${testCase.desc}`);
-            await this.send('ADMIN_GET_USERS', testCase.payload);
-        }
+        // ===== User CRUD =====
+        // await this.testGetAllUsers();
+        // await this.testCreateUser();
+        // await this.testGetUserById();
+        // await this.testUpdateUser();
+        // await this.testResetPassword();
+        // await this.testDeleteUser();
+        // await this.testGetDeletedUsers();
+        // await this.testRestoreUser();
+
+        // ===== Role & Permission =====
+        // await this.testGetAllRoles();
+        // await this.testCreateRole();
+        // await this.testAssignPermissionsToRole();
+        // await this.testGetPermissionsByRole();
+        // await this.testGetAllPermissions();
+        // await this.testDeleteRole();
+
+        // ===== Status change =====
+        await this.testBlockUnblockActivate();
+
+        console.log('\n✅ All TCP tests completed.');
     }
 
+    // ==== USER ====
+    async testGetAllUsers() {
+        await this.send('ADMIN_GET_USERS', {});
+    }
 
-    async createUser(): Promise<TCPResponse<UserResponse>> {
-        const result = await this.send<UserResponse>('ADMIN_CREATE_USER', {
-            email: this.config.email,
-            password: 'HoangTM2511@',
-            name: 'Hoang Manager',
-            phone: '0901234567',
+    async testCreateUser() {
+        const res = await this.send<{ id: number }>('ADMIN_CREATE_USER', {
+            email: this.testEmail,
+            password: 'Test@1234',
+            name: 'TCP User',
+            phone: '0988098782',
             role: 'MANAGER',
         });
 
-        if (result.statusCode !== 200 || !result.data?.id) {
-            console.error('❌ Failed to create user:', result.error || result.message);
-            return result;
-        }
-
-        this.config.userId = result.data.id;
-        return result;
+        this.testUserId = res.data?.id;
     }
 
-    async getUserById(userId?: number) {
-        const id = userId ?? this.config.userId;
-        if (!id) throw new Error('userId is missing');
-        return this.send<UserResponse>('ADMIN_GET_USER_BY_ID', { id });
+    async testGetUserById() {
+        await this.send('ADMIN_GET_USER_BY_ID', { id: this.testUserId });
     }
 
-    async updateUser(userId?: number) {
-        const id = userId ?? this.config.userId;
-        if (!id) throw new Error('userId is missing');
-
-        return this.send<UserResponse>('ADMIN_UPDATE_USER', {
-            id,
+    async testUpdateUser() {
+        await this.send('ADMIN_UPDATE_USER', {
+            id: this.testUserId,
             data: {
-                name: 'Updated Manager',
-                phone: '0999999999',
+                name: 'TCP Updated',
+                phone: '0988098782',
             },
         });
     }
 
-    async deleteUser(userId?: number) {
-        const id = userId ?? this.config.userId;
-        if (!id) throw new Error('userId is missing');
-        return this.send<UserResponse>('ADMIN_DELETE_USER', { id });
+    async testResetPassword() {
+        await this.send('ADMIN_RESET_USER_PASSWORD', {
+            id: this.testUserId,
+            newPassword: 'HoangTM2512@'
+        });
     }
 
-    async runAllTests() {
-        console.log('🚀 Start ADMIN USER TEST SUITE\n');
+    async testDeleteUser() {
+        await this.send('ADMIN_DELETE_USER', { id: this.testUserId });
+    }
 
-        await this.getAllUsers();
+    async testGetDeletedUsers() {
+        await this.send('ADMIN_GET_DELETED_USERS', {});
+    }
 
-        const created = await this.createUser();
-        if (created.statusCode !== 200 || !this.config.userId) {
-            console.error('❌ Failed to create user. Aborting tests.');
-            return;
-        }
+    async testRestoreUser() {
+        await this.send('ADMIN_RESTORE_USER', { id: this.testUserId });
+    }
 
-        await this.getUserById();
-        await this.updateUser();
-        await this.deleteUser();
+    // ==== ROLE & PERMISSION ====
+    private testRoleId?: number;
 
-        console.log('\n✅ All tests finished');
+    async testGetAllRoles() {
+        await this.send('ADMIN_GET_ROLES', {});
+    }
+
+    async testCreateRole() {
+        const res = await this.send<{ id: number }>('ADMIN_CREATE_ROLE', {
+            name: `TEST_ROLE_${Date.now()}`,
+        });
+        this.testRoleId = res.data?.id;
+    }
+
+    async testAssignPermissionsToRole() {
+        if (!this.testRoleId) return;
+        await this.send('ADMIN_ASSIGN_PERMISSIONS_TO_ROLE', {
+            roleId: this.testRoleId,
+            permissionIds: [1, 2], // test permission IDs
+        });
+    }
+
+    async testGetPermissionsByRole() {
+        await this.send('ADMIN_GET_PERMISSIONS_BY_ROLE', {
+            roleId: this.testRoleId,
+        });
+    }
+
+    async testGetAllPermissions() {
+        await this.send('ADMIN_GET_PERMISSIONS', {});
+    }
+
+    async testDeleteRole() {
+        if (!this.testRoleId) return;
+        await this.send('ADMIN_DELETE_ROLE', { id: this.testRoleId });
+    }
+
+    // ==== BLOCK / ACTIVATE ====
+    async testBlockUnblockActivate() {
+        await this.send('ADMIN_BLOCK_USER', { id: 15 });
+            await this.send('ADMIN_UNBLOCK_USER', { id: 15 });
+            await this.send('ADMIN_ACTIVATE_USER', { id: 15 });
+        // 
     }
 }
 
-// Main run
 (async () => {
-    const test = new AdminUserTest({
-        email: `test.manager.${Date.now()}@example.com`,
-    });
-
-    await test.runAllTests();
+    const tester = new AdminUserTCPTest();
+    await tester.run();
 })();
