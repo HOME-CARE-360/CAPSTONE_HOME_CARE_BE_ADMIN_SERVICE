@@ -161,7 +161,7 @@ async function handleResetPassword(data: any): Promise<HandlerResult> {
 async function handleAssignRoles(data: any): Promise<HandlerResult> {
     const { userId, roleIds, adminId } = data;
     await assertIsAdmin(adminId);
-    await service.assignRolesToUser(userId, roleIds, adminId);
+    await service.assignRolesToUser({ userId, roleIds }, adminId);
     return { message: 'Roles assigned successfully', data: null };
 }
 

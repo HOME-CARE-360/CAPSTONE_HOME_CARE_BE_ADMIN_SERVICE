@@ -9,6 +9,8 @@ interface TCPResponse<T = any> {
 
 class AdminUserTCPTest {
     private testUserId?: number;
+    private testRoleId?: number;
+    private adminId = 5;
     private testEmail = `test.admin.${Date.now()}@example.com`;
 
     private async send<T>(type: string, data: any): Promise<TCPResponse<T>> {
@@ -22,31 +24,36 @@ class AdminUserTCPTest {
     async run() {
         console.log('\n🚀 Running Admin TCP Test Suite');
 
-        // ===== User CRUD =====
-        // await this.testGetAllUsers();
-        // await this.testCreateUser();
-        // await this.testGetUserById();
-        // await this.testUpdateUser();
-        // await this.testResetPassword();
-        // await this.testDeleteUser();
-        // await this.testGetDeletedUsers();
-        // await this.testRestoreUser();
+        // === USER CRUD ===
+        await this.testGetAllUsers();
+        await this.testCreateUser();
+        await this.testGetUserById();
+        await this.testUpdateUser();
+        await this.testResetPassword();
 
-        // ===== Role & Permission =====
-        // await this.testGetAllRoles();
-        // await this.testCreateRole();
-        // await this.testAssignPermissionsToRole();
-        // await this.testGetPermissionsByRole();
-        // await this.testGetAllPermissions();
-        // await this.testDeleteRole();
+        // === STATUS ===
+        await this.testBlockUser();
+        await this.testUnblockUser();
+        await this.testActivateUser();
 
-        // ===== Status change =====
-        await this.testBlockUnblockActivate();
+        // === ROLE & PERMISSION ===
+        await this.testGetAllRoles();
+        await this.testCreateRole();
+        await this.testAssignPermissionsToRole();
+        await this.testGetPermissionsByRole();
+        await this.testGetAllPermissions();
+
+        // === DELETE & RESTORE ===
+        await this.testDeleteUser();
+        await this.testGetDeletedUsers();
+        await this.testRestoreUser();
+        await this.testDeleteRole();
 
         console.log('\n✅ All TCP tests completed.');
     }
 
-    // ==== USER ====
+    // === USER TESTS ===
+
     async testGetAllUsers() {
         await this.send('ADMIN_GET_USERS', {});
     }
@@ -55,11 +62,11 @@ class AdminUserTCPTest {
         const res = await this.send<{ id: number }>('ADMIN_CREATE_USER', {
             email: this.testEmail,
             password: 'Test@1234',
-            name: 'TCP User',
-            phone: '0988098782',
+            name: 'TCP Test User',
+            phone: '0988888888',
             role: 'MANAGER',
+            adminId: this.adminId,
         });
-
         this.testUserId = res.data?.id;
     }
 
@@ -71,21 +78,47 @@ class AdminUserTCPTest {
         await this.send('ADMIN_UPDATE_USER', {
             id: this.testUserId,
             data: {
-                name: 'TCP Updated',
-                phone: '0988098782',
+                name: 'TCP Updated Name',
+                phone: '0911999999',
             },
+            adminId: this.adminId,
         });
     }
 
     async testResetPassword() {
         await this.send('ADMIN_RESET_USER_PASSWORD', {
             id: this.testUserId,
-            newPassword: 'HoangTM2512@'
+            newPassword: 'StrongPass123@',
+            adminId: this.adminId,
+        });
+    }
+
+    async testBlockUser() {
+        await this.send('ADMIN_BLOCK_USER', {
+            id: this.testUserId,
+            adminId: this.adminId,
+        });
+    }
+
+    async testUnblockUser() {
+        await this.send('ADMIN_UNBLOCK_USER', {
+            id: this.testUserId,
+            adminId: this.adminId,
+        });
+    }
+
+    async testActivateUser() {
+        await this.send('ADMIN_ACTIVATE_USER', {
+            id: this.testUserId,
+            adminId: this.adminId,
         });
     }
 
     async testDeleteUser() {
-        await this.send('ADMIN_DELETE_USER', { id: this.testUserId });
+        await this.send('ADMIN_DELETE_USER', {
+            id: this.testUserId,
+            adminId: this.adminId,
+        });
     }
 
     async testGetDeletedUsers() {
@@ -93,11 +126,13 @@ class AdminUserTCPTest {
     }
 
     async testRestoreUser() {
-        await this.send('ADMIN_RESTORE_USER', { id: this.testUserId });
+        await this.send('ADMIN_RESTORE_USER', {
+            id: this.testUserId,
+            adminId: this.adminId,
+        });
     }
 
-    // ==== ROLE & PERMISSION ====
-    private testRoleId?: number;
+    // === ROLE & PERMISSION ===
 
     async testGetAllRoles() {
         await this.send('ADMIN_GET_ROLES', {});
@@ -105,7 +140,8 @@ class AdminUserTCPTest {
 
     async testCreateRole() {
         const res = await this.send<{ id: number }>('ADMIN_CREATE_ROLE', {
-            name: `TEST_ROLE_${Date.now()}`,
+            name: `TCP_ROLE_${Date.now()}`,
+            adminId: this.adminId,
         });
         this.testRoleId = res.data?.id;
     }
@@ -114,11 +150,13 @@ class AdminUserTCPTest {
         if (!this.testRoleId) return;
         await this.send('ADMIN_ASSIGN_PERMISSIONS_TO_ROLE', {
             roleId: this.testRoleId,
-            permissionIds: [1, 2], // test permission IDs
+            permissionIds: [1, 2], // dùng test permission ID thật
+            adminId: this.adminId,
         });
     }
 
     async testGetPermissionsByRole() {
+        if (!this.testRoleId) return;
         await this.send('ADMIN_GET_PERMISSIONS_BY_ROLE', {
             roleId: this.testRoleId,
         });
@@ -130,18 +168,14 @@ class AdminUserTCPTest {
 
     async testDeleteRole() {
         if (!this.testRoleId) return;
-        await this.send('ADMIN_DELETE_ROLE', { id: this.testRoleId });
-    }
-
-    // ==== BLOCK / ACTIVATE ====
-    async testBlockUnblockActivate() {
-        await this.send('ADMIN_BLOCK_USER', { id: 15 });
-            await this.send('ADMIN_UNBLOCK_USER', { id: 15 });
-            await this.send('ADMIN_ACTIVATE_USER', { id: 15 });
-        // 
+        await this.send('ADMIN_DELETE_ROLE', {
+            id: this.testRoleId,
+            adminId: this.adminId,
+        });
     }
 }
 
+// Auto run
 (async () => {
     const tester = new AdminUserTCPTest();
     await tester.run();
