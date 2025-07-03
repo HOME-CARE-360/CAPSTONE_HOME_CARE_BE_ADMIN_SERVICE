@@ -7,7 +7,7 @@ import { AppError } from './handlers/error';
 dotenv.config();
 
 const CONFIG = {
-    TCP_PORT: parseInt(process.env.STAFF_TCP_PORT || '4002', 10),
+    TCP_PORT: parseInt(process.env.ADMIN_TCP_PORT || '4003', 10),
     TCP_HOST: process.env.TCP_HOST || '0.0.0.0',
     MAX_CONNECTIONS: parseInt(process.env.MAX_TCP_CONNECTIONS || '100', 10),
     SOCKET_TIMEOUT: parseInt(process.env.SOCKET_TIMEOUT || '30000', 10), // 30s

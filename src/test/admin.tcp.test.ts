@@ -24,30 +24,30 @@ class AdminUserTCPTest {
     async run() {
         console.log('\n🚀 Running Admin TCP Test Suite');
 
-        // // === USER CRUD ===
-        // await this.testGetAllUsers();
-        // await this.testCreateUser();
-        // await this.testGetUserById();
-        // await this.testUpdateUser();
-        // await this.testResetPassword();
+        // === USER CRUD ===
+        await this.testGetAllUsers();
+        await this.testCreateUser();
+        await this.testGetUserById();
+        await this.testUpdateUser();
+        await this.testResetPassword();
 
-        // // === STATUS ===
-        // await this.testBlockUser();
-        // await this.testUnblockUser();
-        // await this.testActivateUser();
+        // === STATUS ===
+        await this.testBlockUser();
+        await this.testUnblockUser();
+        await this.testActivateUser();
 
-        // // === ROLE & PERMISSION ===
-        // await this.testGetAllRoles();
-        // await this.testCreateRole();
-        // await this.testAssignPermissionsToRole();
-        // await this.testGetPermissionsByRole();
-        // await this.testGetAllPermissions();
+        // === ROLE & PERMISSION ===
+        await this.testGetAllRoles();
+        await this.testCreateRole();
+        await this.testAssignPermissionsToRole();
+        await this.testGetPermissionsByRole();
+        await this.testGetAllPermissions();
 
-        // // === DELETE & RESTORE ===
-        // await this.testDeleteUser();
-        // await this.testGetDeletedUsers();
-        // await this.testRestoreUser();
-        // await this.testDeleteRole();
+        // === DELETE & RESTORE ===
+        await this.testDeleteUser();
+        await this.testGetDeletedUsers();
+        await this.testRestoreUser();
+        await this.testDeleteRole();
 
         // === REPORTS ===
         await this.testGetMonthlyReport();
