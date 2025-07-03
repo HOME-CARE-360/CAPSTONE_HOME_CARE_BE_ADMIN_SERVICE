@@ -4,7 +4,6 @@ import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
-// Types for better type safety
 interface PaginationParams {
   page?: number;
   limit?: number;
@@ -19,7 +18,7 @@ interface UserSearchParams extends PaginationParams {
 
 interface PaginatedResult<T> {
   data: T[];
-  totalCount: number;
+  total: number;
   page: number;
   limit: number;
   totalPages: number;
@@ -59,6 +58,85 @@ interface UserAssignRolesInput {
   roleIds: number[];
 }
 
+export interface UserResponse {
+  id: number;
+  email: string;
+  name: string;
+  phone: string;
+  avatar?: string;
+  status: UserStatus;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+  customer?: {
+    id: number;
+    address?: string;
+    dateOfBirth?: Date;
+    gender?: string;
+    rewardPoints?: number;
+    totalBookings?: number;
+  };
+  staff?: {
+    id: number;
+    isActive: boolean;
+    jobTitle?: string;
+    joinedAt?: Date;
+    totalReviews?: number;
+    provider?: {
+      id: number;
+      name: string;
+      verificationStatus: string;
+      address?: string;
+      industry?: string;
+      companyType?: string;
+    };
+  };
+  provider?: {
+    id: number;
+    description?: string;
+    address?: string;
+    verificationStatus: string;
+    companyType?: string;
+    industry?: string;
+    taxId?: string;
+    licenseNo?: string;
+    verifiedAt?: Date;
+    staffCount?: number;
+    serviceCount?: number;
+  };
+  roles: Array<{
+    id: number;
+    name: string;
+  }>;
+}
+
+interface RoleResponse {
+  id: number;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  permissions: Array<{
+    id: number;
+    name: string;
+    description?: string;
+    path: string;
+    method: string;
+    module: string;
+  }>;
+  userCount: number;
+}
+
+interface PermissionResponse {
+  id: number;
+  name: string;
+  description?: string;
+  path: string;
+  method: string;
+  module: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export class AdminRepository {
   private static readonly DEFAULT_PAGE = 1;
   private static readonly DEFAULT_LIMIT = 10;
@@ -74,26 +152,18 @@ export class AdminRepository {
         address: true,
         dateOfBirth: true,
         gender: true,
-        userId: true,
       }
     },
     Staff: {
       select: {
         id: true,
-        providerId: true,
         isActive: true,
         ServiceProvider: {
           select: {
             id: true,
             description: true,
             address: true,
-            companyType: true,
-            industry: true,
-            licenseNo: true,
-            logo: true,
-            taxId: true,
             verificationStatus: true,
-            verifiedAt: true,
           }
         }
       }
@@ -103,15 +173,7 @@ export class AdminRepository {
         id: true,
         description: true,
         address: true,
-        companyType: true,
-        industry: true,
-        licenseNo: true,
-        logo: true,
-        taxId: true,
         verificationStatus: true,
-        verifiedAt: true,
-        createdAt: true,
-        updatedAt: true,
       }
     },
     Device: {
@@ -123,11 +185,16 @@ export class AdminRepository {
         isActive: true,
       }
     },
+    Role_UserRoles: {
+      select: {
+        id: true,
+        name: true,
+      }
+    },
     _count: {
       select: {
         Notification: true,
         RefreshToken: true,
-        Device: true,
       }
     }
   } as const;
@@ -150,9 +217,81 @@ export class AdminRepository {
     }
   } as const;
 
+  // ==================== HELPER METHODS ====================
+
+  private transformUser(user: any): UserResponse {
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      phone: user.phone,
+      avatar: user.avatar,
+      status: user.status,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      deletedAt: user.deletedAt,
+      customer: user.CustomerProfile ? {
+        id: user.CustomerProfile.id,
+        address: user.CustomerProfile.address,
+        dateOfBirth: user.CustomerProfile.dateOfBirth,
+        gender: user.CustomerProfile.gender,
+      } : undefined,
+      staff: user.Staff ? {
+        id: user.Staff.id,
+        isActive: user.Staff.isActive,
+        provider: user.Staff.ServiceProvider ? {
+          id: user.Staff.ServiceProvider.id,
+          name: user.Staff.ServiceProvider.description, // Assuming description acts as name
+          verificationStatus: user.Staff.ServiceProvider.verificationStatus,
+        } : undefined,
+      } : undefined,
+      provider: user.ServiceProvider_ServiceProvider_userIdToUser ? {
+        id: user.ServiceProvider_ServiceProvider_userIdToUser.id,
+        description: user.ServiceProvider_ServiceProvider_userIdToUser.description,
+        address: user.ServiceProvider_ServiceProvider_userIdToUser.address,
+        verificationStatus: user.ServiceProvider_ServiceProvider_userIdToUser.verificationStatus,
+      } : undefined,
+      roles: user.Role_UserRoles.map((role: any) => ({
+        id: role.id,
+        name: role.name,
+      })),
+    };
+  }
+
+  private transformRole(role: any): RoleResponse {
+    return {
+      id: role.id,
+      name: role.name,
+      createdAt: role.createdAt,
+      updatedAt: role.updatedAt,
+      permissions: role.Permission.map((perm: any) => ({
+        id: perm.id,
+        name: perm.name,
+        description: perm.description,
+        path: perm.path,
+        method: perm.method,
+        module: perm.module,
+      })),
+      userCount: role._count.User_UserRoles,
+    };
+  }
+
+  private transformPermission(permission: any): PermissionResponse {
+    return {
+      id: permission.id,
+      name: permission.name,
+      description: permission.description,
+      path: permission.path,
+      method: permission.method,
+      module: permission.module,
+      createdAt: permission.createdAt,
+      updatedAt: permission.updatedAt,
+    };
+  }
+
   // ==================== USER MANAGEMENT ====================
 
-  async findAll(params?: UserSearchParams): Promise<PaginatedResult<any>> {
+  async findAll(params?: UserSearchParams): Promise<PaginatedResult<UserResponse>> {
     const {
       page = AdminRepository.DEFAULT_PAGE,
       limit: requestedLimit = AdminRepository.DEFAULT_LIMIT,
@@ -203,8 +342,8 @@ export class AdminRepository {
     const totalPages = Math.ceil(totalCount / validatedLimit);
 
     return {
-      data: users,
-      totalCount,
+      data: users.map(user => this.transformUser(user)),
+      total: totalCount,
       page: validatedPage,
       limit: validatedLimit,
       totalPages,
@@ -213,7 +352,7 @@ export class AdminRepository {
     };
   }
 
-  async findById(id: number) {
+  async findById(id: number): Promise<UserResponse> {
     this._validateId(id);
 
     const user = await prisma.user.findFirst({
@@ -233,10 +372,10 @@ export class AdminRepository {
       );
     }
 
-    return user;
+    return this.transformUser(user);
   }
 
-  async findByEmailOrThrow(email: string) {
+  async findByEmailOrThrow(email: string): Promise<UserResponse | null> {
     this._validateEmail(email);
 
     const user = await prisma.user.findFirst({
@@ -247,11 +386,10 @@ export class AdminRepository {
       include: AdminRepository.USER_INCLUDE,
     });
 
-    return user;
+    return user ? this.transformUser(user) : null;
   }
 
-
-  async create(data: CreateUserInput, adminId: number) {
+  async create(data: CreateUserInput, adminId: number): Promise<UserResponse> {
     await this._validateUserCreation(data);
 
     const now = new Date();
@@ -263,18 +401,25 @@ export class AdminRepository {
       name: data.name.trim(),
       phone: data.phone.trim(),
       avatar: data.avatar,
-      status: data.status || UserStatus.INACTIVE,
+      status: data.status || UserStatus.ACTIVE,
       createdAt: now,
       updatedAt: now,
       User_User_createdByIdToUser: {
         connect: { id: adminId }
       },
+      ...(data.roleIds && {
+        Role_UserRoles: {
+          connect: data.roleIds.map(id => ({ id }))
+        }
+      }),
     };
+
     try {
-      return await prisma.user.create({
+      const user = await prisma.user.create({
         data: createData,
         include: AdminRepository.USER_INCLUDE,
       });
+      return this.transformUser(user);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -290,8 +435,7 @@ export class AdminRepository {
     }
   }
 
-
-  async update(id: number, data: UpdateUserInput, adminId?: number) {
+  async update(id: number, data: UpdateUserInput, adminId?: number): Promise<UserResponse> {
     this._validateId(id);
     await this._assertUserExists(id);
     const existingUser = await prisma.user.findUnique({
@@ -320,15 +464,20 @@ export class AdminRepository {
           connect: { id: adminId }
         }
       }),
+      ...(data.roleIds && {
+        Role_UserRoles: {
+          set: data.roleIds.map(id => ({ id }))
+        }
+      }),
     };
 
-
     try {
-      return await prisma.user.update({
+      const user = await prisma.user.update({
         where: { id },
         data: updateData,
         include: AdminRepository.USER_INCLUDE,
       });
+      return this.transformUser(user);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -344,14 +493,12 @@ export class AdminRepository {
     }
   }
 
-  async softDelete(id: number, adminId?: number) {
+  async softDelete(id: number, adminId?: number): Promise<UserResponse> {
     this._validateId(id);
     await this._assertUserExists(id);
-
-    // Business rule: Check if user can be deleted
     await this._validateUserDeletion(id);
 
-    return prisma.user.update({
+    const user = await prisma.user.update({
       where: { id },
       data: {
         deletedAt: new Date(),
@@ -363,14 +510,17 @@ export class AdminRepository {
           }
         }),
       },
+      include: AdminRepository.USER_INCLUDE,
     });
+
+    return this.transformUser(user);
   }
 
-  async blockUser(id: number, adminId?: number) {
+  async blockUser(id: number, adminId?: number): Promise<UserResponse> {
     this._validateId(id);
     await this._assertUserActiveStatus(id);
 
-    return prisma.user.update({
+    const user = await prisma.user.update({
       where: { id },
       data: {
         status: UserStatus.BLOCKED,
@@ -379,14 +529,17 @@ export class AdminRepository {
           connect: { id: adminId }
         }
       },
+      include: AdminRepository.USER_INCLUDE,
     });
+
+    return this.transformUser(user);
   }
 
-  async unblockUser(id: number, adminId?: number) {
+  async unblockUser(id: number, adminId?: number): Promise<UserResponse> {
     this._validateId(id);
     await this._assertUserBlockedStatus(id);
 
-    return prisma.user.update({
+    const user = await prisma.user.update({
       where: { id },
       data: {
         status: UserStatus.ACTIVE,
@@ -395,14 +548,17 @@ export class AdminRepository {
           connect: { id: adminId }
         }
       },
+      include: AdminRepository.USER_INCLUDE,
     });
+
+    return this.transformUser(user);
   }
 
-  async activateUser(id: number, adminId?: number) {
+  async activateUser(id: number, adminId?: number): Promise<UserResponse> {
     this._validateId(id);
     await this._assertUserExists(id);
 
-    return prisma.user.update({
+    const user = await prisma.user.update({
       where: { id },
       data: {
         status: UserStatus.ACTIVE,
@@ -411,17 +567,20 @@ export class AdminRepository {
           connect: { id: adminId }
         }
       },
+      include: AdminRepository.USER_INCLUDE,
     });
+
+    return this.transformUser(user);
   }
 
-  async resetUserPassword(id: number, newPassword: string, adminId?: number) {
+  async resetUserPassword(id: number, newPassword: string, adminId?: number): Promise<UserResponse> {
     this._validateId(id);
     this._validatePassword(newPassword);
     await this._assertUserExists(id);
 
     const hashedPassword = await bcrypt.hash(newPassword, AdminRepository.BCRYPT_ROUNDS);
 
-    return prisma.user.update({
+    const user = await prisma.user.update({
       where: { id },
       data: {
         password: hashedPassword,
@@ -432,60 +591,49 @@ export class AdminRepository {
           }
         }),
       },
+      include: AdminRepository.USER_INCLUDE,
     });
+
+    return this.transformUser(user);
   }
 
-  async assignRolesToUser(data: UserAssignRolesInput, adminId?: number) {
+  async assignRolesToUser(data: UserAssignRolesInput, adminId?: number): Promise<UserResponse> {
     this._validateId(data.userId);
     this._validateRoleIds(data.roleIds);
 
     await this._assertUserExists(data.userId);
     await this._validateRoleIds(data.roleIds);
 
-    const updateData: Prisma.UserUpdateInput = {
-      updatedAt: new Date(),
-      ...(adminId && {
-        User_User_updatedByIdToUser: {
-          connect: { id: adminId }
-        }
-      }),
-      Role_UserRoles: {
-        set: data.roleIds.map(id => ({ id }))
-      }
-    };
-
-    return prisma.user.update({
+    const user = await prisma.user.update({
       where: { id: data.userId },
-      data: updateData,
+      data: {
+        updatedAt: new Date(),
+        ...(adminId && {
+          User_User_updatedByIdToUser: {
+            connect: { id: adminId }
+          }
+        }),
+        Role_UserRoles: {
+          set: data.roleIds.map(id => ({ id }))
+        }
+      },
       include: AdminRepository.USER_INCLUDE,
     });
+
+    return this.transformUser(user);
   }
 
-
-  async getUserRoles(userId: number) {
+  async getUserRoles(userId: number): Promise<Array<{ id: number; name: string }>> {
     this._validateId(userId);
     await this._assertUserExists(userId);
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
-        id: true,
-        email: true,
-        name: true,
         Role_UserRoles: {
           select: {
             id: true,
             name: true,
-            Permission: {
-              select: {
-                id: true,
-                name: true,
-                description: true,
-                path: true,
-                method: true,
-                module: true,
-              }
-            }
           }
         }
       }
@@ -496,15 +644,17 @@ export class AdminRepository {
 
   // ==================== ROLE & PERMISSION MANAGEMENT ====================
 
-  async getAllRoles() {
-    return prisma.role.findMany({
+  async getAllRoles(): Promise<RoleResponse[]> {
+    const roles = await prisma.role.findMany({
       where: { deletedAt: null },
       include: AdminRepository.ROLE_INCLUDE,
       orderBy: { name: 'asc' },
     });
+
+    return roles.map(role => this.transformRole(role));
   }
 
-  async getRoleById(id: number) {
+  async getRoleById(id: number): Promise<RoleResponse> {
     this._validateId(id);
 
     const role = await prisma.role.findFirst({
@@ -524,13 +674,12 @@ export class AdminRepository {
       );
     }
 
-    return role;
+    return this.transformRole(role);
   }
 
-  async createRole(data: CreateRoleInput, adminId: number) {
+  async createRole(data: CreateRoleInput, adminId: number): Promise<RoleResponse> {
     this._validateRoleName(data.name);
 
-    // Business rule: Check for duplicate role name (case-insensitive)
     const existing = await prisma.role.findFirst({
       where: {
         name: { equals: data.name, mode: 'insensitive' },
@@ -548,7 +697,7 @@ export class AdminRepository {
     }
 
     const now = new Date();
-    return prisma.role.create({
+    const role = await prisma.role.create({
       data: {
         name: data.name.trim(),
         createdAt: now,
@@ -559,16 +708,17 @@ export class AdminRepository {
       },
       include: AdminRepository.ROLE_INCLUDE,
     });
+
+    return this.transformRole(role);
   }
 
-  async updateRole(id: number, data: UpdateRoleInput, adminId?: number) {
+  async updateRole(id: number, data: UpdateRoleInput, adminId?: number): Promise<RoleResponse> {
     this._validateId(id);
     await this._assertRoleExists(id);
 
     if (data.name) {
       this._validateRoleName(data.name);
 
-      // Check for duplicate name (excluding current role)
       const existing = await prisma.role.findFirst({
         where: {
           name: { equals: data.name, mode: 'insensitive' },
@@ -587,7 +737,7 @@ export class AdminRepository {
       }
     }
 
-    return prisma.role.update({
+    const role = await prisma.role.update({
       where: { id },
       data: {
         ...data,
@@ -601,9 +751,11 @@ export class AdminRepository {
       },
       include: AdminRepository.ROLE_INCLUDE,
     });
+
+    return this.transformRole(role);
   }
 
-  async deleteRole(id: number, adminId?: number) {
+  async deleteRole(id: number, adminId?: number): Promise<RoleResponse> {
     this._validateId(id);
     await this._assertRoleExists(id);
     const usageCount = await prisma.user.count({
@@ -623,7 +775,7 @@ export class AdminRepository {
       );
     }
 
-    return prisma.role.update({
+    const role = await prisma.role.update({
       where: { id },
       data: {
         deletedAt: new Date(),
@@ -634,10 +786,13 @@ export class AdminRepository {
           }
         }),
       },
+      include: AdminRepository.ROLE_INCLUDE,
     });
+
+    return this.transformRole(role);
   }
 
-  async getPermissionsByRole(roleId: number) {
+  async getPermissionsByRole(roleId: number): Promise<PermissionResponse[]> {
     this._validateId(roleId);
 
     const role = await prisma.role.findFirst({
@@ -654,6 +809,8 @@ export class AdminRepository {
             path: true,
             method: true,
             module: true,
+            createdAt: true,
+            updatedAt: true,
           }
         }
       },
@@ -668,10 +825,10 @@ export class AdminRepository {
       );
     }
 
-    return role.Permission;
+    return role.Permission.map(perm => this.transformPermission(perm));
   }
 
-  async assignPermissionToRole(roleId: number, permissionIds: number[], adminId?: number) {
+  async assignPermissionToRole(roleId: number, permissionIds: number[], adminId?: number): Promise<RoleResponse> {
     this._validateId(roleId);
     this._validatePermissionIds(permissionIds);
 
@@ -697,7 +854,7 @@ export class AdminRepository {
       );
     }
 
-    return prisma.role.update({
+    const role = await prisma.role.update({
       where: { id: roleId },
       data: {
         Permission: {
@@ -712,10 +869,12 @@ export class AdminRepository {
       },
       include: AdminRepository.ROLE_INCLUDE,
     });
+
+    return this.transformRole(role);
   }
 
-  async getAllPermissions() {
-    return prisma.permission.findMany({
+  async getAllPermissions(): Promise<PermissionResponse[]> {
+    const permissions = await prisma.permission.findMany({
       where: { deletedAt: null },
       select: {
         id: true,
@@ -732,9 +891,11 @@ export class AdminRepository {
         { name: 'asc' },
       ],
     });
+
+    return permissions.map(perm => this.transformPermission(perm));
   }
 
-  async findRoleByName(name: string) {
+  async findRoleByName(name: string): Promise<RoleResponse> {
     this._validateRoleName(name);
 
     const role = await prisma.role.findFirst({
@@ -754,7 +915,7 @@ export class AdminRepository {
       );
     }
 
-    return role;
+    return this.transformRole(role);
   }
 
   // ==================== STATISTICS & ANALYTICS ====================
@@ -794,14 +955,13 @@ export class AdminRepository {
     ]);
 
     return {
-      totalUsers,
-      activeUsers,
-      inactiveUsers,
-      blockedUsers,
-      usersWithCustomerProfile,
-      usersWithServiceProvider,
-      usersWithStaff,
-      userTypeBreakdown: {
+      totals: {
+        users: totalUsers,
+        active: activeUsers,
+        inactive: inactiveUsers,
+        blocked: blockedUsers
+      },
+      types: {
         customers: usersWithCustomerProfile,
         serviceProviders: usersWithServiceProvider,
         staff: usersWithStaff,
@@ -829,10 +989,11 @@ export class AdminRepository {
 
     return {
       totalRoles,
-      rolesWithUsers: rolesWithUsers.map(role => ({
+      roles: rolesWithUsers.map(role => ({
         id: role.id,
         name: role.name,
-        userCount: role._count.User_UserRoles
+        userCount: role._count.User_UserRoles,
+        percentage: totalRoles > 0 ? Math.round((role._count.User_UserRoles / totalRoles) * 100) : 0
       }))
     };
   }
@@ -886,10 +1047,97 @@ export class AdminRepository {
     ]);
 
     return {
-      devices,
-      notifications,
-      refreshTokens
+      devices: devices.map(device => ({
+        id: device.id,
+        userAgent: device.userAgent,
+        ip: device.ip,
+        lastActive: device.lastActive,
+        isActive: device.isActive,
+        createdAt: device.createdAt,
+      })),
+      notifications: notifications.map(notification => ({
+        id: notification.id,
+        content: notification.content,
+        isRead: notification.isRead,
+        createdAt: notification.createdAt,
+      })),
+      sessions: refreshTokens.map(token => ({
+        id: token.id,
+        createdAt: token.createdAt,
+        expiresAt: token.expiresAt,
+        device: {
+          userAgent: token.Device.userAgent,
+          ip: token.Device.ip,
+        }
+      }))
     };
+  }
+
+  // ==================== DELETED USERS ====================
+
+  async getDeletedUsers(params?: PaginationParams): Promise<PaginatedResult<UserResponse>> {
+    const {
+      page = AdminRepository.DEFAULT_PAGE,
+      limit = AdminRepository.DEFAULT_LIMIT,
+    } = params || {};
+
+    const [totalCount, users] = await Promise.all([
+      prisma.user.count({ where: { deletedAt: { not: null } } }),
+      prisma.user.findMany({
+        where: { deletedAt: { not: null } },
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { deletedAt: 'desc' },
+        include: AdminRepository.USER_INCLUDE,
+      }),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return {
+      data: users.map(user => this.transformUser(user)),
+      total: totalCount,
+      page,
+      limit,
+      totalPages,
+      hasNext: page < totalPages,
+      hasPrev: page > 1,
+    };
+  }
+
+  async restoreUser(id: number, adminId?: number): Promise<UserResponse> {
+    this._validateId(id);
+
+    const user = await prisma.user.findUnique({ where: { id } });
+
+    if (!user || !user.deletedAt) {
+      throw new AppError(
+        'User is not deleted or not found',
+        [{ message: 'Error.UserNotDeleted', path: ['id'] }],
+        { id },
+        400
+      );
+    }
+
+    const restoredUser = await prisma.user.update({
+      where: { id },
+      data: {
+        User_User_deletedByIdToUser: {
+          disconnect: true
+        },
+        status: UserStatus.ACTIVE,
+        deletedAt: null,
+        updatedAt: new Date(),
+        ...(adminId && {
+          User_User_updatedByIdToUser: {
+            connect: { id: adminId }
+          }
+        }),
+      },
+      include: AdminRepository.USER_INCLUDE,
+    });
+
+    return this.transformUser(restoredUser);
   }
 
   // ==================== PRIVATE VALIDATION METHODS ====================
@@ -1175,66 +1423,4 @@ export class AdminRepository {
       );
     }
   }
-
-  async getDeletedUsers(params?: PaginationParams): Promise<PaginatedResult<any>> {
-    const {
-      page = AdminRepository.DEFAULT_PAGE,
-      limit = AdminRepository.DEFAULT_LIMIT,
-    } = params || {};
-
-    const [totalCount, users] = await Promise.all([
-      prisma.user.count({ where: { deletedAt: { not: null } } }),
-      prisma.user.findMany({
-        where: { deletedAt: { not: null } },
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: { deletedAt: 'desc' },
-        include: AdminRepository.USER_INCLUDE,
-      }),
-    ]);
-
-    const totalPages = Math.ceil(totalCount / limit);
-
-    return {
-      data: users,
-      totalCount,
-      page,
-      limit,
-      totalPages,
-      hasNext: page < totalPages,
-      hasPrev: page > 1,
-    };
-  }
-
-  async restoreUser(id: number, adminId?: number) {
-    this._validateId(id);
-
-    const user = await prisma.user.findUnique({ where: { id } });
-
-    if (!user || !user.deletedAt) {
-      throw new AppError(
-        'User is not deleted or not found',
-        [{ message: 'Error.UserNotDeleted', path: ['id'] }],
-        { id },
-        400
-      );
-    }
-
-    return prisma.user.update({
-      where: { id },
-      data: {
-        User_User_deletedByIdToUser: {
-          disconnect: true
-        }, deletedAt: null,
-        updatedAt: new Date(),
-        ...(adminId && {
-          User_User_updatedByIdToUser: {
-            connect: { id: adminId }
-          }
-        }),
-      },
-      include: AdminRepository.USER_INCLUDE,
-    });
-  }
-
 }

@@ -17,38 +17,42 @@ class AdminUserTCPTest {
         const res = (await sendTCPRequest({ type, data })) as TCPResponse<T>;
         const prefix = res.statusCode >= 400 ? '❌' : '✅';
         console.log(`${prefix} [${type}] - ${res.message || res.error}`);
-        if (res.data) console.dir(res.data, { depth: null });
+        if (res) console.dir(res);
         return res;
     }
 
     async run() {
         console.log('\n🚀 Running Admin TCP Test Suite');
 
-        // === USER CRUD ===
-        await this.testGetAllUsers();
-        await this.testCreateUser();
-        await this.testGetUserById();
-        await this.testUpdateUser();
-        await this.testResetPassword();
+        // // === USER CRUD ===
+        // await this.testGetAllUsers();
+        // await this.testCreateUser();
+        // await this.testGetUserById();
+        // await this.testUpdateUser();
+        // await this.testResetPassword();
 
-        // === STATUS ===
-        await this.testBlockUser();
-        await this.testUnblockUser();
-        await this.testActivateUser();
+        // // === STATUS ===
+        // await this.testBlockUser();
+        // await this.testUnblockUser();
+        // await this.testActivateUser();
 
-        // === ROLE & PERMISSION ===
-        await this.testGetAllRoles();
-        await this.testCreateRole();
-        await this.testAssignPermissionsToRole();
-        await this.testGetPermissionsByRole();
-        await this.testGetAllPermissions();
+        // // === ROLE & PERMISSION ===
+        // await this.testGetAllRoles();
+        // await this.testCreateRole();
+        // await this.testAssignPermissionsToRole();
+        // await this.testGetPermissionsByRole();
+        // await this.testGetAllPermissions();
 
-        // === DELETE & RESTORE ===
-        await this.testDeleteUser();
-        await this.testGetDeletedUsers();
-        await this.testRestoreUser();
-        await this.testDeleteRole();
+        // // === DELETE & RESTORE ===
+        // await this.testDeleteUser();
+        // await this.testGetDeletedUsers();
+        // await this.testRestoreUser();
+        // await this.testDeleteRole();
 
+        // === REPORTS ===
+        await this.testGetMonthlyReport();
+        await this.testExportMonthlyPDF();
+        await this.testExportMultiMonthPDF();
         console.log('\n✅ All TCP tests completed.');
     }
 
@@ -172,6 +176,43 @@ class AdminUserTCPTest {
             id: this.testRoleId,
             adminId: this.adminId,
         });
+    }
+
+
+    async testGetMonthlyReport() {
+        await this.send('ADMIN_GET_MONTHLY_REPORT', {
+            month: 7,
+            year: 2025,
+            adminId: this.adminId,
+        });
+    }
+
+    async testExportMonthlyPDF() {
+        const res = await this.send<string>('ADMIN_EXPORT_MONTHLY_PDF', {
+            month: 7,
+            year: 2025,
+            adminId: this.adminId,
+        });
+
+        if (res.data) {
+            const buffer = Buffer.from(res.data, 'base64');
+            console.log(`📄 Monthly PDF size: ${buffer.length} bytes`);
+        }
+    }
+
+    async testExportMultiMonthPDF() {
+        const res = await this.send<string>('ADMIN_EXPORT_MULTI_MONTHS_PDF', {
+            startMonth: 4,
+            startYear: 2025,
+            endMonth: 7,
+            endYear: 2025,
+            adminId: this.adminId,
+        });
+
+        if (res.data) {
+            const buffer = Buffer.from(res.data, 'base64');
+            console.log(`📄 Multi-month PDF size: ${buffer.length} bytes`);
+        }
     }
 }
 

@@ -7,12 +7,13 @@ import {
 import { AppError } from '../handlers/error';
 import { AdminRepository } from '../repositories/admin.repository';
 import { UserStatus } from '../generated/prisma';
+import { ReportRepository } from '../repositories/admin.report.repository';
 
 export class AdminService {
   private static readonly BCRYPT_ROUNDS = 12;
   private static readonly DEFAULT_USER_STATUS = UserStatus.ACTIVE;
 
-  constructor(private readonly adminRepository: AdminRepository) { }
+  constructor(private readonly adminRepository: AdminRepository, private readonly reportRepository: ReportRepository) { }
 
   // =================== USER ===================
 
@@ -152,7 +153,7 @@ export class AdminService {
   }
 
   async restoreDeletedUser(id: number, adminId: number) {
-    return this.adminRepository.restoreUser(id, adminId); 
+    return this.adminRepository.restoreUser(id, adminId);
   }
 
   // =================== PRIVATE ===================
@@ -168,5 +169,18 @@ export class AdminService {
 
     const permissions = await Promise.all(roleIds.map((id) => this.getPermissionsByRole(id)));
     return permissions.flat().some((p) => p.name === requiredPermission);
+  }
+
+  // =================== EXPORTS ===================
+  async getMonthlyReport(month: number, year: number) {
+    return this.reportRepository.getMonthlyReportData(month, year);
+  }
+
+  async exportMonthlyReportPDF(month: number, year: number) {
+    return this.reportRepository.exportMonthlyReportPDF(month, year);
+  }
+
+  async exportMultiMonthReportPDF(startMonth: number, startYear: number, endMonth: number, endYear: number) {
+    return this.reportRepository.exportMultipleMonthsReportPDF(startMonth, startYear, endMonth, endYear);
   }
 }

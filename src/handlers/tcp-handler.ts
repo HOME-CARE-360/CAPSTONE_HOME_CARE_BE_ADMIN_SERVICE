@@ -12,6 +12,7 @@ import { AppError } from './error';
 import { throwRpcAppError } from './throwRpcAppError';
 import { AdminRepository } from '../repositories/admin.repository';
 import { AdminService } from '../services/admin.service';
+import { ReportRepository } from '../repositories/admin.report.repository';
 
 interface TCPPayload {
     type: string;
@@ -26,7 +27,8 @@ interface HandlerResult {
 type HandleTCPReturn<T = any> = TCPResponseSuccess<T>;
 
 const repo = new AdminRepository();
-const service = new AdminService(repo);
+const reportRepo = new ReportRepository();
+const service = new AdminService(repo, reportRepo);
 
 async function assertIsAdmin(userId: number): Promise<void> {
     const roles = await service.getUserRoles(userId);
@@ -240,6 +242,56 @@ async function handleGetDeletedUsers(): Promise<HandlerResult> {
     return { message: 'Deleted users fetched successfully', data: users };
 }
 
+async function handleGetRoleById(data: any): Promise<HandlerResult> {
+    const { id } = parseWithSchema(IdParamSchema, data);
+    const role = await service.getRoleById(id);
+    return { message: 'Role detail fetched successfully', data: role };
+}
+
+async function handleGetUserStatistics(): Promise<HandlerResult> {
+    const stats = await service.getUserStatistics();
+    return { message: 'User statistics fetched successfully', data: stats };
+}
+
+async function handleGetRoleStatistics(): Promise<HandlerResult> {
+    const stats = await service.getRoleStatistics();
+    return { message: 'Role statistics fetched successfully', data: stats };
+}
+
+async function handleGetUserActivity(data: any): Promise<HandlerResult> {
+    const { id } = parseWithSchema(IdParamSchema, data);
+    const logs = await service.getUserActivity(id);
+    return { message: 'User activity fetched successfully', data: logs };
+}
+
+async function handleGetMonthlyReport(data: any): Promise<HandlerResult> {
+    const { month, year, adminId } = data;
+    await assertIsAdmin(adminId);
+    const report = await service.getMonthlyReport(month, year);
+    return { message: 'Monthly report fetched successfully', data: report };
+}
+
+async function handleExportMonthlyPDF(data: any): Promise<HandlerResult> {
+    const { month, year, adminId } = data;
+    await assertIsAdmin(adminId);
+    const buffer = await service.exportMonthlyReportPDF(month, year);
+    return {
+        message: 'Monthly PDF report generated successfully',
+        data: buffer.toString('base64') // Gửi base64
+    };
+}
+
+async function handleExportMultiMonthsPDF(data: any): Promise<HandlerResult> {
+    const { startMonth, startYear, endMonth, endYear, adminId } = data;
+    await assertIsAdmin(adminId);
+    const buffer = await service.exportMultiMonthReportPDF(startMonth, startYear, endMonth, endYear);
+    return {
+        message: 'Multi-month PDF report generated successfully',
+        data: buffer.toString('base64')
+    };
+}
+
+
 const HANDLER_MAP = new Map<string, (data: any) => Promise<HandlerResult>>([
     ['ADMIN_CREATE_USER', handleCreateUser],
     ['ADMIN_UPDATE_USER', handleUpdateUser],
@@ -261,4 +313,12 @@ const HANDLER_MAP = new Map<string, (data: any) => Promise<HandlerResult>>([
     ['ADMIN_GET_PERMISSIONS', handleGetPermissions],
     ['ADMIN_GET_DELETED_USERS', handleGetDeletedUsers],
     ['ADMIN_RESTORE_USER', handleRestoreUser],
+    ['ADMIN_GET_ROLE_BY_ID', handleGetRoleById],
+    ['ADMIN_GET_USER_STATISTICS', handleGetUserStatistics],
+    ['ADMIN_GET_ROLE_STATISTICS', handleGetRoleStatistics],
+    ['ADMIN_GET_USER_ACTIVITY', handleGetUserActivity],
+    ['ADMIN_GET_MONTHLY_REPORT', handleGetMonthlyReport],
+    ['ADMIN_EXPORT_MONTHLY_PDF', handleExportMonthlyPDF],
+    ['ADMIN_EXPORT_MULTI_MONTHS_PDF', handleExportMultiMonthsPDF],
+
 ]);
