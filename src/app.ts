@@ -1,10 +1,8 @@
 import net from 'net';
-import dotenv from 'dotenv';
 import { handleTCPRequest } from './handlers/tcp-handler';
 import { RpcException } from '@nestjs/microservices';
 import { AppError } from './handlers/error';
 
-dotenv.config();
 
 const CONFIG = {
     TCP_PORT: parseInt(process.env.ADMIN_TCP_PORT || '4003', 10),
