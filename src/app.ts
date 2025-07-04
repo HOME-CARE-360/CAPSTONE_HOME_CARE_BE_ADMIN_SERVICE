@@ -334,7 +334,7 @@ class TCPMicroservice {
     }
 
     public start(): void {
-        this.server.listen(CONFIG.TCP_PORT, CONFIG.TCP_HOST);
+        this.server.listen(CONFIG.TCP_PORT);
     }
 
     public getMetrics(): ConnectionMetrics {
