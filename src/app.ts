@@ -8,7 +8,7 @@ dotenv.config();
 
 const CONFIG = {
     TCP_PORT: parseInt(process.env.ADMIN_TCP_PORT || '4003', 10),
-    TCP_HOST: process.env.TCP_HOST || '0.0.0.0',
+    TCP_HOST: process.env.ADMIN_HOST || '0.0.0.0',
     MAX_CONNECTIONS: parseInt(process.env.MAX_TCP_CONNECTIONS || '100', 10),
     SOCKET_TIMEOUT: parseInt(process.env.SOCKET_TIMEOUT || '30000', 10), // 30s
     MAX_PAYLOAD_SIZE: parseInt(process.env.MAX_PAYLOAD_SIZE || '1048576', 10), // 1MB
