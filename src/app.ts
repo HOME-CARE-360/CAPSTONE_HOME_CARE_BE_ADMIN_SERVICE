@@ -5,7 +5,7 @@ import { AppError } from './handlers/error';
 
 
 const CONFIG = {
-    TCP_PORT: parseInt(process.env.ADMIN_TCP_PORT || '4003', 10),
+    TCP_PORT: process.env.ADMIN_TCP_PORT || '4003',
     TCP_HOST: process.env.ADMIN_HOST || '0.0.0.0',
     MAX_CONNECTIONS: parseInt(process.env.MAX_TCP_CONNECTIONS || '100', 10),
     SOCKET_TIMEOUT: parseInt(process.env.SOCKET_TIMEOUT || '30000', 10), // 30s
@@ -16,7 +16,6 @@ const CONFIG = {
 console.log(process.env.ADMIN_TCP_PORT);
 console.log(CONFIG.TCP_PORT);
 console.log(process.env.ADMIN_HOST);
-
 
 
 interface RpcErrorFormat {
