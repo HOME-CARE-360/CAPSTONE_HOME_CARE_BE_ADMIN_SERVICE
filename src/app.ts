@@ -13,6 +13,11 @@ const CONFIG = {
     KEEP_ALIVE: true,
     NO_DELAY: true,
 } as const;
+console.log(process.env.ADMIN_TCP_PORT);
+console.log(CONFIG.TCP_PORT);
+console.log(process.env.ADMIN_HOST);
+
+
 
 interface RpcErrorFormat {
     statusCode?: number;
