@@ -1,20 +1,22 @@
 import net from 'net';
-import dotenv from 'dotenv';
 import { handleTCPRequest } from './handlers/tcp-handler';
 import { RpcException } from '@nestjs/microservices';
 import { AppError } from './handlers/error';
 
-dotenv.config();
 
 const CONFIG = {
-    TCP_PORT: parseInt(process.env.ADMIN_TCP_PORT || '4003', 10),
-    TCP_HOST: process.env.TCP_HOST || '0.0.0.0',
+    TCP_PORT: process.env.ADMIN_POD_TCP_PORT || 4003,
+    TCP_HOST: process.env.ADMIN_POD_HOST || '0.0.0.0',
     MAX_CONNECTIONS: parseInt(process.env.MAX_TCP_CONNECTIONS || '100', 10),
     SOCKET_TIMEOUT: parseInt(process.env.SOCKET_TIMEOUT || '30000', 10), // 30s
     MAX_PAYLOAD_SIZE: parseInt(process.env.MAX_PAYLOAD_SIZE || '1048576', 10), // 1MB
     KEEP_ALIVE: true,
     NO_DELAY: true,
 } as const;
+console.log(process.env.ADMIN_POD_TCP_PORT);
+console.log(CONFIG.TCP_PORT);
+console.log(process.env.ADMIN_POD_HOST);
+
 
 interface RpcErrorFormat {
     statusCode?: number;
@@ -332,7 +334,7 @@ class TCPMicroservice {
     }
 
     public start(): void {
-        this.server.listen(CONFIG.TCP_PORT, CONFIG.TCP_HOST);
+        this.server.listen(CONFIG.TCP_PORT);
     }
 
     public getMetrics(): ConnectionMetrics {
