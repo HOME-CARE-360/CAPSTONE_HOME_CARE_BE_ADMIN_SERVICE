@@ -47,3 +47,43 @@ export const GetUsersQuerySchema = z.object({
 export const AdminIdSchema = z.object({
   adminId: z.number().int().positive()
 });
+
+export const AssignRolesSchema = AdminIdSchema.extend({
+  userId: z.number().int().positive(),
+  roleIds: z.array(z.number().int().positive()),
+});
+
+export const ResetPasswordSchema = AdminIdSchema.extend({
+  id: z.number().int().positive(),
+  newPassword: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
+export const CreateRoleSchema = AdminIdSchema.extend({
+  name: z.string().min(1),
+});
+
+export const UpdateRoleSchema = AdminIdSchema.extend({
+  id: z.number().int().positive(),
+  name: z.string().min(1),
+});
+
+export const DeleteRoleSchema = AdminIdSchema.extend({
+  id: z.number().int().positive(),
+});
+
+export const AssignPermissionsToRoleSchema = AdminIdSchema.extend({
+  roleId: z.number().int().positive(),
+  permissionIds: z.array(z.number().int().positive()),
+});
+
+export const MonthlyReportSchema = AdminIdSchema.extend({
+  month: z.number().int().min(1).max(12),
+  year: z.number().int().min(2000),
+});
+
+export const MultiMonthReportSchema = AdminIdSchema.extend({
+  startMonth: z.number().int().min(1).max(12),
+  startYear: z.number().int().min(2000),
+  endMonth: z.number().int().min(1).max(12),
+  endYear: z.number().int().min(2000),
+});

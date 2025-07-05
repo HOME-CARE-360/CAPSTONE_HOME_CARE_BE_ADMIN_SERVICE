@@ -6,7 +6,29 @@ import {
     UpdateUserSchema,
     IdParamSchema,
     GetUsersQuerySchema,
+    AssignRolesSchema,
+    ResetPasswordSchema,
+    CreateRoleSchema,
+    UpdateRoleSchema,
+    DeleteRoleSchema,
+    AssignPermissionsToRoleSchema,
+    MonthlyReportSchema,
+    MultiMonthReportSchema,
 } from '../schemas/app.schema';
+import {
+    CreateUserDTO,
+    UpdateUserDTO,
+    IdParamDTO,
+    GetUsersQuery,
+    AssignRolesDTO,
+    ResetPasswordDTO,
+    CreateRoleDTO,
+    UpdateRoleDTO,
+    DeleteRoleDTO,
+    AssignPermissionsToRoleDTO,
+    MonthlyReportDTO,
+    MultiMonthReportDTO,
+} from '../schemas/type';
 import { parseWithSchema } from './parseWithSchema';
 import { AppError } from './error';
 import { throwRpcAppError } from './throwRpcAppError';
@@ -109,7 +131,11 @@ function handleError(err: any, payload: TCPPayload): never {
 
 // === HANDLERS ===
 async function handleCreateUser(data: any): Promise<HandlerResult> {
-    const parsed = parseWithSchema(CreateUserSchema.extend({ adminId: z.number().int().positive() }), data);
+    const parsed = parseWithSchema(
+        CreateUserSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as CreateUserDTO & { adminId: number };
+
     await assertIsAdmin(parsed.adminId);
     const user = await service.createUser(parsed, parsed.adminId);
     return { message: 'Manager created successfully', data: user };
@@ -120,104 +146,152 @@ async function handleUpdateUser(data: any): Promise<HandlerResult> {
         throw new AppError('Error.MissingUserId', [{ message: 'User ID and adminId are required', path: ['id'] }], {}, 400);
     }
     await assertIsAdmin(data.adminId);
-    const parsedData = parseWithSchema(UpdateUserSchema, data.data);
+
+    const parsedData = parseWithSchema(UpdateUserSchema, data.data) as UpdateUserDTO;
     const updated = await service.updateUser(Number(data.id), parsedData, data.adminId);
     return { message: 'User updated successfully', data: updated };
 }
 
 async function handleDeleteUser(data: any): Promise<HandlerResult> {
-    const parsed = parseWithSchema(IdParamSchema.extend({ adminId: z.number().int().positive() }), data);
+    const parsed = parseWithSchema(
+        IdParamSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as IdParamDTO & { adminId: number };
+
     await assertIsAdmin(parsed.adminId);
     const deleted = await service.deleteUser(parsed.id, parsed.adminId);
     return { message: 'User deleted successfully', data: deleted };
 }
 
 async function handleBlockUser(data: any): Promise<HandlerResult> {
-    const parsed = parseWithSchema(IdParamSchema.extend({ adminId: z.number().int().positive() }), data);
+    const parsed = parseWithSchema(
+        IdParamSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as IdParamDTO & { adminId: number };
+
     await assertIsAdmin(parsed.adminId);
     const user = await service.blockUser(parsed.id, parsed.adminId);
     return { message: 'User blocked successfully', data: user };
 }
 
 async function handleUnblockUser(data: any): Promise<HandlerResult> {
-    const parsed = parseWithSchema(IdParamSchema.extend({ adminId: z.number().int().positive() }), data);
+    const parsed = parseWithSchema(
+        IdParamSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as IdParamDTO & { adminId: number };
+
     await assertIsAdmin(parsed.adminId);
     const user = await service.unblockUser(parsed.id, parsed.adminId);
     return { message: 'User unblocked successfully', data: user };
 }
 
 async function handleActivateUser(data: any): Promise<HandlerResult> {
-    const parsed = parseWithSchema(IdParamSchema.extend({ adminId: z.number().int().positive() }), data);
+    const parsed = parseWithSchema(
+        IdParamSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as IdParamDTO & { adminId: number };
+
     await assertIsAdmin(parsed.adminId);
     const user = await service.activateUser(parsed.id, parsed.adminId);
     return { message: 'User activated successfully', data: user };
 }
 
 async function handleResetPassword(data: any): Promise<HandlerResult> {
-    const { id, newPassword, adminId } = data;
-    await assertIsAdmin(adminId);
-    const user = await service.resetUserPassword(id, newPassword, adminId);
+    const parsed = parseWithSchema(
+        ResetPasswordSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as ResetPasswordDTO & { adminId: number };
+
+    await assertIsAdmin(parsed.adminId);
+    const user = await service.resetUserPassword(parsed.id, parsed.newPassword, parsed.adminId);
     return { message: 'Password reset successfully', data: user };
 }
 
 async function handleAssignRoles(data: any): Promise<HandlerResult> {
-    const { userId, roleIds, adminId } = data;
-    await assertIsAdmin(adminId);
-    await service.assignRolesToUser({ userId, roleIds }, adminId);
+    const parsed = parseWithSchema(
+        AssignRolesSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as AssignRolesDTO & { adminId: number };
+
+    await assertIsAdmin(parsed.adminId);
+    await service.assignRolesToUser(parsed, parsed.adminId);
     return { message: 'Roles assigned successfully', data: null };
 }
 
 async function handleCreateRole(data: any): Promise<HandlerResult> {
-    const { name, adminId } = data;
-    await assertIsAdmin(adminId);
-    const role = await service.createRole(name, adminId);
+    const parsed = parseWithSchema(
+        CreateRoleSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as CreateRoleDTO & { adminId: number };
+
+    await assertIsAdmin(parsed.adminId);
+    const role = await service.createRole(parsed.name, parsed.adminId);
     return { message: 'Role created successfully', data: role };
 }
 
 async function handleUpdateRole(data: any): Promise<HandlerResult> {
-    const { id, name, adminId } = data;
-    await assertIsAdmin(adminId);
-    const updated = await service.updateRole(id, name, adminId);
+    const parsed = parseWithSchema(
+        UpdateRoleSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as UpdateRoleDTO & { adminId: number };
+
+    await assertIsAdmin(parsed.adminId);
+    const updated = await service.updateRole(parsed.id, parsed.name, parsed.adminId);
     return { message: 'Role updated successfully', data: updated };
 }
 
 async function handleDeleteRole(data: any): Promise<HandlerResult> {
-    const { id, adminId } = data;
-    await assertIsAdmin(adminId);
-    await service.deleteRole(id, adminId);
+    const parsed = parseWithSchema(
+        DeleteRoleSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as DeleteRoleDTO & { adminId: number };
+
+    await assertIsAdmin(parsed.adminId);
+    await service.deleteRole(parsed.id, parsed.adminId);
     return { message: 'Role deleted successfully', data: null };
 }
 
 async function handleAssignPermissionsToRole(data: any): Promise<HandlerResult> {
-    const { roleId, permissionIds, adminId } = data;
-    await assertIsAdmin(adminId);
-    await service.assignPermissionToRole(roleId, permissionIds, adminId);
+    const parsed = parseWithSchema(
+        AssignPermissionsToRoleSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as AssignPermissionsToRoleDTO & { adminId: number };
+
+    await assertIsAdmin(parsed.adminId);
+    await service.assignPermissionToRole(parsed.roleId, parsed.permissionIds, parsed.adminId);
     return { message: 'Permissions assigned to role successfully', data: null };
 }
 
 async function handleRestoreUser(data: any): Promise<HandlerResult> {
-    const { id, adminId } = data;
-    await assertIsAdmin(adminId);
-    const user = await service.restoreDeletedUser(id, adminId);
+    const parsed = parseWithSchema(
+        IdParamSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as IdParamDTO & { adminId: number };
+
+    await assertIsAdmin(parsed.adminId);
+    const user = await service.restoreDeletedUser(parsed.id, parsed.adminId);
     return { message: 'User restored successfully', data: user };
 }
 
-// Basic handlers not requiring admin check
 async function handleGetAllUsers(data: any): Promise<HandlerResult> {
-    const query = parseWithSchema(GetUsersQuerySchema, data);
-    const users = await service.getAllUsers({ ...query, page: query.page ?? 1, limit: query.limit ?? 10 });
+    const query = parseWithSchema(GetUsersQuerySchema, data) as GetUsersQuery;
+    const users = await service.getAllUsers({
+        ...query,
+        page: query.page ?? 1,
+        limit: query.limit ?? 10
+    });
     return { message: 'All users fetched successfully', data: users };
 }
 
 async function handleGetUserById(data: any): Promise<HandlerResult> {
-    const parsed = parseWithSchema(IdParamSchema, data) as { id: number };
+    const parsed = parseWithSchema(IdParamSchema, data) as IdParamDTO;
     const user = await service.getUserById(parsed.id);
     return { message: 'User detail fetched successfully', data: user };
 }
 
 async function handleGetUserRoles(data: any): Promise<HandlerResult> {
-    const { id } = parseWithSchema(IdParamSchema, data);
-    const roles = await service.getUserRoles(id);
+    const parsed = parseWithSchema(IdParamSchema, data) as IdParamDTO;
+    const roles = await service.getUserRoles(parsed.id);
     return { message: 'User roles fetched successfully', data: roles };
 }
 
@@ -232,8 +306,8 @@ async function handleGetPermissions(): Promise<HandlerResult> {
 }
 
 async function handleGetPermissionsByRole(data: any): Promise<HandlerResult> {
-    const { roleId } = data;
-    const permissions = await service.getPermissionsByRole(roleId);
+    const parsed = parseWithSchema(IdParamSchema, data) as IdParamDTO;
+    const permissions = await service.getPermissionsByRole(parsed.id);
     return { message: 'Permissions fetched successfully', data: permissions };
 }
 
@@ -243,8 +317,8 @@ async function handleGetDeletedUsers(): Promise<HandlerResult> {
 }
 
 async function handleGetRoleById(data: any): Promise<HandlerResult> {
-    const { id } = parseWithSchema(IdParamSchema, data);
-    const role = await service.getRoleById(id);
+    const parsed = parseWithSchema(IdParamSchema, data) as IdParamDTO;
+    const role = await service.getRoleById(parsed.id);
     return { message: 'Role detail fetched successfully', data: role };
 }
 
@@ -259,38 +333,54 @@ async function handleGetRoleStatistics(): Promise<HandlerResult> {
 }
 
 async function handleGetUserActivity(data: any): Promise<HandlerResult> {
-    const { id } = parseWithSchema(IdParamSchema, data);
-    const logs = await service.getUserActivity(id);
+    const parsed = parseWithSchema(IdParamSchema, data) as IdParamDTO;
+    const logs = await service.getUserActivity(parsed.id);
     return { message: 'User activity fetched successfully', data: logs };
 }
 
 async function handleGetMonthlyReport(data: any): Promise<HandlerResult> {
-    const { month, year, adminId } = data;
-    await assertIsAdmin(adminId);
-    const report = await service.getMonthlyReport(month, year);
+    const parsed = parseWithSchema(
+        MonthlyReportSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as MonthlyReportDTO & { adminId: number };
+
+    await assertIsAdmin(parsed.adminId);
+    const report = await service.getMonthlyReport(parsed.month, parsed.year);
     return { message: 'Monthly report fetched successfully', data: report };
 }
 
 async function handleExportMonthlyPDF(data: any): Promise<HandlerResult> {
-    const { month, year, adminId } = data;
-    await assertIsAdmin(adminId);
-    const buffer = await service.exportMonthlyReportPDF(month, year);
+    const parsed = parseWithSchema(
+        MonthlyReportSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as MonthlyReportDTO & { adminId: number };
+
+    await assertIsAdmin(parsed.adminId);
+    const buffer = await service.exportMonthlyReportPDF(parsed.month, parsed.year);
     return {
         message: 'Monthly PDF report generated successfully',
-        data: buffer.toString('base64') // Gửi base64
+        data: buffer.toString('base64')
     };
 }
 
 async function handleExportMultiMonthsPDF(data: any): Promise<HandlerResult> {
-    const { startMonth, startYear, endMonth, endYear, adminId } = data;
-    await assertIsAdmin(adminId);
-    const buffer = await service.exportMultiMonthReportPDF(startMonth, startYear, endMonth, endYear);
+    const parsed = parseWithSchema(
+        MultiMonthReportSchema.extend({ adminId: z.number().int().positive() }),
+        data
+    ) as MultiMonthReportDTO & { adminId: number };
+
+    await assertIsAdmin(parsed.adminId);
+    const buffer = await service.exportMultiMonthReportPDF(
+        parsed.startMonth,
+        parsed.startYear,
+        parsed.endMonth,
+        parsed.endYear
+    );
     return {
         message: 'Multi-month PDF report generated successfully',
         data: buffer.toString('base64')
     };
 }
-
 
 const HANDLER_MAP = new Map<string, (data: any) => Promise<HandlerResult>>([
     ['ADMIN_CREATE_USER', handleCreateUser],
@@ -320,5 +410,4 @@ const HANDLER_MAP = new Map<string, (data: any) => Promise<HandlerResult>>([
     ['ADMIN_GET_MONTHLY_REPORT', handleGetMonthlyReport],
     ['ADMIN_EXPORT_MONTHLY_PDF', handleExportMonthlyPDF],
     ['ADMIN_EXPORT_MULTI_MONTHS_PDF', handleExportMultiMonthsPDF],
-
 ]);

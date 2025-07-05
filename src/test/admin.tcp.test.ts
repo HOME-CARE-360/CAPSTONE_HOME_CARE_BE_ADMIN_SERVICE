@@ -9,7 +9,7 @@ interface TCPResponse<T = any> {
 
 class AdminUserTCPTest {
     private testUserId?: number;
-    private testRoleId?: number;
+    private testRoleId?: number = 5;
     private adminId = 5;
     private testEmail = `test.admin.${Date.now()}@example.com`;
 
@@ -154,7 +154,7 @@ class AdminUserTCPTest {
         if (!this.testRoleId) return;
         await this.send('ADMIN_ASSIGN_PERMISSIONS_TO_ROLE', {
             roleId: this.testRoleId,
-            permissionIds: [1, 2], // dùng test permission ID thật
+            permissionIds: [1, 2],
             adminId: this.adminId,
         });
     }
