@@ -970,33 +970,40 @@ export class AdminRepository {
     };
   }
 
-  async getRoleStatistics() {
-    const [totalRoles, rolesWithUsers] = await Promise.all([
-      prisma.role.count({ where: { deletedAt: null } }),
-      prisma.role.findMany({
-        where: { deletedAt: null },
-        select: {
-          id: true,
-          name: true,
-          _count: {
-            select: {
-              User_UserRoles: true
-            }
-          }
-        }
-      })
-    ]);
+async getRoleStatistics() {
+  const [totalRoles, rolesWithUsers] = await Promise.all([
+    prisma.role.count({ where: { deletedAt: null } }),
+    prisma.role.findMany({
+      where: { deletedAt: null },
+      select: {
+        id: true,
+        name: true,
+        _count: {
+          select: { User_UserRoles: true },
+        },
+      },
+    }),
+  ]);
 
-    return {
-      totalRoles,
-      roles: rolesWithUsers.map(role => ({
-        id: role.id,
-        name: role.name,
-        userCount: role._count.User_UserRoles,
-        percentage: totalRoles > 0 ? Math.round((role._count.User_UserRoles / totalRoles) * 100) : 0
-      }))
-    };
-  }
+  const totalUsersWithRole = rolesWithUsers.reduce(
+    (sum, role) => sum + role._count.User_UserRoles,
+    0
+  );
+
+  return {
+    totalRoles,
+    roles: rolesWithUsers.map((role) => ({
+      id: role.id,
+      name: role.name,
+      userCount: role._count.User_UserRoles,
+      percentage:
+        totalUsersWithRole > 0
+          ? Math.round((role._count.User_UserRoles / totalUsersWithRole) * 100)
+          : 0,
+    })),
+  };
+}
+
 
   // ==================== AUDIT & ACTIVITY LOGS ====================
 
