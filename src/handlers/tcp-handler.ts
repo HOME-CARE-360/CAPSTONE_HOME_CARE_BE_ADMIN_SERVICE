@@ -383,7 +383,7 @@ async function handleExportMonthlyPDF(data: any): Promise<HandlerResult> {
 
 async function handleExportMultiMonthsPDF(data: any): Promise<HandlerResult> {
     const parsed = parseWithSchema(
-        MultiMonthReportSchema.extend({ adminId: z.number().int().positive() }),
+        MultiMonthReportSchema,
         data
     ) as MultiMonthReportDTO & { adminId: number };
 
