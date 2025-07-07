@@ -281,14 +281,20 @@ async function handleAssignPermissionsToRole(data: any): Promise<HandlerResult> 
 }
 
 async function handleRestoreUser(data: any): Promise<HandlerResult> {
-    const parsed = parseWithSchema(
-        IdParamSchema.extend({ adminId: z.number().int().positive() }),
-        data
-    ) as IdParamDTO & { adminId: number };
+  const RestoreUserSchema = z.object({
+    id: z.number().int().positive(),
+    adminId: z.number().int().positive(),
+  });
 
-    await assertIsAdmin(parsed.adminId);
-    const user = await service.restoreDeletedUser(parsed.id, parsed.adminId);
-    return { message: 'User restored successfully', data: user };
+  const parsed = parseWithSchema(RestoreUserSchema, data);
+
+  await assertIsAdmin(parsed.adminId);
+  const user = await service.restoreDeletedUser(parsed.id, parsed.adminId);
+
+  return {
+    message: 'User restored successfully',
+    data: user,
+  };
 }
 
 async function handleGetAllUsers(data: any): Promise<HandlerResult> {
