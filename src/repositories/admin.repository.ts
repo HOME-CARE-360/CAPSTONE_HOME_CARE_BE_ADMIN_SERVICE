@@ -142,7 +142,7 @@ export class AdminRepository {
   private static readonly DEFAULT_LIMIT = 10;
   private static readonly DEFAULT_SORT_BY = 'createdAt';
   private static readonly DEFAULT_SORT_ORDER = 'desc';
-  private static readonly BCRYPT_ROUNDS = 12;
+  private static readonly BCRYPT_ROUNDS = 10;
   private static readonly MAX_LIMIT = 100;
 
   private static readonly USER_INCLUDE = {
@@ -573,29 +573,27 @@ export class AdminRepository {
     return this.transformUser(user);
   }
 
-  async resetUserPassword(id: number, newPassword: string, adminId?: number): Promise<UserResponse> {
-    this._validateId(id);
-    this._validatePassword(newPassword);
-    await this._assertUserExists(id);
+async resetUserPassword(id: number, hashedPassword: string, adminId?: number): Promise<UserResponse> {
+  this._validateId(id);
+  await this._assertUserExists(id);
 
-    const hashedPassword = await bcrypt.hash(newPassword, AdminRepository.BCRYPT_ROUNDS);
+  const user = await prisma.user.update({
+    where: { id },
+    data: {
+      password: hashedPassword,
+      updatedAt: new Date(),
+      ...(adminId && {
+        User_User_updatedByIdToUser: {
+          connect: { id: adminId }
+        }
+      }),
+    },
+    include: AdminRepository.USER_INCLUDE,
+  });
 
-    const user = await prisma.user.update({
-      where: { id },
-      data: {
-        password: hashedPassword,
-        updatedAt: new Date(),
-        ...(adminId && {
-          User_User_updatedByIdToUser: {
-            connect: { id: adminId }
-          }
-        }),
-      },
-      include: AdminRepository.USER_INCLUDE,
-    });
+  return this.transformUser(user);
+}
 
-    return this.transformUser(user);
-  }
 
   async assignRolesToUser(data: UserAssignRolesInput, adminId?: number): Promise<UserResponse> {
     this._validateId(data.userId);

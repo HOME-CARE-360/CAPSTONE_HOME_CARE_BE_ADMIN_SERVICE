@@ -10,7 +10,7 @@ import { UserStatus } from '../generated/prisma';
 import { ReportRepository } from '../repositories/admin.report.repository';
 
 export class AdminService {
-  private static readonly BCRYPT_ROUNDS = 12;
+  private static readonly BCRYPT_ROUNDS = 10;
   private static readonly DEFAULT_USER_STATUS = UserStatus.ACTIVE;
 
   constructor(private readonly adminRepository: AdminRepository, private readonly reportRepository: ReportRepository) { }
@@ -84,7 +84,7 @@ export class AdminService {
 
   async resetUserPassword(id: number, newPassword: string, adminId: number) {
     const hashedPassword = await this.hashPassword(newPassword);
-    return this.adminRepository.resetUserPassword(id, hashedPassword, adminId); // updatedById
+    return this.adminRepository.resetUserPassword(id, hashedPassword, adminId); 
   }
 
   async assignRolesToUser(data: { userId: number; roleIds: number[] }, adminId: number) {

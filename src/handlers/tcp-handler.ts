@@ -197,32 +197,21 @@ async function handleActivateUser(data: any): Promise<HandlerResult> {
 }
 
 async function handleResetPassword(data: any): Promise<HandlerResult> {
-  console.log('=== RESET PASSWORD DEBUG ===');
-  console.log('Raw data received:', JSON.stringify(data, null, 2));
-  
-  try {
-    const ResetPasswordFullSchema = z.object({
-      id: z.number().int().positive(),
-      adminId: z.number().int().positive(),
-      newPassword: z.string().min(6),
-      confirmPassword: z.string().min(6)
-    }).refine((data) => data.newPassword === data.confirmPassword, {
-      message: "Password confirmation does not match",
-      path: ["confirmPassword"]
-    });
+  const schema = z.object({
+    id: z.number().int().positive(),
+    adminId: z.number().int().positive(),
+    newPassword: z.string().min(6),
+    confirmPassword: z.string().min(6)
+  }).refine((d) => d.newPassword === d.confirmPassword, {
+    message: 'Password confirmation does not match',
+    path: ['confirmPassword']
+  });
 
-    const parsed = parseWithSchema(ResetPasswordFullSchema, data);
-    await assertIsAdmin(parsed.adminId);
-    const user = await service.resetUserPassword(parsed.id, parsed.newPassword, parsed.adminId);
+  const parsed = parseWithSchema(schema, data);
+  await assertIsAdmin(parsed.adminId);
 
-    return {
-      message: 'Password reset successfully',
-      data: user,
-    };
-  } catch (error) {
-    console.error('Error in handleResetPassword:', error);
-    throw error;
-  }
+  const user = await service.resetUserPassword(parsed.id, parsed.newPassword, parsed.adminId);
+  return { message: 'Password reset successfully', data: user };
 }
 
 async function handleAssignRoles(data: any): Promise<HandlerResult> {
