@@ -226,15 +226,13 @@ async function handleResetPassword(data: any): Promise<HandlerResult> {
 }
 
 async function handleAssignRoles(data: any): Promise<HandlerResult> {
-    const parsed = parseWithSchema(
-        AssignRolesSchema.extend({ adminId: z.number().int().positive() }),
-        data
-    ) as AssignRolesDTO & { adminId: number };
+  const parsed = parseWithSchema(AssignRolesSchema, data) as AssignRolesDTO & { adminId: number };
 
-    await assertIsAdmin(parsed.adminId);
-    await service.assignRolesToUser(parsed, parsed.adminId);
-    return { message: 'Roles assigned successfully', data: null };
+  await assertIsAdmin(parsed.adminId);
+  await service.assignRolesToUser(parsed, parsed.adminId);
+  return { message: 'Roles assigned successfully', data: null };
 }
+
 
 async function handleCreateRole(data: any): Promise<HandlerResult> {
     const parsed = parseWithSchema(
