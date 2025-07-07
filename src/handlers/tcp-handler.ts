@@ -195,18 +195,27 @@ async function handleActivateUser(data: any): Promise<HandlerResult> {
     const user = await service.activateUser(parsed.id, parsed.adminId);
     return { message: 'User activated successfully', data: user };
 }
-
 async function handleResetPassword(data: any): Promise<HandlerResult> {
-    const parsed = parseWithSchema(
-        ResetPasswordSchema.extend({ adminId: z.number().int().positive() }),
-        data
-    ) as ResetPasswordDTO & { adminId: number };
+  const parsed = parseWithSchema(ResetPasswordSchema, data) as ResetPasswordDTO & {
+    id: number;
+    adminId: number;
+  };
 
-    await assertIsAdmin(parsed.adminId);
-    const user = await service.resetUserPassword(parsed.id, parsed.newPassword, parsed.adminId);
-    return { message: 'Password reset successfully', data: user };
+  await assertIsAdmin(parsed.adminId);
+
+  if (parsed.newPassword !== parsed.confirmPassword) {
+    throw new AppError('Password confirmation does not match', [
+      { message: 'Password confirmation mismatch', path: ['confirmPassword'] },
+    ]);
+  }
+
+  const user = await service.resetUserPassword(parsed.id, parsed.newPassword, parsed.adminId);
+
+  return {
+    message: 'Password reset successfully',
+    data: user,
+  };
 }
-
 async function handleAssignRoles(data: any): Promise<HandlerResult> {
     const parsed = parseWithSchema(
         AssignRolesSchema.extend({ adminId: z.number().int().positive() }),

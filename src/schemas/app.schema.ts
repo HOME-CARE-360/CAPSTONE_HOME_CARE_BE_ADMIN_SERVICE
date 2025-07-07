@@ -15,9 +15,7 @@ export const UpdateUserSchema = z.object({
     email: z.string().email().optional(),
     name: z.string().optional(),
     phone: z.string().optional(),
-    password: z.string().min(6, 'Password must be at least 6 characters').optional(),
     avatar: z.string().url().optional(),
-    status: z.nativeEnum(UserStatus).optional(),
     roleIds: z.array(z.number().int().positive()).optional(),
 });
 
@@ -56,7 +54,15 @@ export const AssignRolesSchema = AdminIdSchema.extend({
 export const ResetPasswordSchema = AdminIdSchema.extend({
   id: z.number().int().positive(),
   newPassword: z.string().min(6, 'Password must be at least 6 characters'),
-});
+  confirmPassword: z.string(),
+}).refine(
+  (data) => data.newPassword === data.confirmPassword,
+  {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  }
+);
+
 
 export const CreateRoleSchema = AdminIdSchema.extend({
   name: z.string().min(1),

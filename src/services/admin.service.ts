@@ -63,9 +63,6 @@ export class AdminService {
   }
 
   async updateUser(id: number, data: UpdateUserDTO, adminId: number) {
-    if (data.password) {
-      data.password = await this.hashPassword(data.password);
-    }
     return this.adminRepository.update(id, data, adminId); // updatedById
   }
 
