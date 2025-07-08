@@ -1006,57 +1006,57 @@ async getAllPermissions(params?: PaginationParams): Promise<PaginatedResult<Perm
 
   // ==================== STATISTICS & ANALYTICS ====================
 
-  async getUserStatistics() {
-    const [
-      totalUsers,
-      activeUsers,
-      inactiveUsers,
-      blockedUsers,
-      usersWithCustomerProfile,
-      usersWithServiceProvider,
-      usersWithStaff
-    ] = await Promise.all([
-      prisma.user.count({ where: { deletedAt: null } }),
-      prisma.user.count({ where: { deletedAt: null, status: UserStatus.ACTIVE } }),
-      prisma.user.count({ where: { deletedAt: null, status: UserStatus.INACTIVE } }),
-      prisma.user.count({ where: { deletedAt: null, status: UserStatus.BLOCKED } }),
-      prisma.user.count({
-        where: {
-          deletedAt: null,
-          CustomerProfile: { isNot: null }
-        }
-      }),
-      prisma.user.count({
-        where: {
-          deletedAt: null,
-          ServiceProvider_ServiceProvider_userIdToUser: { isNot: null }
-        }
-      }),
-      prisma.user.count({
-        where: {
-          deletedAt: null,
-          Staff: { isNot: null }
-        }
-      }),
-    ]);
-
-    return {
-      totals: {
-        users: totalUsers,
-        active: activeUsers,
-        inactive: inactiveUsers,
-        blocked: blockedUsers
-      },
-      types: {
-        customers: usersWithCustomerProfile,
-        serviceProviders: usersWithServiceProvider,
-        staff: usersWithStaff,
-        adminOnly: totalUsers - usersWithCustomerProfile - usersWithServiceProvider - usersWithStaff
+async  getUserStatistics() {
+  const [
+    totalUsers,
+    activeUsers,
+    inactiveUsers,
+    blockedUsers,
+    usersWithCustomerProfile,
+    usersWithServiceProvider,
+    usersWithStaff
+  ] = await Promise.all([
+    prisma.user.count({ where: { deletedAt: null } }),
+    prisma.user.count({ where: { deletedAt: null, status: UserStatus.ACTIVE } }),
+    prisma.user.count({ where: { deletedAt: null, status: UserStatus.INACTIVE } }),
+    prisma.user.count({ where: { deletedAt: null, status: UserStatus.BLOCKED } }),
+    prisma.user.count({
+      where: {
+        deletedAt: null,
+        CustomerProfile: { isNot: null }
       }
-    };
-  }
+    }),
+    prisma.user.count({
+      where: {
+        deletedAt: null,
+        ServiceProvider_ServiceProvider_userIdToUser: { isNot: null }
+      }
+    }),
+    prisma.user.count({
+      where: {
+        deletedAt: null,
+        Staff: { isNot: null }
+      }
+    }),
+  ]);
 
-async getRoleStatistics() {
+  return {
+    totals: {
+      users: totalUsers,
+      active: activeUsers,
+      inactive: inactiveUsers,
+      blocked: blockedUsers
+    },
+    types: {
+      customers: usersWithCustomerProfile,
+      serviceProviders: usersWithServiceProvider,
+      staff: usersWithStaff,
+      adminOnly: totalUsers - usersWithCustomerProfile - usersWithServiceProvider - usersWithStaff
+    }
+  };
+}
+
+async  getRoleStatistics() {
   const [totalRoles, rolesWithUsers] = await Promise.all([
     prisma.role.count({ where: { deletedAt: null } }),
     prisma.role.findMany({
@@ -1070,7 +1070,6 @@ async getRoleStatistics() {
       },
     }),
   ]);
-
   const totalUsersWithRole = rolesWithUsers.reduce(
     (sum, role) => sum + role._count.User_UserRoles,
     0
