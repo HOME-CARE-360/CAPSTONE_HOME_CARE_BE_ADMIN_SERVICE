@@ -642,15 +642,38 @@ async resetUserPassword(id: number, hashedPassword: string, adminId?: number): P
 
   // ==================== ROLE & PERMISSION MANAGEMENT ====================
 
-  async getAllRoles(): Promise<RoleResponse[]> {
-    const roles = await prisma.role.findMany({
+async getAllRoles(params?: PaginationParams): Promise<PaginatedResult<RoleResponse>> {
+  const {
+    page = AdminRepository.DEFAULT_PAGE,
+    limit = AdminRepository.DEFAULT_LIMIT,
+  } = params || {};
+
+  const validatedPage = Math.max(1, page);
+  const validatedLimit = Math.min(Math.max(1, limit), AdminRepository.MAX_LIMIT);
+
+  const [totalCount, roles] = await Promise.all([
+    prisma.role.count({ where: { deletedAt: null } }),
+    prisma.role.findMany({
       where: { deletedAt: null },
       include: AdminRepository.ROLE_INCLUDE,
       orderBy: { name: 'asc' },
-    });
+      skip: (validatedPage - 1) * validatedLimit,
+      take: validatedLimit,
+    }),
+  ]);
 
-    return roles.map(role => this.transformRole(role));
-  }
+  const totalPages = Math.ceil(totalCount / validatedLimit);
+
+  return {
+    data: roles.map(role => this.transformRole(role)),
+    total: totalCount,
+    page: validatedPage,
+    limit: validatedLimit,
+    totalPages,
+    hasNext: validatedPage < totalPages,
+    hasPrev: validatedPage > 1,
+  };
+}
 
   async getRoleById(id: number): Promise<RoleResponse> {
     this._validateId(id);
@@ -660,7 +683,6 @@ async resetUserPassword(id: number, hashedPassword: string, adminId?: number): P
         id,
         deletedAt: null,
       },
-      include: AdminRepository.ROLE_INCLUDE,
     });
 
     if (!role) {
@@ -674,6 +696,7 @@ async resetUserPassword(id: number, hashedPassword: string, adminId?: number): P
 
     return this.transformRole(role);
   }
+
 
   async createRole(data: CreateRoleInput, adminId: number): Promise<RoleResponse> {
     this._validateRoleName(data.name);
@@ -790,41 +813,82 @@ async resetUserPassword(id: number, hashedPassword: string, adminId?: number): P
     return this.transformRole(role);
   }
 
-  async getPermissionsByRole(roleId: number): Promise<PermissionResponse[]> {
-    this._validateId(roleId);
+async getPermissionsByRole(
+  roleId: number,
+  params?: PaginationParams
+): Promise<PaginatedResult<PermissionResponse>> {
+  this._validateId(roleId);
 
-    const role = await prisma.role.findFirst({
+  const {
+    page = AdminRepository.DEFAULT_PAGE,
+    limit = AdminRepository.DEFAULT_LIMIT,
+  } = params || {};
+
+  const validatedPage = Math.max(1, page);
+  const validatedLimit = Math.min(Math.max(1, limit), AdminRepository.MAX_LIMIT);
+
+  const role = await prisma.role.findUnique({
+    where: { id: roleId, deletedAt: null },
+    select: { id: true }
+  });
+
+  if (!role) {
+    throw new AppError(
+      'Role not found',
+      [{ message: 'Error.RoleNotFound', path: ['roleId'] }],
+      { roleId },
+      404
+    );
+  }
+
+  const [totalCount, permissions] = await Promise.all([
+    prisma.permission.count({
       where: {
-        id: roleId,
         deletedAt: null,
-      },
-      include: {
-        Permission: {
-          select: {
-            id: true,
-            name: true,
-            description: true,
-            path: true,
-            method: true,
-            module: true,
-            createdAt: true,
-            updatedAt: true,
+        Role: {
+          some: {
+            id: roleId
+          }
+        }
+      }
+    }),
+    prisma.permission.findMany({
+      where: {
+        deletedAt: null,
+        Role: {
+          some: {
+            id: roleId
           }
         }
       },
-    });
+      orderBy: { name: 'asc' },
+      skip: (validatedPage - 1) * validatedLimit,
+      take: validatedLimit,
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        path: true,
+        method: true,
+        module: true,
+        createdAt: true,
+        updatedAt: true,
+      }
+    })
+  ]);
 
-    if (!role) {
-      throw new AppError(
-        'Role not found',
-        [{ message: 'Error.RoleNotFound', path: ['roleId'] }],
-        { roleId },
-        404
-      );
-    }
+  const totalPages = Math.ceil(totalCount / validatedLimit);
 
-    return role.Permission.map(perm => this.transformPermission(perm));
-  }
+  return {
+    data: permissions.map(this.transformPermission),
+    total: totalCount,
+    page: validatedPage,
+    limit: validatedLimit,
+    totalPages,
+    hasNext: validatedPage < totalPages,
+    hasPrev: validatedPage > 1,
+  };
+}
 
   async assignPermissionToRole(roleId: number, permissionIds: number[], adminId?: number): Promise<RoleResponse> {
     this._validateId(roleId);
@@ -871,8 +935,18 @@ async resetUserPassword(id: number, hashedPassword: string, adminId?: number): P
     return this.transformRole(role);
   }
 
-  async getAllPermissions(): Promise<PermissionResponse[]> {
-    const permissions = await prisma.permission.findMany({
+async getAllPermissions(params?: PaginationParams): Promise<PaginatedResult<PermissionResponse>> {
+  const {
+    page = AdminRepository.DEFAULT_PAGE,
+    limit = AdminRepository.DEFAULT_LIMIT,
+  } = params || {};
+
+  const validatedPage = Math.max(1, page);
+  const validatedLimit = Math.min(Math.max(1, limit), AdminRepository.MAX_LIMIT);
+
+  const [totalCount, permissions] = await Promise.all([
+    prisma.permission.count({ where: { deletedAt: null } }),
+    prisma.permission.findMany({
       where: { deletedAt: null },
       select: {
         id: true,
@@ -888,10 +962,24 @@ async resetUserPassword(id: number, hashedPassword: string, adminId?: number): P
         { module: 'asc' },
         { name: 'asc' },
       ],
-    });
+      skip: (validatedPage - 1) * validatedLimit,
+      take: validatedLimit,
+    }),
+  ]);
 
-    return permissions.map(perm => this.transformPermission(perm));
-  }
+  const totalPages = Math.ceil(totalCount / validatedLimit);
+
+  return {
+    data: permissions.map(perm => this.transformPermission(perm)),
+    total: totalCount,
+    page: validatedPage,
+    limit: validatedLimit,
+    totalPages,
+    hasNext: validatedPage < totalPages,
+    hasPrev: validatedPage > 1,
+  };
+}
+
 
   async findRoleByName(name: string): Promise<RoleResponse> {
     this._validateRoleName(name);

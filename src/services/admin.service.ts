@@ -8,6 +8,7 @@ import { AppError } from '../handlers/error';
 import { AdminRepository } from '../repositories/admin.repository';
 import { UserStatus } from '../generated/prisma';
 import { ReportRepository } from '../repositories/admin.report.repository';
+import { PaginationParams } from '../schemas/app.schema';
 
 export class AdminService {
   private static readonly BCRYPT_ROUNDS = 10;
@@ -97,9 +98,9 @@ export class AdminService {
 
   // =================== ROLE ===================
 
-  async getAllRoles() {
-    return this.adminRepository.getAllRoles();
-  }
+async getAllRoles(query?: PaginationParams) {
+  return this.adminRepository.getAllRoles(query);
+} 
 
   async getRoleById(id: number) {
     return this.adminRepository.getRoleById(id);
@@ -119,17 +120,18 @@ export class AdminService {
 
   // =================== PERMISSION ===================
 
-  async getPermissionsByRole(roleId: number) {
-    return this.adminRepository.getPermissionsByRole(roleId);
-  }
+async getPermissionsByRole(roleId: number, query?: PaginationParams) {
+  return this.adminRepository.getPermissionsByRole(roleId, query);
+}
 
   async assignPermissionToRole(roleId: number, permissionIds: number[], adminId: number) {
     return this.adminRepository.assignPermissionToRole(roleId, permissionIds, adminId); // updatedById
   }
 
-  async getAllPermissions() {
-    return this.adminRepository.getAllPermissions();
-  }
+async getAllPermissions(query?: PaginationParams) {
+  return this.adminRepository.getAllPermissions(query);
+}
+
 
   // =================== STATS ===================
 
@@ -145,9 +147,10 @@ export class AdminService {
     return this.adminRepository.getUserActivity(userId);
   }
 
-  async getDeletedUsers() {
-    return this.adminRepository.getDeletedUsers();
-  }
+async getDeletedUsers(query?: PaginationParams) {
+  return this.adminRepository.getDeletedUsers(query);
+}
+
 
   async restoreDeletedUser(id: number, adminId: number) {
     return this.adminRepository.restoreUser(id, adminId);
@@ -157,15 +160,6 @@ export class AdminService {
 
   private async hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, AdminService.BCRYPT_ROUNDS);
-  }
-
-  private async validateUserPermission(userId: number, requiredPermission: string): Promise<boolean> {
-    const userRoles = await this.getUserRoles(userId);
-    const roleIds = userRoles.map((role) => role.id);
-    if (roleIds.length === 0) return false;
-
-    const permissions = await Promise.all(roleIds.map((id) => this.getPermissionsByRole(id)));
-    return permissions.flat().some((p) => p.name === requiredPermission);
   }
 
   // =================== EXPORTS ===================

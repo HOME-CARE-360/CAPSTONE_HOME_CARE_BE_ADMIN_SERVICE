@@ -306,26 +306,56 @@ async function handleGetUserRoles(data: any): Promise<HandlerResult> {
     return { message: 'User roles fetched successfully', data: roles };
 }
 
-async function handleGetRoles(): Promise<HandlerResult> {
-    const roles = await service.getAllRoles();
-    return { message: 'All roles fetched successfully', data: roles };
+async function handleGetRoles(data: any): Promise<HandlerResult> {
+  const schema = z.object({
+    page: z.number().int().min(1).optional(),
+    limit: z.number().int().min(1).optional(),
+  });
+
+  const parsed = parseWithSchema(schema, data);
+  const roles = await service.getAllRoles(parsed);
+  return { message: 'All roles fetched successfully', data: roles };
 }
 
-async function handleGetPermissions(): Promise<HandlerResult> {
-    const permissions = await service.getAllPermissions();
-    return { message: 'All permissions fetched successfully', data: permissions };
+async function handleGetPermissions(data: any): Promise<HandlerResult> {
+  const schema = z.object({
+    page: z.number().int().min(1).optional(),
+    limit: z.number().int().min(1).optional(),
+  });
+
+  const parsed = parseWithSchema(schema, data);
+  const permissions = await service.getAllPermissions(parsed);
+  return { message: 'All permissions fetched successfully', data: permissions };
 }
 
 async function handleGetPermissionsByRole(data: any): Promise<HandlerResult> {
-    const parsed = parseWithSchema(IdParamSchema, data) as IdParamDTO;
-    const permissions = await service.getPermissionsByRole(parsed.id);
-    return { message: 'Permissions fetched successfully', data: permissions };
+  const schema = z.object({
+    id: z.number().int().positive(),
+    page: z.number().int().min(1).optional(),
+    limit: z.number().int().min(1).optional(),
+  });
+
+  const parsed = parseWithSchema(schema, data);
+  const permissions = await service.getPermissionsByRole(parsed.id, {
+    page: parsed.page,
+    limit: parsed.limit
+  });
+
+  return { message: 'Permissions fetched successfully', data: permissions };
 }
 
-async function handleGetDeletedUsers(): Promise<HandlerResult> {
-    const users = await service.getDeletedUsers();
-    return { message: 'Deleted users fetched successfully', data: users };
+
+async function handleGetDeletedUsers(data: any): Promise<HandlerResult> {
+  const schema = z.object({
+    page: z.number().int().min(1).optional(),
+    limit: z.number().int().min(1).optional(),
+  });
+
+  const parsed = parseWithSchema(schema, data);
+  const users = await service.getDeletedUsers(parsed);
+  return { message: 'Deleted users fetched successfully', data: users };
 }
+
 
 async function handleGetRoleById(data: any): Promise<HandlerResult> {
     const parsed = parseWithSchema(IdParamSchema, data) as IdParamDTO;

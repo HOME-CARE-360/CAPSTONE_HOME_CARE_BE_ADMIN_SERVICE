@@ -291,3 +291,8 @@ export const REPORT_CONSTRAINTS = {
   MIN_YEAR: 2000,
   MAX_YEAR: new Date().getFullYear() + 10,
 } as const;
+
+export interface PaginationParams {
+  page?: number;
+  limit?: number;
+}
