@@ -42,9 +42,11 @@ interface TCPPayload {
 }
 
 interface HandlerResult {
-    message: string;
-    data: any;
+  message: string;
+  data: any;
+  statusCode?: number;
 }
+
 
 type HandleTCPReturn<T = any> = TCPResponseSuccess<T>;
 
@@ -90,7 +92,7 @@ export async function handleTCPRequest(payload: TCPPayload): Promise<HandleTCPRe
             code: 'SUCCESS',
             message: result.message,
             data: result.data,
-            statusCode: 200,
+            statusCode: result.statusCode ?? 200,
             timestamp: new Date().toISOString(),
         };
     } catch (err) {
@@ -138,7 +140,7 @@ async function handleCreateUser(data: any): Promise<HandlerResult> {
 
     await assertIsAdmin(parsed.adminId);
     const user = await service.createUser(parsed, parsed.adminId);
-    return { message: 'Manager created successfully', data: user };
+    return { message: 'Manager created successfully', data: user, statusCode: 201 };
 }
 
 async function handleUpdateUser(data: any): Promise<HandlerResult> {
@@ -160,7 +162,7 @@ async function handleDeleteUser(data: any): Promise<HandlerResult> {
 
     await assertIsAdmin(parsed.adminId);
     const deleted = await service.deleteUser(parsed.id, parsed.adminId);
-    return { message: 'User deleted successfully', data: deleted };
+    return { message: 'User deleted successfully', data: deleted, statusCode: 200 };
 }
 
 async function handleBlockUser(data: any): Promise<HandlerResult> {
@@ -231,7 +233,7 @@ async function handleCreateRole(data: any): Promise<HandlerResult> {
 
     await assertIsAdmin(parsed.adminId);
     const role = await service.createRole(parsed.name, parsed.adminId);
-    return { message: 'Role created successfully', data: role };
+    return { message: 'Role created successfully', data: role, statusCode: 201 };
 }
 
 async function handleUpdateRole(data: any): Promise<HandlerResult> {
