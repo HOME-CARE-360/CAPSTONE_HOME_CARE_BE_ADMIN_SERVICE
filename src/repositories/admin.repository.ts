@@ -375,19 +375,22 @@ export class AdminRepository {
     return this.transformUser(user);
   }
 
-  async findByEmailOrThrow(email: string): Promise<UserResponse | null> {
-    this._validateEmail(email);
-
+ async findByEmail(email: string): Promise<boolean> {
+  try {
     const user = await prisma.user.findFirst({
       where: {
         email: email.toLowerCase().trim(),
         deletedAt: null,
       },
-      include: AdminRepository.USER_INCLUDE,
+      select: { id: true } 
     });
 
-    return user ? this.transformUser(user) : null;
+    return !!user;
+  } catch (error) {
+    console.error('Error checking user existence:', error);
+    throw error;
   }
+}
 
   async create(data: CreateUserInput, adminId: number): Promise<UserResponse> {
     await this._validateUserCreation(data);

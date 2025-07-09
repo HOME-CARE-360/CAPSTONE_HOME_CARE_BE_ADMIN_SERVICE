@@ -17,14 +17,14 @@ model Booking {
   deletedAt                    DateTime?
   createdAt                    DateTime          @default(now())
   updatedAt                    DateTime
-  staffId                      Int?              @unique
+  staffId                      Int?
   serviceRequestId             Int?              @unique
   CustomerProfile              CustomerProfile   @relation(fields: [customerId], references: [id], onDelete: Cascade)
   ServiceProvider              ServiceProvider   @relation(fields: [providerId], references: [id], onDelete: Cascade)
   ServiceRequest               ServiceRequest?   @relation(fields: [serviceRequestId], references: [id])
   Staff_Booking_staffIdToStaff Staff?            @relation("Booking_staffIdToStaff", fields: [staffId], references: [id], onDelete: Cascade)
   InspectionReport             InspectionReport?
-  ProposedService              ProposedService[]
+  Proposal                     Proposal?
   Transaction                  Transaction?
   WorkLog                      WorkLog[]
 }
@@ -262,10 +262,11 @@ model Service {
   updatedAt                      DateTime
   name                           String                 @default("test") @db.VarChar(100)
   publishedAt                    DateTime?              @default(now())
-  description                    String                 @default("test description") @db.VarChar(100)
+  description                    String                 @default("test description") @db.VarChar(5000)
   categoryId                     Int
   unit                           Unit                   @default(PER_JOB)
-  ProposedService                ProposedService[]
+  status                         ServiceStatus          @default(PENDING)
+  ProposalItem                   ProposalItem[]
   RecurringBooking               RecurringBooking[]
   Review                         Review[]
   Category                       Category               @relation(fields: [categoryId], references: [id], onDelete: Cascade)
@@ -337,7 +338,7 @@ model Staff {
   createdAt                      DateTime           @default(now())
   updatedAt                      DateTime
   isActive                       Boolean            @default(true)
-  Booking_Booking_staffIdToStaff Booking?           @relation("Booking_staffIdToStaff")
+  Booking_Booking_staffIdToStaff Booking[]          @relation("Booking_staffIdToStaff")
   InspectionReport               InspectionReport[]
   Review                         Review[]
   ServiceProvider                ServiceProvider    @relation(fields: [providerId], references: [id], onDelete: Cascade)
@@ -456,18 +457,6 @@ model InspectionReport {
   Staff         Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
 }
 
-model ProposedService {
-  id        Int      @id @default(autoincrement())
-  bookingId Int
-  serviceId Int
-  quantity  Int      @default(1)
-  price     Float
-  notes     String?
-  createdAt DateTime @default(now())
-  Booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  Service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-}
-
 model ServiceItem {
   id                   Int                    @id @default(autoincrement())
   name                 String                 @db.VarChar(255)
@@ -514,6 +503,26 @@ model Service_ServiceItems {
   ServiceItem   ServiceItem @relation(fields: [serviceItemId], references: [id], onDelete: Cascade)
 
   @@id([serviceId, serviceItemId])
+}
+
+model Proposal {
+  id           Int            @id @default(autoincrement())
+  bookingId    Int            @unique
+  notes        String?
+  createdAt    DateTime       @default(now())
+  Booking      Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  ProposalItem ProposalItem[]
+}
+
+model ProposalItem {
+  id         Int      @id @default(autoincrement())
+  proposalId Int
+  serviceId  Int
+  quantity   Int      @default(1)
+  price      Float
+  createdAt  DateTime @default(now())
+  Proposal   Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  Service    Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 }
 
 enum BookingStatus {
@@ -605,6 +614,7 @@ enum RequestStatus {
   PENDING
   IN_PROGRESS
   ESTIMATED
+  CANCELLED
 }
 
 enum Unit {
@@ -612,4 +622,10 @@ enum Unit {
   PER_ITEM
   PER_SQUARE_METER
   PER_JOB
+}
+
+enum ServiceStatus {
+  PENDING
+  REJECTED
+  ACCEPTED
 }

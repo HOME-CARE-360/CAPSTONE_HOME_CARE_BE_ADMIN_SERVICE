@@ -26,42 +26,42 @@ export class AdminService {
     return this.adminRepository.findById(id);
   }
 
-  async createUser(data: CreateUserDTO, adminId: number) {
-    const existingUser = await this.adminRepository.findByEmailOrThrow(data.email);
-    if (existingUser) {
-      throw new AppError(
-        'Error.EmailExists',
-        [{ message: 'Email already in use', path: ['email'] }],
-        { email: data.email },
-        400
-      );
-    }
-
-    const role = await this.adminRepository.findRoleByName(data.role);
-    if (!role) {
-      throw new AppError(
-        'Error.RoleNotFound',
-        [{ message: `Role ${data.role} not found`, path: ['role'] }],
-        { role: data.role },
-        400
-      );
-    }
-
-    const hashedPassword = await this.hashPassword(data.password);
-
-    return this.adminRepository.create(
-      {
-        email: data.email,
-        password: hashedPassword,
-        name: data.name,
-        phone: data.phone,
-        avatar: data.avatar,
-        status: data.status ?? AdminService.DEFAULT_USER_STATUS,
-        roleIds: [role.id],
-      },
-      adminId // createdById
+ async createUser(data: CreateUserDTO, adminId: number) {
+  const existingUser = await this.adminRepository.findByEmail(data.email);
+  if (existingUser) {
+    throw new AppError(
+      'Email already in use',
+      [{ message: 'Error.EmailExists', path: ['email'] }],
+      { email: data.email },
+      400
     );
   }
+
+  const role = await this.adminRepository.findRoleByName(data.role);
+  if (!role) {
+    throw new AppError(
+      'Role not found',
+      [{ message: `Error.RoleNotFound`, path: ['role'] }],
+      { role: data.role },
+      400
+    );
+  }
+
+  const hashedPassword = await this.hashPassword(data.password);
+
+  return this.adminRepository.create(
+    {
+      email: data.email,
+      password: hashedPassword,
+      name: data.name,
+      phone: data.phone,
+      avatar: data.avatar,
+      status: data.status ?? UserStatus.ACTIVE, 
+      roleIds: [role.id],
+    },
+    adminId
+  );
+}
 
   async updateUser(id: number, data: UpdateUserDTO, adminId: number) {
     return this.adminRepository.update(id, data, adminId); // updatedById

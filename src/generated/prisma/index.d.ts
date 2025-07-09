@@ -149,11 +149,6 @@ export type WorkLog = $Result.DefaultSelection<Prisma.$WorkLogPayload>
  */
 export type InspectionReport = $Result.DefaultSelection<Prisma.$InspectionReportPayload>
 /**
- * Model ProposedService
- * 
- */
-export type ProposedService = $Result.DefaultSelection<Prisma.$ProposedServicePayload>
-/**
  * Model ServiceItem
  * 
  */
@@ -168,6 +163,16 @@ export type ServiceRequest = $Result.DefaultSelection<Prisma.$ServiceRequestPayl
  * 
  */
 export type Service_ServiceItems = $Result.DefaultSelection<Prisma.$Service_ServiceItemsPayload>
+/**
+ * Model Proposal
+ * 
+ */
+export type Proposal = $Result.DefaultSelection<Prisma.$ProposalPayload>
+/**
+ * Model ProposalItem
+ * 
+ */
+export type ProposalItem = $Result.DefaultSelection<Prisma.$ProposalItemPayload>
 
 /**
  * Enums
@@ -297,7 +302,8 @@ export type InspectionStatus = (typeof InspectionStatus)[keyof typeof Inspection
 export const RequestStatus: {
   PENDING: 'PENDING',
   IN_PROGRESS: 'IN_PROGRESS',
-  ESTIMATED: 'ESTIMATED'
+  ESTIMATED: 'ESTIMATED',
+  CANCELLED: 'CANCELLED'
 };
 
 export type RequestStatus = (typeof RequestStatus)[keyof typeof RequestStatus]
@@ -311,6 +317,15 @@ export const Unit: {
 };
 
 export type Unit = (typeof Unit)[keyof typeof Unit]
+
+
+export const ServiceStatus: {
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  ACCEPTED: 'ACCEPTED'
+};
+
+export type ServiceStatus = (typeof ServiceStatus)[keyof typeof ServiceStatus]
 
 }
 
@@ -369,6 +384,10 @@ export const RequestStatus: typeof $Enums.RequestStatus
 export type Unit = $Enums.Unit
 
 export const Unit: typeof $Enums.Unit
+
+export type ServiceStatus = $Enums.ServiceStatus
+
+export const ServiceStatus: typeof $Enums.ServiceStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -766,16 +785,6 @@ export class PrismaClient<
   get inspectionReport(): Prisma.InspectionReportDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.proposedService`: Exposes CRUD operations for the **ProposedService** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more ProposedServices
-    * const proposedServices = await prisma.proposedService.findMany()
-    * ```
-    */
-  get proposedService(): Prisma.ProposedServiceDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.serviceItem`: Exposes CRUD operations for the **ServiceItem** model.
     * Example usage:
     * ```ts
@@ -804,6 +813,26 @@ export class PrismaClient<
     * ```
     */
   get service_ServiceItems(): Prisma.Service_ServiceItemsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.proposal`: Exposes CRUD operations for the **Proposal** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Proposals
+    * const proposals = await prisma.proposal.findMany()
+    * ```
+    */
+  get proposal(): Prisma.ProposalDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.proposalItem`: Exposes CRUD operations for the **ProposalItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProposalItems
+    * const proposalItems = await prisma.proposalItem.findMany()
+    * ```
+    */
+  get proposalItem(): Prisma.ProposalItemDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1271,10 +1300,11 @@ export namespace Prisma {
     VerificationCode: 'VerificationCode',
     WorkLog: 'WorkLog',
     InspectionReport: 'InspectionReport',
-    ProposedService: 'ProposedService',
     ServiceItem: 'ServiceItem',
     ServiceRequest: 'ServiceRequest',
-    Service_ServiceItems: 'Service_ServiceItems'
+    Service_ServiceItems: 'Service_ServiceItems',
+    Proposal: 'Proposal',
+    ProposalItem: 'ProposalItem'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1293,7 +1323,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "booking" | "category" | "categoryTranslation" | "chatMessage" | "customerProfile" | "device" | "language" | "notification" | "packageRecommendation" | "paymentTransaction" | "permission" | "recurringBooking" | "refreshToken" | "review" | "rewardPoint" | "role" | "service" | "serviceProvider" | "serviceProviderTranslation" | "serviceTranslation" | "staff" | "staffCategory" | "transaction" | "user" | "verificationCode" | "workLog" | "inspectionReport" | "proposedService" | "serviceItem" | "serviceRequest" | "service_ServiceItems"
+      modelProps: "booking" | "category" | "categoryTranslation" | "chatMessage" | "customerProfile" | "device" | "language" | "notification" | "packageRecommendation" | "paymentTransaction" | "permission" | "recurringBooking" | "refreshToken" | "review" | "rewardPoint" | "role" | "service" | "serviceProvider" | "serviceProviderTranslation" | "serviceTranslation" | "staff" | "staffCategory" | "transaction" | "user" | "verificationCode" | "workLog" | "inspectionReport" | "serviceItem" | "serviceRequest" | "service_ServiceItems" | "proposal" | "proposalItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3295,80 +3325,6 @@ export namespace Prisma {
           }
         }
       }
-      ProposedService: {
-        payload: Prisma.$ProposedServicePayload<ExtArgs>
-        fields: Prisma.ProposedServiceFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.ProposedServiceFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProposedServicePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.ProposedServiceFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProposedServicePayload>
-          }
-          findFirst: {
-            args: Prisma.ProposedServiceFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProposedServicePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.ProposedServiceFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProposedServicePayload>
-          }
-          findMany: {
-            args: Prisma.ProposedServiceFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProposedServicePayload>[]
-          }
-          create: {
-            args: Prisma.ProposedServiceCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProposedServicePayload>
-          }
-          createMany: {
-            args: Prisma.ProposedServiceCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.ProposedServiceCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProposedServicePayload>[]
-          }
-          delete: {
-            args: Prisma.ProposedServiceDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProposedServicePayload>
-          }
-          update: {
-            args: Prisma.ProposedServiceUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProposedServicePayload>
-          }
-          deleteMany: {
-            args: Prisma.ProposedServiceDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.ProposedServiceUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.ProposedServiceUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProposedServicePayload>[]
-          }
-          upsert: {
-            args: Prisma.ProposedServiceUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ProposedServicePayload>
-          }
-          aggregate: {
-            args: Prisma.ProposedServiceAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateProposedService>
-          }
-          groupBy: {
-            args: Prisma.ProposedServiceGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ProposedServiceGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.ProposedServiceCountArgs<ExtArgs>
-            result: $Utils.Optional<ProposedServiceCountAggregateOutputType> | number
-          }
-        }
-      }
       ServiceItem: {
         payload: Prisma.$ServiceItemPayload<ExtArgs>
         fields: Prisma.ServiceItemFieldRefs
@@ -3591,6 +3547,154 @@ export namespace Prisma {
           }
         }
       }
+      Proposal: {
+        payload: Prisma.$ProposalPayload<ExtArgs>
+        fields: Prisma.ProposalFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProposalFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProposalFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalPayload>
+          }
+          findFirst: {
+            args: Prisma.ProposalFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProposalFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalPayload>
+          }
+          findMany: {
+            args: Prisma.ProposalFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalPayload>[]
+          }
+          create: {
+            args: Prisma.ProposalCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalPayload>
+          }
+          createMany: {
+            args: Prisma.ProposalCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProposalCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalPayload>[]
+          }
+          delete: {
+            args: Prisma.ProposalDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalPayload>
+          }
+          update: {
+            args: Prisma.ProposalUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProposalDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProposalUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProposalUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProposalUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalPayload>
+          }
+          aggregate: {
+            args: Prisma.ProposalAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProposal>
+          }
+          groupBy: {
+            args: Prisma.ProposalGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProposalGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProposalCountArgs<ExtArgs>
+            result: $Utils.Optional<ProposalCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProposalItem: {
+        payload: Prisma.$ProposalItemPayload<ExtArgs>
+        fields: Prisma.ProposalItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProposalItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProposalItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalItemPayload>
+          }
+          findFirst: {
+            args: Prisma.ProposalItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProposalItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalItemPayload>
+          }
+          findMany: {
+            args: Prisma.ProposalItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalItemPayload>[]
+          }
+          create: {
+            args: Prisma.ProposalItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalItemPayload>
+          }
+          createMany: {
+            args: Prisma.ProposalItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProposalItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalItemPayload>[]
+          }
+          delete: {
+            args: Prisma.ProposalItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalItemPayload>
+          }
+          update: {
+            args: Prisma.ProposalItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProposalItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProposalItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProposalItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProposalItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProposalItemPayload>
+          }
+          aggregate: {
+            args: Prisma.ProposalItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProposalItem>
+          }
+          groupBy: {
+            args: Prisma.ProposalItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProposalItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProposalItemCountArgs<ExtArgs>
+            result: $Utils.Optional<ProposalItemCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3702,10 +3806,11 @@ export namespace Prisma {
     verificationCode?: VerificationCodeOmit
     workLog?: WorkLogOmit
     inspectionReport?: InspectionReportOmit
-    proposedService?: ProposedServiceOmit
     serviceItem?: ServiceItemOmit
     serviceRequest?: ServiceRequestOmit
     service_ServiceItems?: Service_ServiceItemsOmit
+    proposal?: ProposalOmit
+    proposalItem?: ProposalItemOmit
   }
 
   /* Types for Logging */
@@ -3800,12 +3905,10 @@ export namespace Prisma {
    */
 
   export type BookingCountOutputType = {
-    ProposedService: number
     WorkLog: number
   }
 
   export type BookingCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    ProposedService?: boolean | BookingCountOutputTypeCountProposedServiceArgs
     WorkLog?: boolean | BookingCountOutputTypeCountWorkLogArgs
   }
 
@@ -3818,13 +3921,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the BookingCountOutputType
      */
     select?: BookingCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * BookingCountOutputType without action
-   */
-  export type BookingCountOutputTypeCountProposedServiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ProposedServiceWhereInput
   }
 
   /**
@@ -4143,7 +4239,7 @@ export namespace Prisma {
    */
 
   export type ServiceCountOutputType = {
-    ProposedService: number
+    ProposalItem: number
     RecurringBooking: number
     Review: number
     ServiceTranslation: number
@@ -4151,7 +4247,7 @@ export namespace Prisma {
   }
 
   export type ServiceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    ProposedService?: boolean | ServiceCountOutputTypeCountProposedServiceArgs
+    ProposalItem?: boolean | ServiceCountOutputTypeCountProposalItemArgs
     RecurringBooking?: boolean | ServiceCountOutputTypeCountRecurringBookingArgs
     Review?: boolean | ServiceCountOutputTypeCountReviewArgs
     ServiceTranslation?: boolean | ServiceCountOutputTypeCountServiceTranslationArgs
@@ -4172,8 +4268,8 @@ export namespace Prisma {
   /**
    * ServiceCountOutputType without action
    */
-  export type ServiceCountOutputTypeCountProposedServiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ProposedServiceWhereInput
+  export type ServiceCountOutputTypeCountProposalItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProposalItemWhereInput
   }
 
   /**
@@ -4286,6 +4382,7 @@ export namespace Prisma {
    */
 
   export type StaffCountOutputType = {
+    Booking_Booking_staffIdToStaff: number
     InspectionReport: number
     Review: number
     StaffCategory: number
@@ -4293,6 +4390,7 @@ export namespace Prisma {
   }
 
   export type StaffCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Booking_Booking_staffIdToStaff?: boolean | StaffCountOutputTypeCountBooking_Booking_staffIdToStaffArgs
     InspectionReport?: boolean | StaffCountOutputTypeCountInspectionReportArgs
     Review?: boolean | StaffCountOutputTypeCountReviewArgs
     StaffCategory?: boolean | StaffCountOutputTypeCountStaffCategoryArgs
@@ -4308,6 +4406,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the StaffCountOutputType
      */
     select?: StaffCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * StaffCountOutputType without action
+   */
+  export type StaffCountOutputTypeCountBooking_Booking_staffIdToStaffArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: BookingWhereInput
   }
 
   /**
@@ -4600,6 +4705,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type ProposalCountOutputType
+   */
+
+  export type ProposalCountOutputType = {
+    ProposalItem: number
+  }
+
+  export type ProposalCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ProposalItem?: boolean | ProposalCountOutputTypeCountProposalItemArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ProposalCountOutputType without action
+   */
+  export type ProposalCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalCountOutputType
+     */
+    select?: ProposalCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProposalCountOutputType without action
+   */
+  export type ProposalCountOutputTypeCountProposalItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProposalItemWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -4854,7 +4990,7 @@ export namespace Prisma {
     ServiceRequest?: boolean | Booking$ServiceRequestArgs<ExtArgs>
     Staff_Booking_staffIdToStaff?: boolean | Booking$Staff_Booking_staffIdToStaffArgs<ExtArgs>
     InspectionReport?: boolean | Booking$InspectionReportArgs<ExtArgs>
-    ProposedService?: boolean | Booking$ProposedServiceArgs<ExtArgs>
+    Proposal?: boolean | Booking$ProposalArgs<ExtArgs>
     Transaction?: boolean | Booking$TransactionArgs<ExtArgs>
     WorkLog?: boolean | Booking$WorkLogArgs<ExtArgs>
     _count?: boolean | BookingCountOutputTypeDefaultArgs<ExtArgs>
@@ -4911,7 +5047,7 @@ export namespace Prisma {
     ServiceRequest?: boolean | Booking$ServiceRequestArgs<ExtArgs>
     Staff_Booking_staffIdToStaff?: boolean | Booking$Staff_Booking_staffIdToStaffArgs<ExtArgs>
     InspectionReport?: boolean | Booking$InspectionReportArgs<ExtArgs>
-    ProposedService?: boolean | Booking$ProposedServiceArgs<ExtArgs>
+    Proposal?: boolean | Booking$ProposalArgs<ExtArgs>
     Transaction?: boolean | Booking$TransactionArgs<ExtArgs>
     WorkLog?: boolean | Booking$WorkLogArgs<ExtArgs>
     _count?: boolean | BookingCountOutputTypeDefaultArgs<ExtArgs>
@@ -4937,7 +5073,7 @@ export namespace Prisma {
       ServiceRequest: Prisma.$ServiceRequestPayload<ExtArgs> | null
       Staff_Booking_staffIdToStaff: Prisma.$StaffPayload<ExtArgs> | null
       InspectionReport: Prisma.$InspectionReportPayload<ExtArgs> | null
-      ProposedService: Prisma.$ProposedServicePayload<ExtArgs>[]
+      Proposal: Prisma.$ProposalPayload<ExtArgs> | null
       Transaction: Prisma.$TransactionPayload<ExtArgs> | null
       WorkLog: Prisma.$WorkLogPayload<ExtArgs>[]
     }
@@ -5350,7 +5486,7 @@ export namespace Prisma {
     ServiceRequest<T extends Booking$ServiceRequestArgs<ExtArgs> = {}>(args?: Subset<T, Booking$ServiceRequestArgs<ExtArgs>>): Prisma__ServiceRequestClient<$Result.GetResult<Prisma.$ServiceRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     Staff_Booking_staffIdToStaff<T extends Booking$Staff_Booking_staffIdToStaffArgs<ExtArgs> = {}>(args?: Subset<T, Booking$Staff_Booking_staffIdToStaffArgs<ExtArgs>>): Prisma__StaffClient<$Result.GetResult<Prisma.$StaffPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     InspectionReport<T extends Booking$InspectionReportArgs<ExtArgs> = {}>(args?: Subset<T, Booking$InspectionReportArgs<ExtArgs>>): Prisma__InspectionReportClient<$Result.GetResult<Prisma.$InspectionReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    ProposedService<T extends Booking$ProposedServiceArgs<ExtArgs> = {}>(args?: Subset<T, Booking$ProposedServiceArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    Proposal<T extends Booking$ProposalArgs<ExtArgs> = {}>(args?: Subset<T, Booking$ProposalArgs<ExtArgs>>): Prisma__ProposalClient<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     Transaction<T extends Booking$TransactionArgs<ExtArgs> = {}>(args?: Subset<T, Booking$TransactionArgs<ExtArgs>>): Prisma__TransactionClient<$Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     WorkLog<T extends Booking$WorkLogArgs<ExtArgs> = {}>(args?: Subset<T, Booking$WorkLogArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -5844,27 +5980,22 @@ export namespace Prisma {
   }
 
   /**
-   * Booking.ProposedService
+   * Booking.Proposal
    */
-  export type Booking$ProposedServiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Booking$ProposalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ProposedService
+     * Select specific fields to fetch from the Proposal
      */
-    select?: ProposedServiceSelect<ExtArgs> | null
+    select?: ProposalSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ProposedService
+     * Omit specific fields from the Proposal
      */
-    omit?: ProposedServiceOmit<ExtArgs> | null
+    omit?: ProposalOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ProposedServiceInclude<ExtArgs> | null
-    where?: ProposedServiceWhereInput
-    orderBy?: ProposedServiceOrderByWithRelationInput | ProposedServiceOrderByWithRelationInput[]
-    cursor?: ProposedServiceWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ProposedServiceScalarFieldEnum | ProposedServiceScalarFieldEnum[]
+    include?: ProposalInclude<ExtArgs> | null
+    where?: ProposalWhereInput
   }
 
   /**
@@ -23863,6 +23994,7 @@ export namespace Prisma {
     description: string | null
     categoryId: number | null
     unit: $Enums.Unit | null
+    status: $Enums.ServiceStatus | null
   }
 
   export type ServiceMaxAggregateOutputType = {
@@ -23882,6 +24014,7 @@ export namespace Prisma {
     description: string | null
     categoryId: number | null
     unit: $Enums.Unit | null
+    status: $Enums.ServiceStatus | null
   }
 
   export type ServiceCountAggregateOutputType = {
@@ -23902,6 +24035,7 @@ export namespace Prisma {
     description: number
     categoryId: number
     unit: number
+    status: number
     _all: number
   }
 
@@ -23947,6 +24081,7 @@ export namespace Prisma {
     description?: true
     categoryId?: true
     unit?: true
+    status?: true
   }
 
   export type ServiceMaxAggregateInputType = {
@@ -23966,6 +24101,7 @@ export namespace Prisma {
     description?: true
     categoryId?: true
     unit?: true
+    status?: true
   }
 
   export type ServiceCountAggregateInputType = {
@@ -23986,6 +24122,7 @@ export namespace Prisma {
     description?: true
     categoryId?: true
     unit?: true
+    status?: true
     _all?: true
   }
 
@@ -24093,6 +24230,7 @@ export namespace Prisma {
     description: string
     categoryId: number
     unit: $Enums.Unit
+    status: $Enums.ServiceStatus
     _count: ServiceCountAggregateOutputType | null
     _avg: ServiceAvgAggregateOutputType | null
     _sum: ServiceSumAggregateOutputType | null
@@ -24132,7 +24270,8 @@ export namespace Prisma {
     description?: boolean
     categoryId?: boolean
     unit?: boolean
-    ProposedService?: boolean | Service$ProposedServiceArgs<ExtArgs>
+    status?: boolean
+    ProposalItem?: boolean | Service$ProposalItemArgs<ExtArgs>
     RecurringBooking?: boolean | Service$RecurringBookingArgs<ExtArgs>
     Review?: boolean | Service$ReviewArgs<ExtArgs>
     Category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -24163,6 +24302,7 @@ export namespace Prisma {
     description?: boolean
     categoryId?: boolean
     unit?: boolean
+    status?: boolean
     Category?: boolean | CategoryDefaultArgs<ExtArgs>
     User_Service_createdByIdToUser?: boolean | Service$User_Service_createdByIdToUserArgs<ExtArgs>
     User_Service_deletedByIdToUser?: boolean | Service$User_Service_deletedByIdToUserArgs<ExtArgs>
@@ -24188,6 +24328,7 @@ export namespace Prisma {
     description?: boolean
     categoryId?: boolean
     unit?: boolean
+    status?: boolean
     Category?: boolean | CategoryDefaultArgs<ExtArgs>
     User_Service_createdByIdToUser?: boolean | Service$User_Service_createdByIdToUserArgs<ExtArgs>
     User_Service_deletedByIdToUser?: boolean | Service$User_Service_deletedByIdToUserArgs<ExtArgs>
@@ -24213,11 +24354,12 @@ export namespace Prisma {
     description?: boolean
     categoryId?: boolean
     unit?: boolean
+    status?: boolean
   }
 
-  export type ServiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "basePrice" | "virtualPrice" | "images" | "durationMinutes" | "providerId" | "createdById" | "updatedById" | "deletedById" | "deletedAt" | "createdAt" | "updatedAt" | "name" | "publishedAt" | "description" | "categoryId" | "unit", ExtArgs["result"]["service"]>
+  export type ServiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "basePrice" | "virtualPrice" | "images" | "durationMinutes" | "providerId" | "createdById" | "updatedById" | "deletedById" | "deletedAt" | "createdAt" | "updatedAt" | "name" | "publishedAt" | "description" | "categoryId" | "unit" | "status", ExtArgs["result"]["service"]>
   export type ServiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    ProposedService?: boolean | Service$ProposedServiceArgs<ExtArgs>
+    ProposalItem?: boolean | Service$ProposalItemArgs<ExtArgs>
     RecurringBooking?: boolean | Service$RecurringBookingArgs<ExtArgs>
     Review?: boolean | Service$ReviewArgs<ExtArgs>
     Category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -24247,7 +24389,7 @@ export namespace Prisma {
   export type $ServicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Service"
     objects: {
-      ProposedService: Prisma.$ProposedServicePayload<ExtArgs>[]
+      ProposalItem: Prisma.$ProposalItemPayload<ExtArgs>[]
       RecurringBooking: Prisma.$RecurringBookingPayload<ExtArgs>[]
       Review: Prisma.$ReviewPayload<ExtArgs>[]
       Category: Prisma.$CategoryPayload<ExtArgs>
@@ -24276,6 +24418,7 @@ export namespace Prisma {
       description: string
       categoryId: number
       unit: $Enums.Unit
+      status: $Enums.ServiceStatus
     }, ExtArgs["result"]["service"]>
     composites: {}
   }
@@ -24670,7 +24813,7 @@ export namespace Prisma {
    */
   export interface Prisma__ServiceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    ProposedService<T extends Service$ProposedServiceArgs<ExtArgs> = {}>(args?: Subset<T, Service$ProposedServiceArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    ProposalItem<T extends Service$ProposalItemArgs<ExtArgs> = {}>(args?: Subset<T, Service$ProposalItemArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     RecurringBooking<T extends Service$RecurringBookingArgs<ExtArgs> = {}>(args?: Subset<T, Service$RecurringBookingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RecurringBookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Review<T extends Service$ReviewArgs<ExtArgs> = {}>(args?: Subset<T, Service$ReviewArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Category<T extends CategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoryDefaultArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -24726,6 +24869,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Service", 'String'>
     readonly categoryId: FieldRef<"Service", 'Int'>
     readonly unit: FieldRef<"Service", 'Unit'>
+    readonly status: FieldRef<"Service", 'ServiceStatus'>
   }
     
 
@@ -25122,27 +25266,27 @@ export namespace Prisma {
   }
 
   /**
-   * Service.ProposedService
+   * Service.ProposalItem
    */
-  export type Service$ProposedServiceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Service$ProposalItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the ProposedService
+     * Select specific fields to fetch from the ProposalItem
      */
-    select?: ProposedServiceSelect<ExtArgs> | null
+    select?: ProposalItemSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the ProposedService
+     * Omit specific fields from the ProposalItem
      */
-    omit?: ProposedServiceOmit<ExtArgs> | null
+    omit?: ProposalItemOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: ProposedServiceInclude<ExtArgs> | null
-    where?: ProposedServiceWhereInput
-    orderBy?: ProposedServiceOrderByWithRelationInput | ProposedServiceOrderByWithRelationInput[]
-    cursor?: ProposedServiceWhereUniqueInput
+    include?: ProposalItemInclude<ExtArgs> | null
+    where?: ProposalItemWhereInput
+    orderBy?: ProposalItemOrderByWithRelationInput | ProposalItemOrderByWithRelationInput[]
+    cursor?: ProposalItemWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ProposedServiceScalarFieldEnum | ProposedServiceScalarFieldEnum[]
+    distinct?: ProposalItemScalarFieldEnum | ProposalItemScalarFieldEnum[]
   }
 
   /**
@@ -29295,7 +29439,7 @@ export namespace Prisma {
   export type $StaffPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Staff"
     objects: {
-      Booking_Booking_staffIdToStaff: Prisma.$BookingPayload<ExtArgs> | null
+      Booking_Booking_staffIdToStaff: Prisma.$BookingPayload<ExtArgs>[]
       InspectionReport: Prisma.$InspectionReportPayload<ExtArgs>[]
       Review: Prisma.$ReviewPayload<ExtArgs>[]
       ServiceProvider: Prisma.$ServiceProviderPayload<ExtArgs>
@@ -29704,7 +29848,7 @@ export namespace Prisma {
    */
   export interface Prisma__StaffClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    Booking_Booking_staffIdToStaff<T extends Staff$Booking_Booking_staffIdToStaffArgs<ExtArgs> = {}>(args?: Subset<T, Staff$Booking_Booking_staffIdToStaffArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    Booking_Booking_staffIdToStaff<T extends Staff$Booking_Booking_staffIdToStaffArgs<ExtArgs> = {}>(args?: Subset<T, Staff$Booking_Booking_staffIdToStaffArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     InspectionReport<T extends Staff$InspectionReportArgs<ExtArgs> = {}>(args?: Subset<T, Staff$InspectionReportArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InspectionReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Review<T extends Staff$ReviewArgs<ExtArgs> = {}>(args?: Subset<T, Staff$ReviewArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ServiceProvider<T extends ServiceProviderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceProviderDefaultArgs<ExtArgs>>): Prisma__ServiceProviderClient<$Result.GetResult<Prisma.$ServiceProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -30158,6 +30302,11 @@ export namespace Prisma {
      */
     include?: BookingInclude<ExtArgs> | null
     where?: BookingWhereInput
+    orderBy?: BookingOrderByWithRelationInput | BookingOrderByWithRelationInput[]
+    cursor?: BookingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BookingScalarFieldEnum | BookingScalarFieldEnum[]
   }
 
   /**
@@ -37876,1148 +38025,6 @@ export namespace Prisma {
 
 
   /**
-   * Model ProposedService
-   */
-
-  export type AggregateProposedService = {
-    _count: ProposedServiceCountAggregateOutputType | null
-    _avg: ProposedServiceAvgAggregateOutputType | null
-    _sum: ProposedServiceSumAggregateOutputType | null
-    _min: ProposedServiceMinAggregateOutputType | null
-    _max: ProposedServiceMaxAggregateOutputType | null
-  }
-
-  export type ProposedServiceAvgAggregateOutputType = {
-    id: number | null
-    bookingId: number | null
-    serviceId: number | null
-    quantity: number | null
-    price: number | null
-  }
-
-  export type ProposedServiceSumAggregateOutputType = {
-    id: number | null
-    bookingId: number | null
-    serviceId: number | null
-    quantity: number | null
-    price: number | null
-  }
-
-  export type ProposedServiceMinAggregateOutputType = {
-    id: number | null
-    bookingId: number | null
-    serviceId: number | null
-    quantity: number | null
-    price: number | null
-    notes: string | null
-    createdAt: Date | null
-  }
-
-  export type ProposedServiceMaxAggregateOutputType = {
-    id: number | null
-    bookingId: number | null
-    serviceId: number | null
-    quantity: number | null
-    price: number | null
-    notes: string | null
-    createdAt: Date | null
-  }
-
-  export type ProposedServiceCountAggregateOutputType = {
-    id: number
-    bookingId: number
-    serviceId: number
-    quantity: number
-    price: number
-    notes: number
-    createdAt: number
-    _all: number
-  }
-
-
-  export type ProposedServiceAvgAggregateInputType = {
-    id?: true
-    bookingId?: true
-    serviceId?: true
-    quantity?: true
-    price?: true
-  }
-
-  export type ProposedServiceSumAggregateInputType = {
-    id?: true
-    bookingId?: true
-    serviceId?: true
-    quantity?: true
-    price?: true
-  }
-
-  export type ProposedServiceMinAggregateInputType = {
-    id?: true
-    bookingId?: true
-    serviceId?: true
-    quantity?: true
-    price?: true
-    notes?: true
-    createdAt?: true
-  }
-
-  export type ProposedServiceMaxAggregateInputType = {
-    id?: true
-    bookingId?: true
-    serviceId?: true
-    quantity?: true
-    price?: true
-    notes?: true
-    createdAt?: true
-  }
-
-  export type ProposedServiceCountAggregateInputType = {
-    id?: true
-    bookingId?: true
-    serviceId?: true
-    quantity?: true
-    price?: true
-    notes?: true
-    createdAt?: true
-    _all?: true
-  }
-
-  export type ProposedServiceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which ProposedService to aggregate.
-     */
-    where?: ProposedServiceWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ProposedServices to fetch.
-     */
-    orderBy?: ProposedServiceOrderByWithRelationInput | ProposedServiceOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: ProposedServiceWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ProposedServices from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ProposedServices.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned ProposedServices
-    **/
-    _count?: true | ProposedServiceCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: ProposedServiceAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: ProposedServiceSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: ProposedServiceMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: ProposedServiceMaxAggregateInputType
-  }
-
-  export type GetProposedServiceAggregateType<T extends ProposedServiceAggregateArgs> = {
-        [P in keyof T & keyof AggregateProposedService]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateProposedService[P]>
-      : GetScalarType<T[P], AggregateProposedService[P]>
-  }
-
-
-
-
-  export type ProposedServiceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ProposedServiceWhereInput
-    orderBy?: ProposedServiceOrderByWithAggregationInput | ProposedServiceOrderByWithAggregationInput[]
-    by: ProposedServiceScalarFieldEnum[] | ProposedServiceScalarFieldEnum
-    having?: ProposedServiceScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: ProposedServiceCountAggregateInputType | true
-    _avg?: ProposedServiceAvgAggregateInputType
-    _sum?: ProposedServiceSumAggregateInputType
-    _min?: ProposedServiceMinAggregateInputType
-    _max?: ProposedServiceMaxAggregateInputType
-  }
-
-  export type ProposedServiceGroupByOutputType = {
-    id: number
-    bookingId: number
-    serviceId: number
-    quantity: number
-    price: number
-    notes: string | null
-    createdAt: Date
-    _count: ProposedServiceCountAggregateOutputType | null
-    _avg: ProposedServiceAvgAggregateOutputType | null
-    _sum: ProposedServiceSumAggregateOutputType | null
-    _min: ProposedServiceMinAggregateOutputType | null
-    _max: ProposedServiceMaxAggregateOutputType | null
-  }
-
-  type GetProposedServiceGroupByPayload<T extends ProposedServiceGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<ProposedServiceGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof ProposedServiceGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], ProposedServiceGroupByOutputType[P]>
-            : GetScalarType<T[P], ProposedServiceGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type ProposedServiceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    bookingId?: boolean
-    serviceId?: boolean
-    quantity?: boolean
-    price?: boolean
-    notes?: boolean
-    createdAt?: boolean
-    Booking?: boolean | BookingDefaultArgs<ExtArgs>
-    Service?: boolean | ServiceDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["proposedService"]>
-
-  export type ProposedServiceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    bookingId?: boolean
-    serviceId?: boolean
-    quantity?: boolean
-    price?: boolean
-    notes?: boolean
-    createdAt?: boolean
-    Booking?: boolean | BookingDefaultArgs<ExtArgs>
-    Service?: boolean | ServiceDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["proposedService"]>
-
-  export type ProposedServiceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    bookingId?: boolean
-    serviceId?: boolean
-    quantity?: boolean
-    price?: boolean
-    notes?: boolean
-    createdAt?: boolean
-    Booking?: boolean | BookingDefaultArgs<ExtArgs>
-    Service?: boolean | ServiceDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["proposedService"]>
-
-  export type ProposedServiceSelectScalar = {
-    id?: boolean
-    bookingId?: boolean
-    serviceId?: boolean
-    quantity?: boolean
-    price?: boolean
-    notes?: boolean
-    createdAt?: boolean
-  }
-
-  export type ProposedServiceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingId" | "serviceId" | "quantity" | "price" | "notes" | "createdAt", ExtArgs["result"]["proposedService"]>
-  export type ProposedServiceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Booking?: boolean | BookingDefaultArgs<ExtArgs>
-    Service?: boolean | ServiceDefaultArgs<ExtArgs>
-  }
-  export type ProposedServiceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Booking?: boolean | BookingDefaultArgs<ExtArgs>
-    Service?: boolean | ServiceDefaultArgs<ExtArgs>
-  }
-  export type ProposedServiceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Booking?: boolean | BookingDefaultArgs<ExtArgs>
-    Service?: boolean | ServiceDefaultArgs<ExtArgs>
-  }
-
-  export type $ProposedServicePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "ProposedService"
-    objects: {
-      Booking: Prisma.$BookingPayload<ExtArgs>
-      Service: Prisma.$ServicePayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      bookingId: number
-      serviceId: number
-      quantity: number
-      price: number
-      notes: string | null
-      createdAt: Date
-    }, ExtArgs["result"]["proposedService"]>
-    composites: {}
-  }
-
-  type ProposedServiceGetPayload<S extends boolean | null | undefined | ProposedServiceDefaultArgs> = $Result.GetResult<Prisma.$ProposedServicePayload, S>
-
-  type ProposedServiceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ProposedServiceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ProposedServiceCountAggregateInputType | true
-    }
-
-  export interface ProposedServiceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProposedService'], meta: { name: 'ProposedService' } }
-    /**
-     * Find zero or one ProposedService that matches the filter.
-     * @param {ProposedServiceFindUniqueArgs} args - Arguments to find a ProposedService
-     * @example
-     * // Get one ProposedService
-     * const proposedService = await prisma.proposedService.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends ProposedServiceFindUniqueArgs>(args: SelectSubset<T, ProposedServiceFindUniqueArgs<ExtArgs>>): Prisma__ProposedServiceClient<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one ProposedService that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {ProposedServiceFindUniqueOrThrowArgs} args - Arguments to find a ProposedService
-     * @example
-     * // Get one ProposedService
-     * const proposedService = await prisma.proposedService.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends ProposedServiceFindUniqueOrThrowArgs>(args: SelectSubset<T, ProposedServiceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProposedServiceClient<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first ProposedService that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProposedServiceFindFirstArgs} args - Arguments to find a ProposedService
-     * @example
-     * // Get one ProposedService
-     * const proposedService = await prisma.proposedService.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends ProposedServiceFindFirstArgs>(args?: SelectSubset<T, ProposedServiceFindFirstArgs<ExtArgs>>): Prisma__ProposedServiceClient<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first ProposedService that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProposedServiceFindFirstOrThrowArgs} args - Arguments to find a ProposedService
-     * @example
-     * // Get one ProposedService
-     * const proposedService = await prisma.proposedService.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends ProposedServiceFindFirstOrThrowArgs>(args?: SelectSubset<T, ProposedServiceFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProposedServiceClient<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more ProposedServices that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProposedServiceFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all ProposedServices
-     * const proposedServices = await prisma.proposedService.findMany()
-     * 
-     * // Get first 10 ProposedServices
-     * const proposedServices = await prisma.proposedService.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const proposedServiceWithIdOnly = await prisma.proposedService.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends ProposedServiceFindManyArgs>(args?: SelectSubset<T, ProposedServiceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a ProposedService.
-     * @param {ProposedServiceCreateArgs} args - Arguments to create a ProposedService.
-     * @example
-     * // Create one ProposedService
-     * const ProposedService = await prisma.proposedService.create({
-     *   data: {
-     *     // ... data to create a ProposedService
-     *   }
-     * })
-     * 
-     */
-    create<T extends ProposedServiceCreateArgs>(args: SelectSubset<T, ProposedServiceCreateArgs<ExtArgs>>): Prisma__ProposedServiceClient<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many ProposedServices.
-     * @param {ProposedServiceCreateManyArgs} args - Arguments to create many ProposedServices.
-     * @example
-     * // Create many ProposedServices
-     * const proposedService = await prisma.proposedService.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends ProposedServiceCreateManyArgs>(args?: SelectSubset<T, ProposedServiceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many ProposedServices and returns the data saved in the database.
-     * @param {ProposedServiceCreateManyAndReturnArgs} args - Arguments to create many ProposedServices.
-     * @example
-     * // Create many ProposedServices
-     * const proposedService = await prisma.proposedService.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many ProposedServices and only return the `id`
-     * const proposedServiceWithIdOnly = await prisma.proposedService.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends ProposedServiceCreateManyAndReturnArgs>(args?: SelectSubset<T, ProposedServiceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a ProposedService.
-     * @param {ProposedServiceDeleteArgs} args - Arguments to delete one ProposedService.
-     * @example
-     * // Delete one ProposedService
-     * const ProposedService = await prisma.proposedService.delete({
-     *   where: {
-     *     // ... filter to delete one ProposedService
-     *   }
-     * })
-     * 
-     */
-    delete<T extends ProposedServiceDeleteArgs>(args: SelectSubset<T, ProposedServiceDeleteArgs<ExtArgs>>): Prisma__ProposedServiceClient<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one ProposedService.
-     * @param {ProposedServiceUpdateArgs} args - Arguments to update one ProposedService.
-     * @example
-     * // Update one ProposedService
-     * const proposedService = await prisma.proposedService.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends ProposedServiceUpdateArgs>(args: SelectSubset<T, ProposedServiceUpdateArgs<ExtArgs>>): Prisma__ProposedServiceClient<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more ProposedServices.
-     * @param {ProposedServiceDeleteManyArgs} args - Arguments to filter ProposedServices to delete.
-     * @example
-     * // Delete a few ProposedServices
-     * const { count } = await prisma.proposedService.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends ProposedServiceDeleteManyArgs>(args?: SelectSubset<T, ProposedServiceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more ProposedServices.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProposedServiceUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many ProposedServices
-     * const proposedService = await prisma.proposedService.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends ProposedServiceUpdateManyArgs>(args: SelectSubset<T, ProposedServiceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more ProposedServices and returns the data updated in the database.
-     * @param {ProposedServiceUpdateManyAndReturnArgs} args - Arguments to update many ProposedServices.
-     * @example
-     * // Update many ProposedServices
-     * const proposedService = await prisma.proposedService.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more ProposedServices and only return the `id`
-     * const proposedServiceWithIdOnly = await prisma.proposedService.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends ProposedServiceUpdateManyAndReturnArgs>(args: SelectSubset<T, ProposedServiceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one ProposedService.
-     * @param {ProposedServiceUpsertArgs} args - Arguments to update or create a ProposedService.
-     * @example
-     * // Update or create a ProposedService
-     * const proposedService = await prisma.proposedService.upsert({
-     *   create: {
-     *     // ... data to create a ProposedService
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the ProposedService we want to update
-     *   }
-     * })
-     */
-    upsert<T extends ProposedServiceUpsertArgs>(args: SelectSubset<T, ProposedServiceUpsertArgs<ExtArgs>>): Prisma__ProposedServiceClient<$Result.GetResult<Prisma.$ProposedServicePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of ProposedServices.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProposedServiceCountArgs} args - Arguments to filter ProposedServices to count.
-     * @example
-     * // Count the number of ProposedServices
-     * const count = await prisma.proposedService.count({
-     *   where: {
-     *     // ... the filter for the ProposedServices we want to count
-     *   }
-     * })
-    **/
-    count<T extends ProposedServiceCountArgs>(
-      args?: Subset<T, ProposedServiceCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], ProposedServiceCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a ProposedService.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProposedServiceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends ProposedServiceAggregateArgs>(args: Subset<T, ProposedServiceAggregateArgs>): Prisma.PrismaPromise<GetProposedServiceAggregateType<T>>
-
-    /**
-     * Group by ProposedService.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ProposedServiceGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends ProposedServiceGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ProposedServiceGroupByArgs['orderBy'] }
-        : { orderBy?: ProposedServiceGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, ProposedServiceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProposedServiceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the ProposedService model
-   */
-  readonly fields: ProposedServiceFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for ProposedService.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__ProposedServiceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    Booking<T extends BookingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BookingDefaultArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    Service<T extends ServiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceDefaultArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the ProposedService model
-   */
-  interface ProposedServiceFieldRefs {
-    readonly id: FieldRef<"ProposedService", 'Int'>
-    readonly bookingId: FieldRef<"ProposedService", 'Int'>
-    readonly serviceId: FieldRef<"ProposedService", 'Int'>
-    readonly quantity: FieldRef<"ProposedService", 'Int'>
-    readonly price: FieldRef<"ProposedService", 'Float'>
-    readonly notes: FieldRef<"ProposedService", 'String'>
-    readonly createdAt: FieldRef<"ProposedService", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * ProposedService findUnique
-   */
-  export type ProposedServiceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProposedService
-     */
-    select?: ProposedServiceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProposedService
-     */
-    omit?: ProposedServiceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProposedServiceInclude<ExtArgs> | null
-    /**
-     * Filter, which ProposedService to fetch.
-     */
-    where: ProposedServiceWhereUniqueInput
-  }
-
-  /**
-   * ProposedService findUniqueOrThrow
-   */
-  export type ProposedServiceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProposedService
-     */
-    select?: ProposedServiceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProposedService
-     */
-    omit?: ProposedServiceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProposedServiceInclude<ExtArgs> | null
-    /**
-     * Filter, which ProposedService to fetch.
-     */
-    where: ProposedServiceWhereUniqueInput
-  }
-
-  /**
-   * ProposedService findFirst
-   */
-  export type ProposedServiceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProposedService
-     */
-    select?: ProposedServiceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProposedService
-     */
-    omit?: ProposedServiceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProposedServiceInclude<ExtArgs> | null
-    /**
-     * Filter, which ProposedService to fetch.
-     */
-    where?: ProposedServiceWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ProposedServices to fetch.
-     */
-    orderBy?: ProposedServiceOrderByWithRelationInput | ProposedServiceOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for ProposedServices.
-     */
-    cursor?: ProposedServiceWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ProposedServices from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ProposedServices.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of ProposedServices.
-     */
-    distinct?: ProposedServiceScalarFieldEnum | ProposedServiceScalarFieldEnum[]
-  }
-
-  /**
-   * ProposedService findFirstOrThrow
-   */
-  export type ProposedServiceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProposedService
-     */
-    select?: ProposedServiceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProposedService
-     */
-    omit?: ProposedServiceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProposedServiceInclude<ExtArgs> | null
-    /**
-     * Filter, which ProposedService to fetch.
-     */
-    where?: ProposedServiceWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ProposedServices to fetch.
-     */
-    orderBy?: ProposedServiceOrderByWithRelationInput | ProposedServiceOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for ProposedServices.
-     */
-    cursor?: ProposedServiceWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ProposedServices from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ProposedServices.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of ProposedServices.
-     */
-    distinct?: ProposedServiceScalarFieldEnum | ProposedServiceScalarFieldEnum[]
-  }
-
-  /**
-   * ProposedService findMany
-   */
-  export type ProposedServiceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProposedService
-     */
-    select?: ProposedServiceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProposedService
-     */
-    omit?: ProposedServiceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProposedServiceInclude<ExtArgs> | null
-    /**
-     * Filter, which ProposedServices to fetch.
-     */
-    where?: ProposedServiceWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ProposedServices to fetch.
-     */
-    orderBy?: ProposedServiceOrderByWithRelationInput | ProposedServiceOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing ProposedServices.
-     */
-    cursor?: ProposedServiceWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ProposedServices from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ProposedServices.
-     */
-    skip?: number
-    distinct?: ProposedServiceScalarFieldEnum | ProposedServiceScalarFieldEnum[]
-  }
-
-  /**
-   * ProposedService create
-   */
-  export type ProposedServiceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProposedService
-     */
-    select?: ProposedServiceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProposedService
-     */
-    omit?: ProposedServiceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProposedServiceInclude<ExtArgs> | null
-    /**
-     * The data needed to create a ProposedService.
-     */
-    data: XOR<ProposedServiceCreateInput, ProposedServiceUncheckedCreateInput>
-  }
-
-  /**
-   * ProposedService createMany
-   */
-  export type ProposedServiceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many ProposedServices.
-     */
-    data: ProposedServiceCreateManyInput | ProposedServiceCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * ProposedService createManyAndReturn
-   */
-  export type ProposedServiceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProposedService
-     */
-    select?: ProposedServiceSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProposedService
-     */
-    omit?: ProposedServiceOmit<ExtArgs> | null
-    /**
-     * The data used to create many ProposedServices.
-     */
-    data: ProposedServiceCreateManyInput | ProposedServiceCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProposedServiceIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * ProposedService update
-   */
-  export type ProposedServiceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProposedService
-     */
-    select?: ProposedServiceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProposedService
-     */
-    omit?: ProposedServiceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProposedServiceInclude<ExtArgs> | null
-    /**
-     * The data needed to update a ProposedService.
-     */
-    data: XOR<ProposedServiceUpdateInput, ProposedServiceUncheckedUpdateInput>
-    /**
-     * Choose, which ProposedService to update.
-     */
-    where: ProposedServiceWhereUniqueInput
-  }
-
-  /**
-   * ProposedService updateMany
-   */
-  export type ProposedServiceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update ProposedServices.
-     */
-    data: XOR<ProposedServiceUpdateManyMutationInput, ProposedServiceUncheckedUpdateManyInput>
-    /**
-     * Filter which ProposedServices to update
-     */
-    where?: ProposedServiceWhereInput
-    /**
-     * Limit how many ProposedServices to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * ProposedService updateManyAndReturn
-   */
-  export type ProposedServiceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProposedService
-     */
-    select?: ProposedServiceSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProposedService
-     */
-    omit?: ProposedServiceOmit<ExtArgs> | null
-    /**
-     * The data used to update ProposedServices.
-     */
-    data: XOR<ProposedServiceUpdateManyMutationInput, ProposedServiceUncheckedUpdateManyInput>
-    /**
-     * Filter which ProposedServices to update
-     */
-    where?: ProposedServiceWhereInput
-    /**
-     * Limit how many ProposedServices to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProposedServiceIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * ProposedService upsert
-   */
-  export type ProposedServiceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProposedService
-     */
-    select?: ProposedServiceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProposedService
-     */
-    omit?: ProposedServiceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProposedServiceInclude<ExtArgs> | null
-    /**
-     * The filter to search for the ProposedService to update in case it exists.
-     */
-    where: ProposedServiceWhereUniqueInput
-    /**
-     * In case the ProposedService found by the `where` argument doesn't exist, create a new ProposedService with this data.
-     */
-    create: XOR<ProposedServiceCreateInput, ProposedServiceUncheckedCreateInput>
-    /**
-     * In case the ProposedService was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<ProposedServiceUpdateInput, ProposedServiceUncheckedUpdateInput>
-  }
-
-  /**
-   * ProposedService delete
-   */
-  export type ProposedServiceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProposedService
-     */
-    select?: ProposedServiceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProposedService
-     */
-    omit?: ProposedServiceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProposedServiceInclude<ExtArgs> | null
-    /**
-     * Filter which ProposedService to delete.
-     */
-    where: ProposedServiceWhereUniqueInput
-  }
-
-  /**
-   * ProposedService deleteMany
-   */
-  export type ProposedServiceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which ProposedServices to delete
-     */
-    where?: ProposedServiceWhereInput
-    /**
-     * Limit how many ProposedServices to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * ProposedService without action
-   */
-  export type ProposedServiceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProposedService
-     */
-    select?: ProposedServiceSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProposedService
-     */
-    omit?: ProposedServiceOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProposedServiceInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model ServiceItem
    */
 
@@ -42559,6 +41566,2248 @@ export namespace Prisma {
 
 
   /**
+   * Model Proposal
+   */
+
+  export type AggregateProposal = {
+    _count: ProposalCountAggregateOutputType | null
+    _avg: ProposalAvgAggregateOutputType | null
+    _sum: ProposalSumAggregateOutputType | null
+    _min: ProposalMinAggregateOutputType | null
+    _max: ProposalMaxAggregateOutputType | null
+  }
+
+  export type ProposalAvgAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+  }
+
+  export type ProposalSumAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+  }
+
+  export type ProposalMinAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    notes: string | null
+    createdAt: Date | null
+  }
+
+  export type ProposalMaxAggregateOutputType = {
+    id: number | null
+    bookingId: number | null
+    notes: string | null
+    createdAt: Date | null
+  }
+
+  export type ProposalCountAggregateOutputType = {
+    id: number
+    bookingId: number
+    notes: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ProposalAvgAggregateInputType = {
+    id?: true
+    bookingId?: true
+  }
+
+  export type ProposalSumAggregateInputType = {
+    id?: true
+    bookingId?: true
+  }
+
+  export type ProposalMinAggregateInputType = {
+    id?: true
+    bookingId?: true
+    notes?: true
+    createdAt?: true
+  }
+
+  export type ProposalMaxAggregateInputType = {
+    id?: true
+    bookingId?: true
+    notes?: true
+    createdAt?: true
+  }
+
+  export type ProposalCountAggregateInputType = {
+    id?: true
+    bookingId?: true
+    notes?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ProposalAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Proposal to aggregate.
+     */
+    where?: ProposalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Proposals to fetch.
+     */
+    orderBy?: ProposalOrderByWithRelationInput | ProposalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProposalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Proposals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Proposals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Proposals
+    **/
+    _count?: true | ProposalCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProposalAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProposalSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProposalMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProposalMaxAggregateInputType
+  }
+
+  export type GetProposalAggregateType<T extends ProposalAggregateArgs> = {
+        [P in keyof T & keyof AggregateProposal]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProposal[P]>
+      : GetScalarType<T[P], AggregateProposal[P]>
+  }
+
+
+
+
+  export type ProposalGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProposalWhereInput
+    orderBy?: ProposalOrderByWithAggregationInput | ProposalOrderByWithAggregationInput[]
+    by: ProposalScalarFieldEnum[] | ProposalScalarFieldEnum
+    having?: ProposalScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProposalCountAggregateInputType | true
+    _avg?: ProposalAvgAggregateInputType
+    _sum?: ProposalSumAggregateInputType
+    _min?: ProposalMinAggregateInputType
+    _max?: ProposalMaxAggregateInputType
+  }
+
+  export type ProposalGroupByOutputType = {
+    id: number
+    bookingId: number
+    notes: string | null
+    createdAt: Date
+    _count: ProposalCountAggregateOutputType | null
+    _avg: ProposalAvgAggregateOutputType | null
+    _sum: ProposalSumAggregateOutputType | null
+    _min: ProposalMinAggregateOutputType | null
+    _max: ProposalMaxAggregateOutputType | null
+  }
+
+  type GetProposalGroupByPayload<T extends ProposalGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProposalGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProposalGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProposalGroupByOutputType[P]>
+            : GetScalarType<T[P], ProposalGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProposalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    Booking?: boolean | BookingDefaultArgs<ExtArgs>
+    ProposalItem?: boolean | Proposal$ProposalItemArgs<ExtArgs>
+    _count?: boolean | ProposalCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proposal"]>
+
+  export type ProposalSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    Booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proposal"]>
+
+  export type ProposalSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    Booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proposal"]>
+
+  export type ProposalSelectScalar = {
+    id?: boolean
+    bookingId?: boolean
+    notes?: boolean
+    createdAt?: boolean
+  }
+
+  export type ProposalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingId" | "notes" | "createdAt", ExtArgs["result"]["proposal"]>
+  export type ProposalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Booking?: boolean | BookingDefaultArgs<ExtArgs>
+    ProposalItem?: boolean | Proposal$ProposalItemArgs<ExtArgs>
+    _count?: boolean | ProposalCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ProposalIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }
+  export type ProposalIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Booking?: boolean | BookingDefaultArgs<ExtArgs>
+  }
+
+  export type $ProposalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Proposal"
+    objects: {
+      Booking: Prisma.$BookingPayload<ExtArgs>
+      ProposalItem: Prisma.$ProposalItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      bookingId: number
+      notes: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["proposal"]>
+    composites: {}
+  }
+
+  type ProposalGetPayload<S extends boolean | null | undefined | ProposalDefaultArgs> = $Result.GetResult<Prisma.$ProposalPayload, S>
+
+  type ProposalCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProposalFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProposalCountAggregateInputType | true
+    }
+
+  export interface ProposalDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Proposal'], meta: { name: 'Proposal' } }
+    /**
+     * Find zero or one Proposal that matches the filter.
+     * @param {ProposalFindUniqueArgs} args - Arguments to find a Proposal
+     * @example
+     * // Get one Proposal
+     * const proposal = await prisma.proposal.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProposalFindUniqueArgs>(args: SelectSubset<T, ProposalFindUniqueArgs<ExtArgs>>): Prisma__ProposalClient<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Proposal that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProposalFindUniqueOrThrowArgs} args - Arguments to find a Proposal
+     * @example
+     * // Get one Proposal
+     * const proposal = await prisma.proposal.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProposalFindUniqueOrThrowArgs>(args: SelectSubset<T, ProposalFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProposalClient<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Proposal that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalFindFirstArgs} args - Arguments to find a Proposal
+     * @example
+     * // Get one Proposal
+     * const proposal = await prisma.proposal.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProposalFindFirstArgs>(args?: SelectSubset<T, ProposalFindFirstArgs<ExtArgs>>): Prisma__ProposalClient<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Proposal that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalFindFirstOrThrowArgs} args - Arguments to find a Proposal
+     * @example
+     * // Get one Proposal
+     * const proposal = await prisma.proposal.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProposalFindFirstOrThrowArgs>(args?: SelectSubset<T, ProposalFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProposalClient<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Proposals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Proposals
+     * const proposals = await prisma.proposal.findMany()
+     * 
+     * // Get first 10 Proposals
+     * const proposals = await prisma.proposal.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const proposalWithIdOnly = await prisma.proposal.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProposalFindManyArgs>(args?: SelectSubset<T, ProposalFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Proposal.
+     * @param {ProposalCreateArgs} args - Arguments to create a Proposal.
+     * @example
+     * // Create one Proposal
+     * const Proposal = await prisma.proposal.create({
+     *   data: {
+     *     // ... data to create a Proposal
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProposalCreateArgs>(args: SelectSubset<T, ProposalCreateArgs<ExtArgs>>): Prisma__ProposalClient<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Proposals.
+     * @param {ProposalCreateManyArgs} args - Arguments to create many Proposals.
+     * @example
+     * // Create many Proposals
+     * const proposal = await prisma.proposal.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProposalCreateManyArgs>(args?: SelectSubset<T, ProposalCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Proposals and returns the data saved in the database.
+     * @param {ProposalCreateManyAndReturnArgs} args - Arguments to create many Proposals.
+     * @example
+     * // Create many Proposals
+     * const proposal = await prisma.proposal.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Proposals and only return the `id`
+     * const proposalWithIdOnly = await prisma.proposal.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProposalCreateManyAndReturnArgs>(args?: SelectSubset<T, ProposalCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Proposal.
+     * @param {ProposalDeleteArgs} args - Arguments to delete one Proposal.
+     * @example
+     * // Delete one Proposal
+     * const Proposal = await prisma.proposal.delete({
+     *   where: {
+     *     // ... filter to delete one Proposal
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProposalDeleteArgs>(args: SelectSubset<T, ProposalDeleteArgs<ExtArgs>>): Prisma__ProposalClient<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Proposal.
+     * @param {ProposalUpdateArgs} args - Arguments to update one Proposal.
+     * @example
+     * // Update one Proposal
+     * const proposal = await prisma.proposal.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProposalUpdateArgs>(args: SelectSubset<T, ProposalUpdateArgs<ExtArgs>>): Prisma__ProposalClient<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Proposals.
+     * @param {ProposalDeleteManyArgs} args - Arguments to filter Proposals to delete.
+     * @example
+     * // Delete a few Proposals
+     * const { count } = await prisma.proposal.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProposalDeleteManyArgs>(args?: SelectSubset<T, ProposalDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Proposals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Proposals
+     * const proposal = await prisma.proposal.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProposalUpdateManyArgs>(args: SelectSubset<T, ProposalUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Proposals and returns the data updated in the database.
+     * @param {ProposalUpdateManyAndReturnArgs} args - Arguments to update many Proposals.
+     * @example
+     * // Update many Proposals
+     * const proposal = await prisma.proposal.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Proposals and only return the `id`
+     * const proposalWithIdOnly = await prisma.proposal.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProposalUpdateManyAndReturnArgs>(args: SelectSubset<T, ProposalUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Proposal.
+     * @param {ProposalUpsertArgs} args - Arguments to update or create a Proposal.
+     * @example
+     * // Update or create a Proposal
+     * const proposal = await prisma.proposal.upsert({
+     *   create: {
+     *     // ... data to create a Proposal
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Proposal we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProposalUpsertArgs>(args: SelectSubset<T, ProposalUpsertArgs<ExtArgs>>): Prisma__ProposalClient<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Proposals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalCountArgs} args - Arguments to filter Proposals to count.
+     * @example
+     * // Count the number of Proposals
+     * const count = await prisma.proposal.count({
+     *   where: {
+     *     // ... the filter for the Proposals we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProposalCountArgs>(
+      args?: Subset<T, ProposalCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProposalCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Proposal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProposalAggregateArgs>(args: Subset<T, ProposalAggregateArgs>): Prisma.PrismaPromise<GetProposalAggregateType<T>>
+
+    /**
+     * Group by Proposal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProposalGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProposalGroupByArgs['orderBy'] }
+        : { orderBy?: ProposalGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProposalGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProposalGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Proposal model
+   */
+  readonly fields: ProposalFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Proposal.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProposalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    Booking<T extends BookingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BookingDefaultArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    ProposalItem<T extends Proposal$ProposalItemArgs<ExtArgs> = {}>(args?: Subset<T, Proposal$ProposalItemArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Proposal model
+   */
+  interface ProposalFieldRefs {
+    readonly id: FieldRef<"Proposal", 'Int'>
+    readonly bookingId: FieldRef<"Proposal", 'Int'>
+    readonly notes: FieldRef<"Proposal", 'String'>
+    readonly createdAt: FieldRef<"Proposal", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Proposal findUnique
+   */
+  export type ProposalFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proposal
+     */
+    select?: ProposalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proposal
+     */
+    omit?: ProposalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalInclude<ExtArgs> | null
+    /**
+     * Filter, which Proposal to fetch.
+     */
+    where: ProposalWhereUniqueInput
+  }
+
+  /**
+   * Proposal findUniqueOrThrow
+   */
+  export type ProposalFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proposal
+     */
+    select?: ProposalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proposal
+     */
+    omit?: ProposalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalInclude<ExtArgs> | null
+    /**
+     * Filter, which Proposal to fetch.
+     */
+    where: ProposalWhereUniqueInput
+  }
+
+  /**
+   * Proposal findFirst
+   */
+  export type ProposalFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proposal
+     */
+    select?: ProposalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proposal
+     */
+    omit?: ProposalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalInclude<ExtArgs> | null
+    /**
+     * Filter, which Proposal to fetch.
+     */
+    where?: ProposalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Proposals to fetch.
+     */
+    orderBy?: ProposalOrderByWithRelationInput | ProposalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Proposals.
+     */
+    cursor?: ProposalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Proposals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Proposals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Proposals.
+     */
+    distinct?: ProposalScalarFieldEnum | ProposalScalarFieldEnum[]
+  }
+
+  /**
+   * Proposal findFirstOrThrow
+   */
+  export type ProposalFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proposal
+     */
+    select?: ProposalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proposal
+     */
+    omit?: ProposalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalInclude<ExtArgs> | null
+    /**
+     * Filter, which Proposal to fetch.
+     */
+    where?: ProposalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Proposals to fetch.
+     */
+    orderBy?: ProposalOrderByWithRelationInput | ProposalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Proposals.
+     */
+    cursor?: ProposalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Proposals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Proposals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Proposals.
+     */
+    distinct?: ProposalScalarFieldEnum | ProposalScalarFieldEnum[]
+  }
+
+  /**
+   * Proposal findMany
+   */
+  export type ProposalFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proposal
+     */
+    select?: ProposalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proposal
+     */
+    omit?: ProposalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalInclude<ExtArgs> | null
+    /**
+     * Filter, which Proposals to fetch.
+     */
+    where?: ProposalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Proposals to fetch.
+     */
+    orderBy?: ProposalOrderByWithRelationInput | ProposalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Proposals.
+     */
+    cursor?: ProposalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Proposals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Proposals.
+     */
+    skip?: number
+    distinct?: ProposalScalarFieldEnum | ProposalScalarFieldEnum[]
+  }
+
+  /**
+   * Proposal create
+   */
+  export type ProposalCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proposal
+     */
+    select?: ProposalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proposal
+     */
+    omit?: ProposalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Proposal.
+     */
+    data: XOR<ProposalCreateInput, ProposalUncheckedCreateInput>
+  }
+
+  /**
+   * Proposal createMany
+   */
+  export type ProposalCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Proposals.
+     */
+    data: ProposalCreateManyInput | ProposalCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Proposal createManyAndReturn
+   */
+  export type ProposalCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proposal
+     */
+    select?: ProposalSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proposal
+     */
+    omit?: ProposalOmit<ExtArgs> | null
+    /**
+     * The data used to create many Proposals.
+     */
+    data: ProposalCreateManyInput | ProposalCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Proposal update
+   */
+  export type ProposalUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proposal
+     */
+    select?: ProposalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proposal
+     */
+    omit?: ProposalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Proposal.
+     */
+    data: XOR<ProposalUpdateInput, ProposalUncheckedUpdateInput>
+    /**
+     * Choose, which Proposal to update.
+     */
+    where: ProposalWhereUniqueInput
+  }
+
+  /**
+   * Proposal updateMany
+   */
+  export type ProposalUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Proposals.
+     */
+    data: XOR<ProposalUpdateManyMutationInput, ProposalUncheckedUpdateManyInput>
+    /**
+     * Filter which Proposals to update
+     */
+    where?: ProposalWhereInput
+    /**
+     * Limit how many Proposals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Proposal updateManyAndReturn
+   */
+  export type ProposalUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proposal
+     */
+    select?: ProposalSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proposal
+     */
+    omit?: ProposalOmit<ExtArgs> | null
+    /**
+     * The data used to update Proposals.
+     */
+    data: XOR<ProposalUpdateManyMutationInput, ProposalUncheckedUpdateManyInput>
+    /**
+     * Filter which Proposals to update
+     */
+    where?: ProposalWhereInput
+    /**
+     * Limit how many Proposals to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Proposal upsert
+   */
+  export type ProposalUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proposal
+     */
+    select?: ProposalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proposal
+     */
+    omit?: ProposalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Proposal to update in case it exists.
+     */
+    where: ProposalWhereUniqueInput
+    /**
+     * In case the Proposal found by the `where` argument doesn't exist, create a new Proposal with this data.
+     */
+    create: XOR<ProposalCreateInput, ProposalUncheckedCreateInput>
+    /**
+     * In case the Proposal was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProposalUpdateInput, ProposalUncheckedUpdateInput>
+  }
+
+  /**
+   * Proposal delete
+   */
+  export type ProposalDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proposal
+     */
+    select?: ProposalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proposal
+     */
+    omit?: ProposalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalInclude<ExtArgs> | null
+    /**
+     * Filter which Proposal to delete.
+     */
+    where: ProposalWhereUniqueInput
+  }
+
+  /**
+   * Proposal deleteMany
+   */
+  export type ProposalDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Proposals to delete
+     */
+    where?: ProposalWhereInput
+    /**
+     * Limit how many Proposals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Proposal.ProposalItem
+   */
+  export type Proposal$ProposalItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemInclude<ExtArgs> | null
+    where?: ProposalItemWhereInput
+    orderBy?: ProposalItemOrderByWithRelationInput | ProposalItemOrderByWithRelationInput[]
+    cursor?: ProposalItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProposalItemScalarFieldEnum | ProposalItemScalarFieldEnum[]
+  }
+
+  /**
+   * Proposal without action
+   */
+  export type ProposalDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Proposal
+     */
+    select?: ProposalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Proposal
+     */
+    omit?: ProposalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ProposalItem
+   */
+
+  export type AggregateProposalItem = {
+    _count: ProposalItemCountAggregateOutputType | null
+    _avg: ProposalItemAvgAggregateOutputType | null
+    _sum: ProposalItemSumAggregateOutputType | null
+    _min: ProposalItemMinAggregateOutputType | null
+    _max: ProposalItemMaxAggregateOutputType | null
+  }
+
+  export type ProposalItemAvgAggregateOutputType = {
+    id: number | null
+    proposalId: number | null
+    serviceId: number | null
+    quantity: number | null
+    price: number | null
+  }
+
+  export type ProposalItemSumAggregateOutputType = {
+    id: number | null
+    proposalId: number | null
+    serviceId: number | null
+    quantity: number | null
+    price: number | null
+  }
+
+  export type ProposalItemMinAggregateOutputType = {
+    id: number | null
+    proposalId: number | null
+    serviceId: number | null
+    quantity: number | null
+    price: number | null
+    createdAt: Date | null
+  }
+
+  export type ProposalItemMaxAggregateOutputType = {
+    id: number | null
+    proposalId: number | null
+    serviceId: number | null
+    quantity: number | null
+    price: number | null
+    createdAt: Date | null
+  }
+
+  export type ProposalItemCountAggregateOutputType = {
+    id: number
+    proposalId: number
+    serviceId: number
+    quantity: number
+    price: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ProposalItemAvgAggregateInputType = {
+    id?: true
+    proposalId?: true
+    serviceId?: true
+    quantity?: true
+    price?: true
+  }
+
+  export type ProposalItemSumAggregateInputType = {
+    id?: true
+    proposalId?: true
+    serviceId?: true
+    quantity?: true
+    price?: true
+  }
+
+  export type ProposalItemMinAggregateInputType = {
+    id?: true
+    proposalId?: true
+    serviceId?: true
+    quantity?: true
+    price?: true
+    createdAt?: true
+  }
+
+  export type ProposalItemMaxAggregateInputType = {
+    id?: true
+    proposalId?: true
+    serviceId?: true
+    quantity?: true
+    price?: true
+    createdAt?: true
+  }
+
+  export type ProposalItemCountAggregateInputType = {
+    id?: true
+    proposalId?: true
+    serviceId?: true
+    quantity?: true
+    price?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ProposalItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProposalItem to aggregate.
+     */
+    where?: ProposalItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProposalItems to fetch.
+     */
+    orderBy?: ProposalItemOrderByWithRelationInput | ProposalItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProposalItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProposalItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProposalItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProposalItems
+    **/
+    _count?: true | ProposalItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProposalItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProposalItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProposalItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProposalItemMaxAggregateInputType
+  }
+
+  export type GetProposalItemAggregateType<T extends ProposalItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateProposalItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProposalItem[P]>
+      : GetScalarType<T[P], AggregateProposalItem[P]>
+  }
+
+
+
+
+  export type ProposalItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProposalItemWhereInput
+    orderBy?: ProposalItemOrderByWithAggregationInput | ProposalItemOrderByWithAggregationInput[]
+    by: ProposalItemScalarFieldEnum[] | ProposalItemScalarFieldEnum
+    having?: ProposalItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProposalItemCountAggregateInputType | true
+    _avg?: ProposalItemAvgAggregateInputType
+    _sum?: ProposalItemSumAggregateInputType
+    _min?: ProposalItemMinAggregateInputType
+    _max?: ProposalItemMaxAggregateInputType
+  }
+
+  export type ProposalItemGroupByOutputType = {
+    id: number
+    proposalId: number
+    serviceId: number
+    quantity: number
+    price: number
+    createdAt: Date
+    _count: ProposalItemCountAggregateOutputType | null
+    _avg: ProposalItemAvgAggregateOutputType | null
+    _sum: ProposalItemSumAggregateOutputType | null
+    _min: ProposalItemMinAggregateOutputType | null
+    _max: ProposalItemMaxAggregateOutputType | null
+  }
+
+  type GetProposalItemGroupByPayload<T extends ProposalItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProposalItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProposalItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProposalItemGroupByOutputType[P]>
+            : GetScalarType<T[P], ProposalItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProposalItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    proposalId?: boolean
+    serviceId?: boolean
+    quantity?: boolean
+    price?: boolean
+    createdAt?: boolean
+    Proposal?: boolean | ProposalDefaultArgs<ExtArgs>
+    Service?: boolean | ServiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proposalItem"]>
+
+  export type ProposalItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    proposalId?: boolean
+    serviceId?: boolean
+    quantity?: boolean
+    price?: boolean
+    createdAt?: boolean
+    Proposal?: boolean | ProposalDefaultArgs<ExtArgs>
+    Service?: boolean | ServiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proposalItem"]>
+
+  export type ProposalItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    proposalId?: boolean
+    serviceId?: boolean
+    quantity?: boolean
+    price?: boolean
+    createdAt?: boolean
+    Proposal?: boolean | ProposalDefaultArgs<ExtArgs>
+    Service?: boolean | ServiceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["proposalItem"]>
+
+  export type ProposalItemSelectScalar = {
+    id?: boolean
+    proposalId?: boolean
+    serviceId?: boolean
+    quantity?: boolean
+    price?: boolean
+    createdAt?: boolean
+  }
+
+  export type ProposalItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "proposalId" | "serviceId" | "quantity" | "price" | "createdAt", ExtArgs["result"]["proposalItem"]>
+  export type ProposalItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Proposal?: boolean | ProposalDefaultArgs<ExtArgs>
+    Service?: boolean | ServiceDefaultArgs<ExtArgs>
+  }
+  export type ProposalItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Proposal?: boolean | ProposalDefaultArgs<ExtArgs>
+    Service?: boolean | ServiceDefaultArgs<ExtArgs>
+  }
+  export type ProposalItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    Proposal?: boolean | ProposalDefaultArgs<ExtArgs>
+    Service?: boolean | ServiceDefaultArgs<ExtArgs>
+  }
+
+  export type $ProposalItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProposalItem"
+    objects: {
+      Proposal: Prisma.$ProposalPayload<ExtArgs>
+      Service: Prisma.$ServicePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      proposalId: number
+      serviceId: number
+      quantity: number
+      price: number
+      createdAt: Date
+    }, ExtArgs["result"]["proposalItem"]>
+    composites: {}
+  }
+
+  type ProposalItemGetPayload<S extends boolean | null | undefined | ProposalItemDefaultArgs> = $Result.GetResult<Prisma.$ProposalItemPayload, S>
+
+  type ProposalItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProposalItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProposalItemCountAggregateInputType | true
+    }
+
+  export interface ProposalItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProposalItem'], meta: { name: 'ProposalItem' } }
+    /**
+     * Find zero or one ProposalItem that matches the filter.
+     * @param {ProposalItemFindUniqueArgs} args - Arguments to find a ProposalItem
+     * @example
+     * // Get one ProposalItem
+     * const proposalItem = await prisma.proposalItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProposalItemFindUniqueArgs>(args: SelectSubset<T, ProposalItemFindUniqueArgs<ExtArgs>>): Prisma__ProposalItemClient<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProposalItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProposalItemFindUniqueOrThrowArgs} args - Arguments to find a ProposalItem
+     * @example
+     * // Get one ProposalItem
+     * const proposalItem = await prisma.proposalItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProposalItemFindUniqueOrThrowArgs>(args: SelectSubset<T, ProposalItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProposalItemClient<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProposalItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalItemFindFirstArgs} args - Arguments to find a ProposalItem
+     * @example
+     * // Get one ProposalItem
+     * const proposalItem = await prisma.proposalItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProposalItemFindFirstArgs>(args?: SelectSubset<T, ProposalItemFindFirstArgs<ExtArgs>>): Prisma__ProposalItemClient<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProposalItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalItemFindFirstOrThrowArgs} args - Arguments to find a ProposalItem
+     * @example
+     * // Get one ProposalItem
+     * const proposalItem = await prisma.proposalItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProposalItemFindFirstOrThrowArgs>(args?: SelectSubset<T, ProposalItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProposalItemClient<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProposalItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProposalItems
+     * const proposalItems = await prisma.proposalItem.findMany()
+     * 
+     * // Get first 10 ProposalItems
+     * const proposalItems = await prisma.proposalItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const proposalItemWithIdOnly = await prisma.proposalItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProposalItemFindManyArgs>(args?: SelectSubset<T, ProposalItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProposalItem.
+     * @param {ProposalItemCreateArgs} args - Arguments to create a ProposalItem.
+     * @example
+     * // Create one ProposalItem
+     * const ProposalItem = await prisma.proposalItem.create({
+     *   data: {
+     *     // ... data to create a ProposalItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProposalItemCreateArgs>(args: SelectSubset<T, ProposalItemCreateArgs<ExtArgs>>): Prisma__ProposalItemClient<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProposalItems.
+     * @param {ProposalItemCreateManyArgs} args - Arguments to create many ProposalItems.
+     * @example
+     * // Create many ProposalItems
+     * const proposalItem = await prisma.proposalItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProposalItemCreateManyArgs>(args?: SelectSubset<T, ProposalItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProposalItems and returns the data saved in the database.
+     * @param {ProposalItemCreateManyAndReturnArgs} args - Arguments to create many ProposalItems.
+     * @example
+     * // Create many ProposalItems
+     * const proposalItem = await prisma.proposalItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProposalItems and only return the `id`
+     * const proposalItemWithIdOnly = await prisma.proposalItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProposalItemCreateManyAndReturnArgs>(args?: SelectSubset<T, ProposalItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProposalItem.
+     * @param {ProposalItemDeleteArgs} args - Arguments to delete one ProposalItem.
+     * @example
+     * // Delete one ProposalItem
+     * const ProposalItem = await prisma.proposalItem.delete({
+     *   where: {
+     *     // ... filter to delete one ProposalItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProposalItemDeleteArgs>(args: SelectSubset<T, ProposalItemDeleteArgs<ExtArgs>>): Prisma__ProposalItemClient<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProposalItem.
+     * @param {ProposalItemUpdateArgs} args - Arguments to update one ProposalItem.
+     * @example
+     * // Update one ProposalItem
+     * const proposalItem = await prisma.proposalItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProposalItemUpdateArgs>(args: SelectSubset<T, ProposalItemUpdateArgs<ExtArgs>>): Prisma__ProposalItemClient<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProposalItems.
+     * @param {ProposalItemDeleteManyArgs} args - Arguments to filter ProposalItems to delete.
+     * @example
+     * // Delete a few ProposalItems
+     * const { count } = await prisma.proposalItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProposalItemDeleteManyArgs>(args?: SelectSubset<T, ProposalItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProposalItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProposalItems
+     * const proposalItem = await prisma.proposalItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProposalItemUpdateManyArgs>(args: SelectSubset<T, ProposalItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProposalItems and returns the data updated in the database.
+     * @param {ProposalItemUpdateManyAndReturnArgs} args - Arguments to update many ProposalItems.
+     * @example
+     * // Update many ProposalItems
+     * const proposalItem = await prisma.proposalItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ProposalItems and only return the `id`
+     * const proposalItemWithIdOnly = await prisma.proposalItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProposalItemUpdateManyAndReturnArgs>(args: SelectSubset<T, ProposalItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProposalItem.
+     * @param {ProposalItemUpsertArgs} args - Arguments to update or create a ProposalItem.
+     * @example
+     * // Update or create a ProposalItem
+     * const proposalItem = await prisma.proposalItem.upsert({
+     *   create: {
+     *     // ... data to create a ProposalItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProposalItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProposalItemUpsertArgs>(args: SelectSubset<T, ProposalItemUpsertArgs<ExtArgs>>): Prisma__ProposalItemClient<$Result.GetResult<Prisma.$ProposalItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProposalItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalItemCountArgs} args - Arguments to filter ProposalItems to count.
+     * @example
+     * // Count the number of ProposalItems
+     * const count = await prisma.proposalItem.count({
+     *   where: {
+     *     // ... the filter for the ProposalItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProposalItemCountArgs>(
+      args?: Subset<T, ProposalItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProposalItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProposalItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProposalItemAggregateArgs>(args: Subset<T, ProposalItemAggregateArgs>): Prisma.PrismaPromise<GetProposalItemAggregateType<T>>
+
+    /**
+     * Group by ProposalItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProposalItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProposalItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProposalItemGroupByArgs['orderBy'] }
+        : { orderBy?: ProposalItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProposalItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProposalItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProposalItem model
+   */
+  readonly fields: ProposalItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProposalItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProposalItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    Proposal<T extends ProposalDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProposalDefaultArgs<ExtArgs>>): Prisma__ProposalClient<$Result.GetResult<Prisma.$ProposalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    Service<T extends ServiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceDefaultArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProposalItem model
+   */
+  interface ProposalItemFieldRefs {
+    readonly id: FieldRef<"ProposalItem", 'Int'>
+    readonly proposalId: FieldRef<"ProposalItem", 'Int'>
+    readonly serviceId: FieldRef<"ProposalItem", 'Int'>
+    readonly quantity: FieldRef<"ProposalItem", 'Int'>
+    readonly price: FieldRef<"ProposalItem", 'Float'>
+    readonly createdAt: FieldRef<"ProposalItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProposalItem findUnique
+   */
+  export type ProposalItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProposalItem to fetch.
+     */
+    where: ProposalItemWhereUniqueInput
+  }
+
+  /**
+   * ProposalItem findUniqueOrThrow
+   */
+  export type ProposalItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProposalItem to fetch.
+     */
+    where: ProposalItemWhereUniqueInput
+  }
+
+  /**
+   * ProposalItem findFirst
+   */
+  export type ProposalItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProposalItem to fetch.
+     */
+    where?: ProposalItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProposalItems to fetch.
+     */
+    orderBy?: ProposalItemOrderByWithRelationInput | ProposalItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProposalItems.
+     */
+    cursor?: ProposalItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProposalItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProposalItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProposalItems.
+     */
+    distinct?: ProposalItemScalarFieldEnum | ProposalItemScalarFieldEnum[]
+  }
+
+  /**
+   * ProposalItem findFirstOrThrow
+   */
+  export type ProposalItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProposalItem to fetch.
+     */
+    where?: ProposalItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProposalItems to fetch.
+     */
+    orderBy?: ProposalItemOrderByWithRelationInput | ProposalItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProposalItems.
+     */
+    cursor?: ProposalItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProposalItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProposalItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProposalItems.
+     */
+    distinct?: ProposalItemScalarFieldEnum | ProposalItemScalarFieldEnum[]
+  }
+
+  /**
+   * ProposalItem findMany
+   */
+  export type ProposalItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ProposalItems to fetch.
+     */
+    where?: ProposalItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProposalItems to fetch.
+     */
+    orderBy?: ProposalItemOrderByWithRelationInput | ProposalItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProposalItems.
+     */
+    cursor?: ProposalItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProposalItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProposalItems.
+     */
+    skip?: number
+    distinct?: ProposalItemScalarFieldEnum | ProposalItemScalarFieldEnum[]
+  }
+
+  /**
+   * ProposalItem create
+   */
+  export type ProposalItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProposalItem.
+     */
+    data: XOR<ProposalItemCreateInput, ProposalItemUncheckedCreateInput>
+  }
+
+  /**
+   * ProposalItem createMany
+   */
+  export type ProposalItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProposalItems.
+     */
+    data: ProposalItemCreateManyInput | ProposalItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProposalItem createManyAndReturn
+   */
+  export type ProposalItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProposalItems.
+     */
+    data: ProposalItemCreateManyInput | ProposalItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProposalItem update
+   */
+  export type ProposalItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProposalItem.
+     */
+    data: XOR<ProposalItemUpdateInput, ProposalItemUncheckedUpdateInput>
+    /**
+     * Choose, which ProposalItem to update.
+     */
+    where: ProposalItemWhereUniqueInput
+  }
+
+  /**
+   * ProposalItem updateMany
+   */
+  export type ProposalItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProposalItems.
+     */
+    data: XOR<ProposalItemUpdateManyMutationInput, ProposalItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ProposalItems to update
+     */
+    where?: ProposalItemWhereInput
+    /**
+     * Limit how many ProposalItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProposalItem updateManyAndReturn
+   */
+  export type ProposalItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * The data used to update ProposalItems.
+     */
+    data: XOR<ProposalItemUpdateManyMutationInput, ProposalItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ProposalItems to update
+     */
+    where?: ProposalItemWhereInput
+    /**
+     * Limit how many ProposalItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProposalItem upsert
+   */
+  export type ProposalItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProposalItem to update in case it exists.
+     */
+    where: ProposalItemWhereUniqueInput
+    /**
+     * In case the ProposalItem found by the `where` argument doesn't exist, create a new ProposalItem with this data.
+     */
+    create: XOR<ProposalItemCreateInput, ProposalItemUncheckedCreateInput>
+    /**
+     * In case the ProposalItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProposalItemUpdateInput, ProposalItemUncheckedUpdateInput>
+  }
+
+  /**
+   * ProposalItem delete
+   */
+  export type ProposalItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemInclude<ExtArgs> | null
+    /**
+     * Filter which ProposalItem to delete.
+     */
+    where: ProposalItemWhereUniqueInput
+  }
+
+  /**
+   * ProposalItem deleteMany
+   */
+  export type ProposalItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProposalItems to delete
+     */
+    where?: ProposalItemWhereInput
+    /**
+     * Limit how many ProposalItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProposalItem without action
+   */
+  export type ProposalItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProposalItem
+     */
+    select?: ProposalItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProposalItem
+     */
+    omit?: ProposalItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProposalItemInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -42810,7 +44059,8 @@ export namespace Prisma {
     publishedAt: 'publishedAt',
     description: 'description',
     categoryId: 'categoryId',
-    unit: 'unit'
+    unit: 'unit',
+    status: 'status'
   };
 
   export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
@@ -42961,19 +44211,6 @@ export namespace Prisma {
   export type InspectionReportScalarFieldEnum = (typeof InspectionReportScalarFieldEnum)[keyof typeof InspectionReportScalarFieldEnum]
 
 
-  export const ProposedServiceScalarFieldEnum: {
-    id: 'id',
-    bookingId: 'bookingId',
-    serviceId: 'serviceId',
-    quantity: 'quantity',
-    price: 'price',
-    notes: 'notes',
-    createdAt: 'createdAt'
-  };
-
-  export type ProposedServiceScalarFieldEnum = (typeof ProposedServiceScalarFieldEnum)[keyof typeof ProposedServiceScalarFieldEnum]
-
-
   export const ServiceItemScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -43017,6 +44254,28 @@ export namespace Prisma {
   };
 
   export type Service_ServiceItemsScalarFieldEnum = (typeof Service_ServiceItemsScalarFieldEnum)[keyof typeof Service_ServiceItemsScalarFieldEnum]
+
+
+  export const ProposalScalarFieldEnum: {
+    id: 'id',
+    bookingId: 'bookingId',
+    notes: 'notes',
+    createdAt: 'createdAt'
+  };
+
+  export type ProposalScalarFieldEnum = (typeof ProposalScalarFieldEnum)[keyof typeof ProposalScalarFieldEnum]
+
+
+  export const ProposalItemScalarFieldEnum: {
+    id: 'id',
+    proposalId: 'proposalId',
+    serviceId: 'serviceId',
+    quantity: 'quantity',
+    price: 'price',
+    createdAt: 'createdAt'
+  };
+
+  export type ProposalItemScalarFieldEnum = (typeof ProposalItemScalarFieldEnum)[keyof typeof ProposalItemScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -43168,6 +44427,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ServiceStatus'
+   */
+  export type EnumServiceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ServiceStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ServiceStatus[]'
+   */
+  export type ListEnumServiceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ServiceStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'CompanyType'
    */
   export type EnumCompanyTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CompanyType'>
@@ -43286,7 +44559,7 @@ export namespace Prisma {
     ServiceRequest?: XOR<ServiceRequestNullableScalarRelationFilter, ServiceRequestWhereInput> | null
     Staff_Booking_staffIdToStaff?: XOR<StaffNullableScalarRelationFilter, StaffWhereInput> | null
     InspectionReport?: XOR<InspectionReportNullableScalarRelationFilter, InspectionReportWhereInput> | null
-    ProposedService?: ProposedServiceListRelationFilter
+    Proposal?: XOR<ProposalNullableScalarRelationFilter, ProposalWhereInput> | null
     Transaction?: XOR<TransactionNullableScalarRelationFilter, TransactionWhereInput> | null
     WorkLog?: WorkLogListRelationFilter
   }
@@ -43306,14 +44579,13 @@ export namespace Prisma {
     ServiceRequest?: ServiceRequestOrderByWithRelationInput
     Staff_Booking_staffIdToStaff?: StaffOrderByWithRelationInput
     InspectionReport?: InspectionReportOrderByWithRelationInput
-    ProposedService?: ProposedServiceOrderByRelationAggregateInput
+    Proposal?: ProposalOrderByWithRelationInput
     Transaction?: TransactionOrderByWithRelationInput
     WorkLog?: WorkLogOrderByRelationAggregateInput
   }
 
   export type BookingWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    staffId?: number
     serviceRequestId?: number
     AND?: BookingWhereInput | BookingWhereInput[]
     OR?: BookingWhereInput[]
@@ -43324,15 +44596,16 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
+    staffId?: IntNullableFilter<"Booking"> | number | null
     CustomerProfile?: XOR<CustomerProfileScalarRelationFilter, CustomerProfileWhereInput>
     ServiceProvider?: XOR<ServiceProviderScalarRelationFilter, ServiceProviderWhereInput>
     ServiceRequest?: XOR<ServiceRequestNullableScalarRelationFilter, ServiceRequestWhereInput> | null
     Staff_Booking_staffIdToStaff?: XOR<StaffNullableScalarRelationFilter, StaffWhereInput> | null
     InspectionReport?: XOR<InspectionReportNullableScalarRelationFilter, InspectionReportWhereInput> | null
-    ProposedService?: ProposedServiceListRelationFilter
+    Proposal?: XOR<ProposalNullableScalarRelationFilter, ProposalWhereInput> | null
     Transaction?: XOR<TransactionNullableScalarRelationFilter, TransactionWhereInput> | null
     WorkLog?: WorkLogListRelationFilter
-  }, "id" | "staffId" | "serviceRequestId">
+  }, "id" | "serviceRequestId">
 
   export type BookingOrderByWithAggregationInput = {
     id?: SortOrder
@@ -44543,7 +45816,8 @@ export namespace Prisma {
     description?: StringFilter<"Service"> | string
     categoryId?: IntFilter<"Service"> | number
     unit?: EnumUnitFilter<"Service"> | $Enums.Unit
-    ProposedService?: ProposedServiceListRelationFilter
+    status?: EnumServiceStatusFilter<"Service"> | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemListRelationFilter
     RecurringBooking?: RecurringBookingListRelationFilter
     Review?: ReviewListRelationFilter
     Category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
@@ -44573,7 +45847,8 @@ export namespace Prisma {
     description?: SortOrder
     categoryId?: SortOrder
     unit?: SortOrder
-    ProposedService?: ProposedServiceOrderByRelationAggregateInput
+    status?: SortOrder
+    ProposalItem?: ProposalItemOrderByRelationAggregateInput
     RecurringBooking?: RecurringBookingOrderByRelationAggregateInput
     Review?: ReviewOrderByRelationAggregateInput
     Category?: CategoryOrderByWithRelationInput
@@ -44606,7 +45881,8 @@ export namespace Prisma {
     description?: StringFilter<"Service"> | string
     categoryId?: IntFilter<"Service"> | number
     unit?: EnumUnitFilter<"Service"> | $Enums.Unit
-    ProposedService?: ProposedServiceListRelationFilter
+    status?: EnumServiceStatusFilter<"Service"> | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemListRelationFilter
     RecurringBooking?: RecurringBookingListRelationFilter
     Review?: ReviewListRelationFilter
     Category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
@@ -44636,6 +45912,7 @@ export namespace Prisma {
     description?: SortOrder
     categoryId?: SortOrder
     unit?: SortOrder
+    status?: SortOrder
     _count?: ServiceCountOrderByAggregateInput
     _avg?: ServiceAvgOrderByAggregateInput
     _max?: ServiceMaxOrderByAggregateInput
@@ -44664,6 +45941,7 @@ export namespace Prisma {
     description?: StringWithAggregatesFilter<"Service"> | string
     categoryId?: IntWithAggregatesFilter<"Service"> | number
     unit?: EnumUnitWithAggregatesFilter<"Service"> | $Enums.Unit
+    status?: EnumServiceStatusWithAggregatesFilter<"Service"> | $Enums.ServiceStatus
   }
 
   export type ServiceProviderWhereInput = {
@@ -44949,7 +46227,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Staff"> | Date | string
     updatedAt?: DateTimeFilter<"Staff"> | Date | string
     isActive?: BoolFilter<"Staff"> | boolean
-    Booking_Booking_staffIdToStaff?: XOR<BookingNullableScalarRelationFilter, BookingWhereInput> | null
+    Booking_Booking_staffIdToStaff?: BookingListRelationFilter
     InspectionReport?: InspectionReportListRelationFilter
     Review?: ReviewListRelationFilter
     ServiceProvider?: XOR<ServiceProviderScalarRelationFilter, ServiceProviderWhereInput>
@@ -44965,7 +46243,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     isActive?: SortOrder
-    Booking_Booking_staffIdToStaff?: BookingOrderByWithRelationInput
+    Booking_Booking_staffIdToStaff?: BookingOrderByRelationAggregateInput
     InspectionReport?: InspectionReportOrderByRelationAggregateInput
     Review?: ReviewOrderByRelationAggregateInput
     ServiceProvider?: ServiceProviderOrderByWithRelationInput
@@ -44984,7 +46262,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Staff"> | Date | string
     updatedAt?: DateTimeFilter<"Staff"> | Date | string
     isActive?: BoolFilter<"Staff"> | boolean
-    Booking_Booking_staffIdToStaff?: XOR<BookingNullableScalarRelationFilter, BookingWhereInput> | null
+    Booking_Booking_staffIdToStaff?: BookingListRelationFilter
     InspectionReport?: InspectionReportListRelationFilter
     Review?: ReviewListRelationFilter
     ServiceProvider?: XOR<ServiceProviderScalarRelationFilter, ServiceProviderWhereInput>
@@ -45548,76 +46826,6 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"InspectionReport"> | Date | string
   }
 
-  export type ProposedServiceWhereInput = {
-    AND?: ProposedServiceWhereInput | ProposedServiceWhereInput[]
-    OR?: ProposedServiceWhereInput[]
-    NOT?: ProposedServiceWhereInput | ProposedServiceWhereInput[]
-    id?: IntFilter<"ProposedService"> | number
-    bookingId?: IntFilter<"ProposedService"> | number
-    serviceId?: IntFilter<"ProposedService"> | number
-    quantity?: IntFilter<"ProposedService"> | number
-    price?: FloatFilter<"ProposedService"> | number
-    notes?: StringNullableFilter<"ProposedService"> | string | null
-    createdAt?: DateTimeFilter<"ProposedService"> | Date | string
-    Booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
-    Service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
-  }
-
-  export type ProposedServiceOrderByWithRelationInput = {
-    id?: SortOrder
-    bookingId?: SortOrder
-    serviceId?: SortOrder
-    quantity?: SortOrder
-    price?: SortOrder
-    notes?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    Booking?: BookingOrderByWithRelationInput
-    Service?: ServiceOrderByWithRelationInput
-  }
-
-  export type ProposedServiceWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: ProposedServiceWhereInput | ProposedServiceWhereInput[]
-    OR?: ProposedServiceWhereInput[]
-    NOT?: ProposedServiceWhereInput | ProposedServiceWhereInput[]
-    bookingId?: IntFilter<"ProposedService"> | number
-    serviceId?: IntFilter<"ProposedService"> | number
-    quantity?: IntFilter<"ProposedService"> | number
-    price?: FloatFilter<"ProposedService"> | number
-    notes?: StringNullableFilter<"ProposedService"> | string | null
-    createdAt?: DateTimeFilter<"ProposedService"> | Date | string
-    Booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
-    Service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
-  }, "id">
-
-  export type ProposedServiceOrderByWithAggregationInput = {
-    id?: SortOrder
-    bookingId?: SortOrder
-    serviceId?: SortOrder
-    quantity?: SortOrder
-    price?: SortOrder
-    notes?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    _count?: ProposedServiceCountOrderByAggregateInput
-    _avg?: ProposedServiceAvgOrderByAggregateInput
-    _max?: ProposedServiceMaxOrderByAggregateInput
-    _min?: ProposedServiceMinOrderByAggregateInput
-    _sum?: ProposedServiceSumOrderByAggregateInput
-  }
-
-  export type ProposedServiceScalarWhereWithAggregatesInput = {
-    AND?: ProposedServiceScalarWhereWithAggregatesInput | ProposedServiceScalarWhereWithAggregatesInput[]
-    OR?: ProposedServiceScalarWhereWithAggregatesInput[]
-    NOT?: ProposedServiceScalarWhereWithAggregatesInput | ProposedServiceScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"ProposedService"> | number
-    bookingId?: IntWithAggregatesFilter<"ProposedService"> | number
-    serviceId?: IntWithAggregatesFilter<"ProposedService"> | number
-    quantity?: IntWithAggregatesFilter<"ProposedService"> | number
-    price?: FloatWithAggregatesFilter<"ProposedService"> | number
-    notes?: StringNullableWithAggregatesFilter<"ProposedService"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"ProposedService"> | Date | string
-  }
-
   export type ServiceItemWhereInput = {
     AND?: ServiceItemWhereInput | ServiceItemWhereInput[]
     OR?: ServiceItemWhereInput[]
@@ -45865,6 +47073,126 @@ export namespace Prisma {
     serviceItemId?: IntWithAggregatesFilter<"Service_ServiceItems"> | number
   }
 
+  export type ProposalWhereInput = {
+    AND?: ProposalWhereInput | ProposalWhereInput[]
+    OR?: ProposalWhereInput[]
+    NOT?: ProposalWhereInput | ProposalWhereInput[]
+    id?: IntFilter<"Proposal"> | number
+    bookingId?: IntFilter<"Proposal"> | number
+    notes?: StringNullableFilter<"Proposal"> | string | null
+    createdAt?: DateTimeFilter<"Proposal"> | Date | string
+    Booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
+    ProposalItem?: ProposalItemListRelationFilter
+  }
+
+  export type ProposalOrderByWithRelationInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    Booking?: BookingOrderByWithRelationInput
+    ProposalItem?: ProposalItemOrderByRelationAggregateInput
+  }
+
+  export type ProposalWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    bookingId?: number
+    AND?: ProposalWhereInput | ProposalWhereInput[]
+    OR?: ProposalWhereInput[]
+    NOT?: ProposalWhereInput | ProposalWhereInput[]
+    notes?: StringNullableFilter<"Proposal"> | string | null
+    createdAt?: DateTimeFilter<"Proposal"> | Date | string
+    Booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
+    ProposalItem?: ProposalItemListRelationFilter
+  }, "id" | "bookingId">
+
+  export type ProposalOrderByWithAggregationInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: ProposalCountOrderByAggregateInput
+    _avg?: ProposalAvgOrderByAggregateInput
+    _max?: ProposalMaxOrderByAggregateInput
+    _min?: ProposalMinOrderByAggregateInput
+    _sum?: ProposalSumOrderByAggregateInput
+  }
+
+  export type ProposalScalarWhereWithAggregatesInput = {
+    AND?: ProposalScalarWhereWithAggregatesInput | ProposalScalarWhereWithAggregatesInput[]
+    OR?: ProposalScalarWhereWithAggregatesInput[]
+    NOT?: ProposalScalarWhereWithAggregatesInput | ProposalScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Proposal"> | number
+    bookingId?: IntWithAggregatesFilter<"Proposal"> | number
+    notes?: StringNullableWithAggregatesFilter<"Proposal"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Proposal"> | Date | string
+  }
+
+  export type ProposalItemWhereInput = {
+    AND?: ProposalItemWhereInput | ProposalItemWhereInput[]
+    OR?: ProposalItemWhereInput[]
+    NOT?: ProposalItemWhereInput | ProposalItemWhereInput[]
+    id?: IntFilter<"ProposalItem"> | number
+    proposalId?: IntFilter<"ProposalItem"> | number
+    serviceId?: IntFilter<"ProposalItem"> | number
+    quantity?: IntFilter<"ProposalItem"> | number
+    price?: FloatFilter<"ProposalItem"> | number
+    createdAt?: DateTimeFilter<"ProposalItem"> | Date | string
+    Proposal?: XOR<ProposalScalarRelationFilter, ProposalWhereInput>
+    Service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
+  }
+
+  export type ProposalItemOrderByWithRelationInput = {
+    id?: SortOrder
+    proposalId?: SortOrder
+    serviceId?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    createdAt?: SortOrder
+    Proposal?: ProposalOrderByWithRelationInput
+    Service?: ServiceOrderByWithRelationInput
+  }
+
+  export type ProposalItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: ProposalItemWhereInput | ProposalItemWhereInput[]
+    OR?: ProposalItemWhereInput[]
+    NOT?: ProposalItemWhereInput | ProposalItemWhereInput[]
+    proposalId?: IntFilter<"ProposalItem"> | number
+    serviceId?: IntFilter<"ProposalItem"> | number
+    quantity?: IntFilter<"ProposalItem"> | number
+    price?: FloatFilter<"ProposalItem"> | number
+    createdAt?: DateTimeFilter<"ProposalItem"> | Date | string
+    Proposal?: XOR<ProposalScalarRelationFilter, ProposalWhereInput>
+    Service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
+  }, "id">
+
+  export type ProposalItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    proposalId?: SortOrder
+    serviceId?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    createdAt?: SortOrder
+    _count?: ProposalItemCountOrderByAggregateInput
+    _avg?: ProposalItemAvgOrderByAggregateInput
+    _max?: ProposalItemMaxOrderByAggregateInput
+    _min?: ProposalItemMinOrderByAggregateInput
+    _sum?: ProposalItemSumOrderByAggregateInput
+  }
+
+  export type ProposalItemScalarWhereWithAggregatesInput = {
+    AND?: ProposalItemScalarWhereWithAggregatesInput | ProposalItemScalarWhereWithAggregatesInput[]
+    OR?: ProposalItemScalarWhereWithAggregatesInput[]
+    NOT?: ProposalItemScalarWhereWithAggregatesInput | ProposalItemScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ProposalItem"> | number
+    proposalId?: IntWithAggregatesFilter<"ProposalItem"> | number
+    serviceId?: IntWithAggregatesFilter<"ProposalItem"> | number
+    quantity?: IntWithAggregatesFilter<"ProposalItem"> | number
+    price?: FloatWithAggregatesFilter<"ProposalItem"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ProposalItem"> | Date | string
+  }
+
   export type BookingCreateInput = {
     status: $Enums.BookingStatus
     deletedAt?: Date | string | null
@@ -45875,7 +47203,7 @@ export namespace Prisma {
     ServiceRequest?: ServiceRequestCreateNestedOneWithoutBookingInput
     Staff_Booking_staffIdToStaff?: StaffCreateNestedOneWithoutBooking_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalCreateNestedOneWithoutBookingInput
     Transaction?: TransactionCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogCreateNestedManyWithoutBookingInput
   }
@@ -45891,7 +47219,7 @@ export namespace Prisma {
     staffId?: number | null
     serviceRequestId?: number | null
     InspectionReport?: InspectionReportUncheckedCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalUncheckedCreateNestedOneWithoutBookingInput
     Transaction?: TransactionUncheckedCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogUncheckedCreateNestedManyWithoutBookingInput
   }
@@ -45906,7 +47234,7 @@ export namespace Prisma {
     ServiceRequest?: ServiceRequestUpdateOneWithoutBookingNestedInput
     Staff_Booking_staffIdToStaff?: StaffUpdateOneWithoutBooking_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUpdateManyWithoutBookingNestedInput
   }
@@ -45922,7 +47250,7 @@ export namespace Prisma {
     staffId?: NullableIntFieldUpdateOperationsInput | number | null
     serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
     InspectionReport?: InspectionReportUncheckedUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUncheckedUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUncheckedUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUncheckedUpdateManyWithoutBookingNestedInput
   }
@@ -47103,7 +48431,8 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     description?: string
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingCreateNestedManyWithoutServiceInput
     Review?: ReviewCreateNestedManyWithoutServiceInput
     Category: CategoryCreateNestedOneWithoutServiceInput
@@ -47133,7 +48462,8 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
     ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
@@ -47152,7 +48482,8 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUpdateManyWithoutServiceNestedInput
     Review?: ReviewUpdateManyWithoutServiceNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceNestedInput
@@ -47182,7 +48513,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
     ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
@@ -47207,6 +48539,7 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
+    status?: $Enums.ServiceStatus
   }
 
   export type ServiceUpdateManyMutationInput = {
@@ -47221,6 +48554,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
   }
 
   export type ServiceUncheckedUpdateManyInput = {
@@ -47241,6 +48575,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
   }
 
   export type ServiceProviderCreateInput = {
@@ -47529,7 +48864,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportCreateNestedManyWithoutStaffInput
     Review?: ReviewCreateNestedManyWithoutStaffInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutStaffInput
@@ -47545,7 +48880,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportUncheckedCreateNestedManyWithoutStaffInput
     Review?: ReviewUncheckedCreateNestedManyWithoutStaffInput
     StaffCategory?: StaffCategoryUncheckedCreateNestedManyWithoutStaffInput
@@ -47556,7 +48891,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUpdateManyWithoutStaffNestedInput
     Review?: ReviewUpdateManyWithoutStaffNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutStaffNestedInput
@@ -47572,7 +48907,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUncheckedUpdateManyWithoutStaffNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutStaffNestedInput
     StaffCategory?: StaffCategoryUncheckedUpdateManyWithoutStaffNestedInput
@@ -48152,71 +49487,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ProposedServiceCreateInput = {
-    quantity?: number
-    price: number
-    notes?: string | null
-    createdAt?: Date | string
-    Booking: BookingCreateNestedOneWithoutProposedServiceInput
-    Service: ServiceCreateNestedOneWithoutProposedServiceInput
-  }
-
-  export type ProposedServiceUncheckedCreateInput = {
-    id?: number
-    bookingId: number
-    serviceId: number
-    quantity?: number
-    price: number
-    notes?: string | null
-    createdAt?: Date | string
-  }
-
-  export type ProposedServiceUpdateInput = {
-    quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Booking?: BookingUpdateOneRequiredWithoutProposedServiceNestedInput
-    Service?: ServiceUpdateOneRequiredWithoutProposedServiceNestedInput
-  }
-
-  export type ProposedServiceUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    bookingId?: IntFieldUpdateOperationsInput | number
-    serviceId?: IntFieldUpdateOperationsInput | number
-    quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ProposedServiceCreateManyInput = {
-    id?: number
-    bookingId: number
-    serviceId: number
-    quantity?: number
-    price: number
-    notes?: string | null
-    createdAt?: Date | string
-  }
-
-  export type ProposedServiceUpdateManyMutationInput = {
-    quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ProposedServiceUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    bookingId?: IntFieldUpdateOperationsInput | number
-    serviceId?: IntFieldUpdateOperationsInput | number
-    quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type ServiceItemCreateInput = {
     name: string
     unitPrice: number
@@ -48466,6 +49736,113 @@ export namespace Prisma {
     serviceItemId?: IntFieldUpdateOperationsInput | number
   }
 
+  export type ProposalCreateInput = {
+    notes?: string | null
+    createdAt?: Date | string
+    Booking: BookingCreateNestedOneWithoutProposalInput
+    ProposalItem?: ProposalItemCreateNestedManyWithoutProposalInput
+  }
+
+  export type ProposalUncheckedCreateInput = {
+    id?: number
+    bookingId: number
+    notes?: string | null
+    createdAt?: Date | string
+    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutProposalInput
+  }
+
+  export type ProposalUpdateInput = {
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Booking?: BookingUpdateOneRequiredWithoutProposalNestedInput
+    ProposalItem?: ProposalItemUpdateManyWithoutProposalNestedInput
+  }
+
+  export type ProposalUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
+  }
+
+  export type ProposalCreateManyInput = {
+    id?: number
+    bookingId: number
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ProposalUpdateManyMutationInput = {
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProposalUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProposalItemCreateInput = {
+    quantity?: number
+    price: number
+    createdAt?: Date | string
+    Proposal: ProposalCreateNestedOneWithoutProposalItemInput
+    Service: ServiceCreateNestedOneWithoutProposalItemInput
+  }
+
+  export type ProposalItemUncheckedCreateInput = {
+    id?: number
+    proposalId: number
+    serviceId: number
+    quantity?: number
+    price: number
+    createdAt?: Date | string
+  }
+
+  export type ProposalItemUpdateInput = {
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Proposal?: ProposalUpdateOneRequiredWithoutProposalItemNestedInput
+    Service?: ServiceUpdateOneRequiredWithoutProposalItemNestedInput
+  }
+
+  export type ProposalItemUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    proposalId?: IntFieldUpdateOperationsInput | number
+    serviceId?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProposalItemCreateManyInput = {
+    id?: number
+    proposalId: number
+    serviceId: number
+    quantity?: number
+    price: number
+    createdAt?: Date | string
+  }
+
+  export type ProposalItemUpdateManyMutationInput = {
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProposalItemUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    proposalId?: IntFieldUpdateOperationsInput | number
+    serviceId?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -48542,10 +49919,9 @@ export namespace Prisma {
     isNot?: InspectionReportWhereInput | null
   }
 
-  export type ProposedServiceListRelationFilter = {
-    every?: ProposedServiceWhereInput
-    some?: ProposedServiceWhereInput
-    none?: ProposedServiceWhereInput
+  export type ProposalNullableScalarRelationFilter = {
+    is?: ProposalWhereInput | null
+    isNot?: ProposalWhereInput | null
   }
 
   export type TransactionNullableScalarRelationFilter = {
@@ -48562,10 +49938,6 @@ export namespace Prisma {
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
-  }
-
-  export type ProposedServiceOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type WorkLogOrderByRelationAggregateInput = {
@@ -49710,10 +51082,27 @@ export namespace Prisma {
     not?: NestedEnumUnitFilter<$PrismaModel> | $Enums.Unit
   }
 
+  export type EnumServiceStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ServiceStatus | EnumServiceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ServiceStatus[] | ListEnumServiceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ServiceStatus[] | ListEnumServiceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumServiceStatusFilter<$PrismaModel> | $Enums.ServiceStatus
+  }
+
+  export type ProposalItemListRelationFilter = {
+    every?: ProposalItemWhereInput
+    some?: ProposalItemWhereInput
+    none?: ProposalItemWhereInput
+  }
+
   export type Service_ServiceItemsListRelationFilter = {
     every?: Service_ServiceItemsWhereInput
     some?: Service_ServiceItemsWhereInput
     none?: Service_ServiceItemsWhereInput
+  }
+
+  export type ProposalItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type Service_ServiceItemsOrderByRelationAggregateInput = {
@@ -49738,6 +51127,7 @@ export namespace Prisma {
     description?: SortOrder
     categoryId?: SortOrder
     unit?: SortOrder
+    status?: SortOrder
   }
 
   export type ServiceAvgOrderByAggregateInput = {
@@ -49769,6 +51159,7 @@ export namespace Prisma {
     description?: SortOrder
     categoryId?: SortOrder
     unit?: SortOrder
+    status?: SortOrder
   }
 
   export type ServiceMinOrderByAggregateInput = {
@@ -49788,6 +51179,7 @@ export namespace Prisma {
     description?: SortOrder
     categoryId?: SortOrder
     unit?: SortOrder
+    status?: SortOrder
   }
 
   export type ServiceSumOrderByAggregateInput = {
@@ -49826,6 +51218,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUnitFilter<$PrismaModel>
     _max?: NestedEnumUnitFilter<$PrismaModel>
+  }
+
+  export type EnumServiceStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ServiceStatus | EnumServiceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ServiceStatus[] | ListEnumServiceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ServiceStatus[] | ListEnumServiceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumServiceStatusWithAggregatesFilter<$PrismaModel> | $Enums.ServiceStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumServiceStatusFilter<$PrismaModel>
+    _max?: NestedEnumServiceStatusFilter<$PrismaModel>
   }
 
   export type EnumCompanyTypeFilter<$PrismaModel = never> = {
@@ -50029,11 +51431,6 @@ export namespace Prisma {
   export type ServiceTranslationSumOrderByAggregateInput = {
     id?: SortOrder
     serviceId?: SortOrder
-  }
-
-  export type BookingNullableScalarRelationFilter = {
-    is?: BookingWhereInput | null
-    isNot?: BookingWhereInput | null
   }
 
   export type InspectionReportListRelationFilter = {
@@ -50494,52 +51891,6 @@ export namespace Prisma {
     estimatedTime?: SortOrder
   }
 
-  export type ProposedServiceCountOrderByAggregateInput = {
-    id?: SortOrder
-    bookingId?: SortOrder
-    serviceId?: SortOrder
-    quantity?: SortOrder
-    price?: SortOrder
-    notes?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type ProposedServiceAvgOrderByAggregateInput = {
-    id?: SortOrder
-    bookingId?: SortOrder
-    serviceId?: SortOrder
-    quantity?: SortOrder
-    price?: SortOrder
-  }
-
-  export type ProposedServiceMaxOrderByAggregateInput = {
-    id?: SortOrder
-    bookingId?: SortOrder
-    serviceId?: SortOrder
-    quantity?: SortOrder
-    price?: SortOrder
-    notes?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type ProposedServiceMinOrderByAggregateInput = {
-    id?: SortOrder
-    bookingId?: SortOrder
-    serviceId?: SortOrder
-    quantity?: SortOrder
-    price?: SortOrder
-    notes?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type ProposedServiceSumOrderByAggregateInput = {
-    id?: SortOrder
-    bookingId?: SortOrder
-    serviceId?: SortOrder
-    quantity?: SortOrder
-    price?: SortOrder
-  }
-
   export type ServiceItemCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -50612,6 +51963,11 @@ export namespace Prisma {
     in?: $Enums.RequestStatus[] | ListEnumRequestStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.RequestStatus[] | ListEnumRequestStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumRequestStatusFilter<$PrismaModel> | $Enums.RequestStatus
+  }
+
+  export type BookingNullableScalarRelationFilter = {
+    is?: BookingWhereInput | null
+    isNot?: BookingWhereInput | null
   }
 
   export type ServiceRequestCountOrderByAggregateInput = {
@@ -50715,6 +52071,85 @@ export namespace Prisma {
     serviceItemId?: SortOrder
   }
 
+  export type ProposalCountOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ProposalAvgOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+  }
+
+  export type ProposalMaxOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ProposalMinOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ProposalSumOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+  }
+
+  export type ProposalScalarRelationFilter = {
+    is?: ProposalWhereInput
+    isNot?: ProposalWhereInput
+  }
+
+  export type ProposalItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    proposalId?: SortOrder
+    serviceId?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ProposalItemAvgOrderByAggregateInput = {
+    id?: SortOrder
+    proposalId?: SortOrder
+    serviceId?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+  }
+
+  export type ProposalItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    proposalId?: SortOrder
+    serviceId?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ProposalItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    proposalId?: SortOrder
+    serviceId?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ProposalItemSumOrderByAggregateInput = {
+    id?: SortOrder
+    proposalId?: SortOrder
+    serviceId?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+  }
+
   export type CustomerProfileCreateNestedOneWithoutBookingInput = {
     create?: XOR<CustomerProfileCreateWithoutBookingInput, CustomerProfileUncheckedCreateWithoutBookingInput>
     connectOrCreate?: CustomerProfileCreateOrConnectWithoutBookingInput
@@ -50745,11 +52180,10 @@ export namespace Prisma {
     connect?: InspectionReportWhereUniqueInput
   }
 
-  export type ProposedServiceCreateNestedManyWithoutBookingInput = {
-    create?: XOR<ProposedServiceCreateWithoutBookingInput, ProposedServiceUncheckedCreateWithoutBookingInput> | ProposedServiceCreateWithoutBookingInput[] | ProposedServiceUncheckedCreateWithoutBookingInput[]
-    connectOrCreate?: ProposedServiceCreateOrConnectWithoutBookingInput | ProposedServiceCreateOrConnectWithoutBookingInput[]
-    createMany?: ProposedServiceCreateManyBookingInputEnvelope
-    connect?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
+  export type ProposalCreateNestedOneWithoutBookingInput = {
+    create?: XOR<ProposalCreateWithoutBookingInput, ProposalUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: ProposalCreateOrConnectWithoutBookingInput
+    connect?: ProposalWhereUniqueInput
   }
 
   export type TransactionCreateNestedOneWithoutBookingInput = {
@@ -50771,11 +52205,10 @@ export namespace Prisma {
     connect?: InspectionReportWhereUniqueInput
   }
 
-  export type ProposedServiceUncheckedCreateNestedManyWithoutBookingInput = {
-    create?: XOR<ProposedServiceCreateWithoutBookingInput, ProposedServiceUncheckedCreateWithoutBookingInput> | ProposedServiceCreateWithoutBookingInput[] | ProposedServiceUncheckedCreateWithoutBookingInput[]
-    connectOrCreate?: ProposedServiceCreateOrConnectWithoutBookingInput | ProposedServiceCreateOrConnectWithoutBookingInput[]
-    createMany?: ProposedServiceCreateManyBookingInputEnvelope
-    connect?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
+  export type ProposalUncheckedCreateNestedOneWithoutBookingInput = {
+    create?: XOR<ProposalCreateWithoutBookingInput, ProposalUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: ProposalCreateOrConnectWithoutBookingInput
+    connect?: ProposalWhereUniqueInput
   }
 
   export type TransactionUncheckedCreateNestedOneWithoutBookingInput = {
@@ -50849,18 +52282,14 @@ export namespace Prisma {
     update?: XOR<XOR<InspectionReportUpdateToOneWithWhereWithoutBookingInput, InspectionReportUpdateWithoutBookingInput>, InspectionReportUncheckedUpdateWithoutBookingInput>
   }
 
-  export type ProposedServiceUpdateManyWithoutBookingNestedInput = {
-    create?: XOR<ProposedServiceCreateWithoutBookingInput, ProposedServiceUncheckedCreateWithoutBookingInput> | ProposedServiceCreateWithoutBookingInput[] | ProposedServiceUncheckedCreateWithoutBookingInput[]
-    connectOrCreate?: ProposedServiceCreateOrConnectWithoutBookingInput | ProposedServiceCreateOrConnectWithoutBookingInput[]
-    upsert?: ProposedServiceUpsertWithWhereUniqueWithoutBookingInput | ProposedServiceUpsertWithWhereUniqueWithoutBookingInput[]
-    createMany?: ProposedServiceCreateManyBookingInputEnvelope
-    set?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    disconnect?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    delete?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    connect?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    update?: ProposedServiceUpdateWithWhereUniqueWithoutBookingInput | ProposedServiceUpdateWithWhereUniqueWithoutBookingInput[]
-    updateMany?: ProposedServiceUpdateManyWithWhereWithoutBookingInput | ProposedServiceUpdateManyWithWhereWithoutBookingInput[]
-    deleteMany?: ProposedServiceScalarWhereInput | ProposedServiceScalarWhereInput[]
+  export type ProposalUpdateOneWithoutBookingNestedInput = {
+    create?: XOR<ProposalCreateWithoutBookingInput, ProposalUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: ProposalCreateOrConnectWithoutBookingInput
+    upsert?: ProposalUpsertWithoutBookingInput
+    disconnect?: ProposalWhereInput | boolean
+    delete?: ProposalWhereInput | boolean
+    connect?: ProposalWhereUniqueInput
+    update?: XOR<XOR<ProposalUpdateToOneWithWhereWithoutBookingInput, ProposalUpdateWithoutBookingInput>, ProposalUncheckedUpdateWithoutBookingInput>
   }
 
   export type TransactionUpdateOneWithoutBookingNestedInput = {
@@ -50913,18 +52342,14 @@ export namespace Prisma {
     update?: XOR<XOR<InspectionReportUpdateToOneWithWhereWithoutBookingInput, InspectionReportUpdateWithoutBookingInput>, InspectionReportUncheckedUpdateWithoutBookingInput>
   }
 
-  export type ProposedServiceUncheckedUpdateManyWithoutBookingNestedInput = {
-    create?: XOR<ProposedServiceCreateWithoutBookingInput, ProposedServiceUncheckedCreateWithoutBookingInput> | ProposedServiceCreateWithoutBookingInput[] | ProposedServiceUncheckedCreateWithoutBookingInput[]
-    connectOrCreate?: ProposedServiceCreateOrConnectWithoutBookingInput | ProposedServiceCreateOrConnectWithoutBookingInput[]
-    upsert?: ProposedServiceUpsertWithWhereUniqueWithoutBookingInput | ProposedServiceUpsertWithWhereUniqueWithoutBookingInput[]
-    createMany?: ProposedServiceCreateManyBookingInputEnvelope
-    set?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    disconnect?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    delete?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    connect?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    update?: ProposedServiceUpdateWithWhereUniqueWithoutBookingInput | ProposedServiceUpdateWithWhereUniqueWithoutBookingInput[]
-    updateMany?: ProposedServiceUpdateManyWithWhereWithoutBookingInput | ProposedServiceUpdateManyWithWhereWithoutBookingInput[]
-    deleteMany?: ProposedServiceScalarWhereInput | ProposedServiceScalarWhereInput[]
+  export type ProposalUncheckedUpdateOneWithoutBookingNestedInput = {
+    create?: XOR<ProposalCreateWithoutBookingInput, ProposalUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: ProposalCreateOrConnectWithoutBookingInput
+    upsert?: ProposalUpsertWithoutBookingInput
+    disconnect?: ProposalWhereInput | boolean
+    delete?: ProposalWhereInput | boolean
+    connect?: ProposalWhereUniqueInput
+    update?: XOR<XOR<ProposalUpdateToOneWithWhereWithoutBookingInput, ProposalUpdateWithoutBookingInput>, ProposalUncheckedUpdateWithoutBookingInput>
   }
 
   export type TransactionUncheckedUpdateOneWithoutBookingNestedInput = {
@@ -52179,11 +53604,11 @@ export namespace Prisma {
     set: string[]
   }
 
-  export type ProposedServiceCreateNestedManyWithoutServiceInput = {
-    create?: XOR<ProposedServiceCreateWithoutServiceInput, ProposedServiceUncheckedCreateWithoutServiceInput> | ProposedServiceCreateWithoutServiceInput[] | ProposedServiceUncheckedCreateWithoutServiceInput[]
-    connectOrCreate?: ProposedServiceCreateOrConnectWithoutServiceInput | ProposedServiceCreateOrConnectWithoutServiceInput[]
-    createMany?: ProposedServiceCreateManyServiceInputEnvelope
-    connect?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
+  export type ProposalItemCreateNestedManyWithoutServiceInput = {
+    create?: XOR<ProposalItemCreateWithoutServiceInput, ProposalItemUncheckedCreateWithoutServiceInput> | ProposalItemCreateWithoutServiceInput[] | ProposalItemUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: ProposalItemCreateOrConnectWithoutServiceInput | ProposalItemCreateOrConnectWithoutServiceInput[]
+    createMany?: ProposalItemCreateManyServiceInputEnvelope
+    connect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
   }
 
   export type RecurringBookingCreateNestedManyWithoutServiceInput = {
@@ -52244,11 +53669,11 @@ export namespace Prisma {
     connect?: Service_ServiceItemsWhereUniqueInput | Service_ServiceItemsWhereUniqueInput[]
   }
 
-  export type ProposedServiceUncheckedCreateNestedManyWithoutServiceInput = {
-    create?: XOR<ProposedServiceCreateWithoutServiceInput, ProposedServiceUncheckedCreateWithoutServiceInput> | ProposedServiceCreateWithoutServiceInput[] | ProposedServiceUncheckedCreateWithoutServiceInput[]
-    connectOrCreate?: ProposedServiceCreateOrConnectWithoutServiceInput | ProposedServiceCreateOrConnectWithoutServiceInput[]
-    createMany?: ProposedServiceCreateManyServiceInputEnvelope
-    connect?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
+  export type ProposalItemUncheckedCreateNestedManyWithoutServiceInput = {
+    create?: XOR<ProposalItemCreateWithoutServiceInput, ProposalItemUncheckedCreateWithoutServiceInput> | ProposalItemCreateWithoutServiceInput[] | ProposalItemUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: ProposalItemCreateOrConnectWithoutServiceInput | ProposalItemCreateOrConnectWithoutServiceInput[]
+    createMany?: ProposalItemCreateManyServiceInputEnvelope
+    connect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
   }
 
   export type RecurringBookingUncheckedCreateNestedManyWithoutServiceInput = {
@@ -52296,18 +53721,22 @@ export namespace Prisma {
     set?: $Enums.Unit
   }
 
-  export type ProposedServiceUpdateManyWithoutServiceNestedInput = {
-    create?: XOR<ProposedServiceCreateWithoutServiceInput, ProposedServiceUncheckedCreateWithoutServiceInput> | ProposedServiceCreateWithoutServiceInput[] | ProposedServiceUncheckedCreateWithoutServiceInput[]
-    connectOrCreate?: ProposedServiceCreateOrConnectWithoutServiceInput | ProposedServiceCreateOrConnectWithoutServiceInput[]
-    upsert?: ProposedServiceUpsertWithWhereUniqueWithoutServiceInput | ProposedServiceUpsertWithWhereUniqueWithoutServiceInput[]
-    createMany?: ProposedServiceCreateManyServiceInputEnvelope
-    set?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    disconnect?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    delete?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    connect?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    update?: ProposedServiceUpdateWithWhereUniqueWithoutServiceInput | ProposedServiceUpdateWithWhereUniqueWithoutServiceInput[]
-    updateMany?: ProposedServiceUpdateManyWithWhereWithoutServiceInput | ProposedServiceUpdateManyWithWhereWithoutServiceInput[]
-    deleteMany?: ProposedServiceScalarWhereInput | ProposedServiceScalarWhereInput[]
+  export type EnumServiceStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ServiceStatus
+  }
+
+  export type ProposalItemUpdateManyWithoutServiceNestedInput = {
+    create?: XOR<ProposalItemCreateWithoutServiceInput, ProposalItemUncheckedCreateWithoutServiceInput> | ProposalItemCreateWithoutServiceInput[] | ProposalItemUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: ProposalItemCreateOrConnectWithoutServiceInput | ProposalItemCreateOrConnectWithoutServiceInput[]
+    upsert?: ProposalItemUpsertWithWhereUniqueWithoutServiceInput | ProposalItemUpsertWithWhereUniqueWithoutServiceInput[]
+    createMany?: ProposalItemCreateManyServiceInputEnvelope
+    set?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    disconnect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    delete?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    connect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    update?: ProposalItemUpdateWithWhereUniqueWithoutServiceInput | ProposalItemUpdateWithWhereUniqueWithoutServiceInput[]
+    updateMany?: ProposalItemUpdateManyWithWhereWithoutServiceInput | ProposalItemUpdateManyWithWhereWithoutServiceInput[]
+    deleteMany?: ProposalItemScalarWhereInput | ProposalItemScalarWhereInput[]
   }
 
   export type RecurringBookingUpdateManyWithoutServiceNestedInput = {
@@ -52412,18 +53841,18 @@ export namespace Prisma {
     deleteMany?: Service_ServiceItemsScalarWhereInput | Service_ServiceItemsScalarWhereInput[]
   }
 
-  export type ProposedServiceUncheckedUpdateManyWithoutServiceNestedInput = {
-    create?: XOR<ProposedServiceCreateWithoutServiceInput, ProposedServiceUncheckedCreateWithoutServiceInput> | ProposedServiceCreateWithoutServiceInput[] | ProposedServiceUncheckedCreateWithoutServiceInput[]
-    connectOrCreate?: ProposedServiceCreateOrConnectWithoutServiceInput | ProposedServiceCreateOrConnectWithoutServiceInput[]
-    upsert?: ProposedServiceUpsertWithWhereUniqueWithoutServiceInput | ProposedServiceUpsertWithWhereUniqueWithoutServiceInput[]
-    createMany?: ProposedServiceCreateManyServiceInputEnvelope
-    set?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    disconnect?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    delete?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    connect?: ProposedServiceWhereUniqueInput | ProposedServiceWhereUniqueInput[]
-    update?: ProposedServiceUpdateWithWhereUniqueWithoutServiceInput | ProposedServiceUpdateWithWhereUniqueWithoutServiceInput[]
-    updateMany?: ProposedServiceUpdateManyWithWhereWithoutServiceInput | ProposedServiceUpdateManyWithWhereWithoutServiceInput[]
-    deleteMany?: ProposedServiceScalarWhereInput | ProposedServiceScalarWhereInput[]
+  export type ProposalItemUncheckedUpdateManyWithoutServiceNestedInput = {
+    create?: XOR<ProposalItemCreateWithoutServiceInput, ProposalItemUncheckedCreateWithoutServiceInput> | ProposalItemCreateWithoutServiceInput[] | ProposalItemUncheckedCreateWithoutServiceInput[]
+    connectOrCreate?: ProposalItemCreateOrConnectWithoutServiceInput | ProposalItemCreateOrConnectWithoutServiceInput[]
+    upsert?: ProposalItemUpsertWithWhereUniqueWithoutServiceInput | ProposalItemUpsertWithWhereUniqueWithoutServiceInput[]
+    createMany?: ProposalItemCreateManyServiceInputEnvelope
+    set?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    disconnect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    delete?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    connect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    update?: ProposalItemUpdateWithWhereUniqueWithoutServiceInput | ProposalItemUpdateWithWhereUniqueWithoutServiceInput[]
+    updateMany?: ProposalItemUpdateManyWithWhereWithoutServiceInput | ProposalItemUpdateManyWithWhereWithoutServiceInput[]
+    deleteMany?: ProposalItemScalarWhereInput | ProposalItemScalarWhereInput[]
   }
 
   export type RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput = {
@@ -52828,10 +54257,11 @@ export namespace Prisma {
     update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutServiceTranslationInput, ServiceUpdateWithoutServiceTranslationInput>, ServiceUncheckedUpdateWithoutServiceTranslationInput>
   }
 
-  export type BookingCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput = {
-    create?: XOR<BookingCreateWithoutStaff_Booking_staffIdToStaffInput, BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput>
-    connectOrCreate?: BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput
-    connect?: BookingWhereUniqueInput
+  export type BookingCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput = {
+    create?: XOR<BookingCreateWithoutStaff_Booking_staffIdToStaffInput, BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput> | BookingCreateWithoutStaff_Booking_staffIdToStaffInput[] | BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput | BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput[]
+    createMany?: BookingCreateManyStaff_Booking_staffIdToStaffInputEnvelope
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
   }
 
   export type InspectionReportCreateNestedManyWithoutStaffInput = {
@@ -52874,10 +54304,11 @@ export namespace Prisma {
     connect?: WorkLogWhereUniqueInput | WorkLogWhereUniqueInput[]
   }
 
-  export type BookingUncheckedCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput = {
-    create?: XOR<BookingCreateWithoutStaff_Booking_staffIdToStaffInput, BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput>
-    connectOrCreate?: BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput
-    connect?: BookingWhereUniqueInput
+  export type BookingUncheckedCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput = {
+    create?: XOR<BookingCreateWithoutStaff_Booking_staffIdToStaffInput, BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput> | BookingCreateWithoutStaff_Booking_staffIdToStaffInput[] | BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput | BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput[]
+    createMany?: BookingCreateManyStaff_Booking_staffIdToStaffInputEnvelope
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
   }
 
   export type InspectionReportUncheckedCreateNestedManyWithoutStaffInput = {
@@ -52908,14 +54339,18 @@ export namespace Prisma {
     connect?: WorkLogWhereUniqueInput | WorkLogWhereUniqueInput[]
   }
 
-  export type BookingUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput = {
-    create?: XOR<BookingCreateWithoutStaff_Booking_staffIdToStaffInput, BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput>
-    connectOrCreate?: BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput
-    upsert?: BookingUpsertWithoutStaff_Booking_staffIdToStaffInput
-    disconnect?: BookingWhereInput | boolean
-    delete?: BookingWhereInput | boolean
-    connect?: BookingWhereUniqueInput
-    update?: XOR<XOR<BookingUpdateToOneWithWhereWithoutStaff_Booking_staffIdToStaffInput, BookingUpdateWithoutStaff_Booking_staffIdToStaffInput>, BookingUncheckedUpdateWithoutStaff_Booking_staffIdToStaffInput>
+  export type BookingUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput = {
+    create?: XOR<BookingCreateWithoutStaff_Booking_staffIdToStaffInput, BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput> | BookingCreateWithoutStaff_Booking_staffIdToStaffInput[] | BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput | BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput[]
+    upsert?: BookingUpsertWithWhereUniqueWithoutStaff_Booking_staffIdToStaffInput | BookingUpsertWithWhereUniqueWithoutStaff_Booking_staffIdToStaffInput[]
+    createMany?: BookingCreateManyStaff_Booking_staffIdToStaffInputEnvelope
+    set?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    disconnect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    delete?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    update?: BookingUpdateWithWhereUniqueWithoutStaff_Booking_staffIdToStaffInput | BookingUpdateWithWhereUniqueWithoutStaff_Booking_staffIdToStaffInput[]
+    updateMany?: BookingUpdateManyWithWhereWithoutStaff_Booking_staffIdToStaffInput | BookingUpdateManyWithWhereWithoutStaff_Booking_staffIdToStaffInput[]
+    deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
   }
 
   export type InspectionReportUpdateManyWithoutStaffNestedInput = {
@@ -52990,14 +54425,18 @@ export namespace Prisma {
     deleteMany?: WorkLogScalarWhereInput | WorkLogScalarWhereInput[]
   }
 
-  export type BookingUncheckedUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput = {
-    create?: XOR<BookingCreateWithoutStaff_Booking_staffIdToStaffInput, BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput>
-    connectOrCreate?: BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput
-    upsert?: BookingUpsertWithoutStaff_Booking_staffIdToStaffInput
-    disconnect?: BookingWhereInput | boolean
-    delete?: BookingWhereInput | boolean
-    connect?: BookingWhereUniqueInput
-    update?: XOR<XOR<BookingUpdateToOneWithWhereWithoutStaff_Booking_staffIdToStaffInput, BookingUpdateWithoutStaff_Booking_staffIdToStaffInput>, BookingUncheckedUpdateWithoutStaff_Booking_staffIdToStaffInput>
+  export type BookingUncheckedUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput = {
+    create?: XOR<BookingCreateWithoutStaff_Booking_staffIdToStaffInput, BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput> | BookingCreateWithoutStaff_Booking_staffIdToStaffInput[] | BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput[]
+    connectOrCreate?: BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput | BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput[]
+    upsert?: BookingUpsertWithWhereUniqueWithoutStaff_Booking_staffIdToStaffInput | BookingUpsertWithWhereUniqueWithoutStaff_Booking_staffIdToStaffInput[]
+    createMany?: BookingCreateManyStaff_Booking_staffIdToStaffInputEnvelope
+    set?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    disconnect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    delete?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+    update?: BookingUpdateWithWhereUniqueWithoutStaff_Booking_staffIdToStaffInput | BookingUpdateWithWhereUniqueWithoutStaff_Booking_staffIdToStaffInput[]
+    updateMany?: BookingUpdateManyWithWhereWithoutStaff_Booking_staffIdToStaffInput | BookingUpdateManyWithWhereWithoutStaff_Booking_staffIdToStaffInput[]
+    deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
   }
 
   export type InspectionReportUncheckedUpdateManyWithoutStaffNestedInput = {
@@ -54285,34 +55724,6 @@ export namespace Prisma {
     update?: XOR<XOR<StaffUpdateToOneWithWhereWithoutInspectionReportInput, StaffUpdateWithoutInspectionReportInput>, StaffUncheckedUpdateWithoutInspectionReportInput>
   }
 
-  export type BookingCreateNestedOneWithoutProposedServiceInput = {
-    create?: XOR<BookingCreateWithoutProposedServiceInput, BookingUncheckedCreateWithoutProposedServiceInput>
-    connectOrCreate?: BookingCreateOrConnectWithoutProposedServiceInput
-    connect?: BookingWhereUniqueInput
-  }
-
-  export type ServiceCreateNestedOneWithoutProposedServiceInput = {
-    create?: XOR<ServiceCreateWithoutProposedServiceInput, ServiceUncheckedCreateWithoutProposedServiceInput>
-    connectOrCreate?: ServiceCreateOrConnectWithoutProposedServiceInput
-    connect?: ServiceWhereUniqueInput
-  }
-
-  export type BookingUpdateOneRequiredWithoutProposedServiceNestedInput = {
-    create?: XOR<BookingCreateWithoutProposedServiceInput, BookingUncheckedCreateWithoutProposedServiceInput>
-    connectOrCreate?: BookingCreateOrConnectWithoutProposedServiceInput
-    upsert?: BookingUpsertWithoutProposedServiceInput
-    connect?: BookingWhereUniqueInput
-    update?: XOR<XOR<BookingUpdateToOneWithWhereWithoutProposedServiceInput, BookingUpdateWithoutProposedServiceInput>, BookingUncheckedUpdateWithoutProposedServiceInput>
-  }
-
-  export type ServiceUpdateOneRequiredWithoutProposedServiceNestedInput = {
-    create?: XOR<ServiceCreateWithoutProposedServiceInput, ServiceUncheckedCreateWithoutProposedServiceInput>
-    connectOrCreate?: ServiceCreateOrConnectWithoutProposedServiceInput
-    upsert?: ServiceUpsertWithoutProposedServiceInput
-    connect?: ServiceWhereUniqueInput
-    update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutProposedServiceInput, ServiceUpdateWithoutProposedServiceInput>, ServiceUncheckedUpdateWithoutProposedServiceInput>
-  }
-
   export type ServiceProviderCreateNestedOneWithoutServiceItemInput = {
     create?: XOR<ServiceProviderCreateWithoutServiceItemInput, ServiceProviderUncheckedCreateWithoutServiceItemInput>
     connectOrCreate?: ServiceProviderCreateOrConnectWithoutServiceItemInput
@@ -54473,6 +55884,90 @@ export namespace Prisma {
     upsert?: ServiceItemUpsertWithoutService_ServiceItemsInput
     connect?: ServiceItemWhereUniqueInput
     update?: XOR<XOR<ServiceItemUpdateToOneWithWhereWithoutService_ServiceItemsInput, ServiceItemUpdateWithoutService_ServiceItemsInput>, ServiceItemUncheckedUpdateWithoutService_ServiceItemsInput>
+  }
+
+  export type BookingCreateNestedOneWithoutProposalInput = {
+    create?: XOR<BookingCreateWithoutProposalInput, BookingUncheckedCreateWithoutProposalInput>
+    connectOrCreate?: BookingCreateOrConnectWithoutProposalInput
+    connect?: BookingWhereUniqueInput
+  }
+
+  export type ProposalItemCreateNestedManyWithoutProposalInput = {
+    create?: XOR<ProposalItemCreateWithoutProposalInput, ProposalItemUncheckedCreateWithoutProposalInput> | ProposalItemCreateWithoutProposalInput[] | ProposalItemUncheckedCreateWithoutProposalInput[]
+    connectOrCreate?: ProposalItemCreateOrConnectWithoutProposalInput | ProposalItemCreateOrConnectWithoutProposalInput[]
+    createMany?: ProposalItemCreateManyProposalInputEnvelope
+    connect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+  }
+
+  export type ProposalItemUncheckedCreateNestedManyWithoutProposalInput = {
+    create?: XOR<ProposalItemCreateWithoutProposalInput, ProposalItemUncheckedCreateWithoutProposalInput> | ProposalItemCreateWithoutProposalInput[] | ProposalItemUncheckedCreateWithoutProposalInput[]
+    connectOrCreate?: ProposalItemCreateOrConnectWithoutProposalInput | ProposalItemCreateOrConnectWithoutProposalInput[]
+    createMany?: ProposalItemCreateManyProposalInputEnvelope
+    connect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+  }
+
+  export type BookingUpdateOneRequiredWithoutProposalNestedInput = {
+    create?: XOR<BookingCreateWithoutProposalInput, BookingUncheckedCreateWithoutProposalInput>
+    connectOrCreate?: BookingCreateOrConnectWithoutProposalInput
+    upsert?: BookingUpsertWithoutProposalInput
+    connect?: BookingWhereUniqueInput
+    update?: XOR<XOR<BookingUpdateToOneWithWhereWithoutProposalInput, BookingUpdateWithoutProposalInput>, BookingUncheckedUpdateWithoutProposalInput>
+  }
+
+  export type ProposalItemUpdateManyWithoutProposalNestedInput = {
+    create?: XOR<ProposalItemCreateWithoutProposalInput, ProposalItemUncheckedCreateWithoutProposalInput> | ProposalItemCreateWithoutProposalInput[] | ProposalItemUncheckedCreateWithoutProposalInput[]
+    connectOrCreate?: ProposalItemCreateOrConnectWithoutProposalInput | ProposalItemCreateOrConnectWithoutProposalInput[]
+    upsert?: ProposalItemUpsertWithWhereUniqueWithoutProposalInput | ProposalItemUpsertWithWhereUniqueWithoutProposalInput[]
+    createMany?: ProposalItemCreateManyProposalInputEnvelope
+    set?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    disconnect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    delete?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    connect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    update?: ProposalItemUpdateWithWhereUniqueWithoutProposalInput | ProposalItemUpdateWithWhereUniqueWithoutProposalInput[]
+    updateMany?: ProposalItemUpdateManyWithWhereWithoutProposalInput | ProposalItemUpdateManyWithWhereWithoutProposalInput[]
+    deleteMany?: ProposalItemScalarWhereInput | ProposalItemScalarWhereInput[]
+  }
+
+  export type ProposalItemUncheckedUpdateManyWithoutProposalNestedInput = {
+    create?: XOR<ProposalItemCreateWithoutProposalInput, ProposalItemUncheckedCreateWithoutProposalInput> | ProposalItemCreateWithoutProposalInput[] | ProposalItemUncheckedCreateWithoutProposalInput[]
+    connectOrCreate?: ProposalItemCreateOrConnectWithoutProposalInput | ProposalItemCreateOrConnectWithoutProposalInput[]
+    upsert?: ProposalItemUpsertWithWhereUniqueWithoutProposalInput | ProposalItemUpsertWithWhereUniqueWithoutProposalInput[]
+    createMany?: ProposalItemCreateManyProposalInputEnvelope
+    set?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    disconnect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    delete?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    connect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+    update?: ProposalItemUpdateWithWhereUniqueWithoutProposalInput | ProposalItemUpdateWithWhereUniqueWithoutProposalInput[]
+    updateMany?: ProposalItemUpdateManyWithWhereWithoutProposalInput | ProposalItemUpdateManyWithWhereWithoutProposalInput[]
+    deleteMany?: ProposalItemScalarWhereInput | ProposalItemScalarWhereInput[]
+  }
+
+  export type ProposalCreateNestedOneWithoutProposalItemInput = {
+    create?: XOR<ProposalCreateWithoutProposalItemInput, ProposalUncheckedCreateWithoutProposalItemInput>
+    connectOrCreate?: ProposalCreateOrConnectWithoutProposalItemInput
+    connect?: ProposalWhereUniqueInput
+  }
+
+  export type ServiceCreateNestedOneWithoutProposalItemInput = {
+    create?: XOR<ServiceCreateWithoutProposalItemInput, ServiceUncheckedCreateWithoutProposalItemInput>
+    connectOrCreate?: ServiceCreateOrConnectWithoutProposalItemInput
+    connect?: ServiceWhereUniqueInput
+  }
+
+  export type ProposalUpdateOneRequiredWithoutProposalItemNestedInput = {
+    create?: XOR<ProposalCreateWithoutProposalItemInput, ProposalUncheckedCreateWithoutProposalItemInput>
+    connectOrCreate?: ProposalCreateOrConnectWithoutProposalItemInput
+    upsert?: ProposalUpsertWithoutProposalItemInput
+    connect?: ProposalWhereUniqueInput
+    update?: XOR<XOR<ProposalUpdateToOneWithWhereWithoutProposalItemInput, ProposalUpdateWithoutProposalItemInput>, ProposalUncheckedUpdateWithoutProposalItemInput>
+  }
+
+  export type ServiceUpdateOneRequiredWithoutProposalItemNestedInput = {
+    create?: XOR<ServiceCreateWithoutProposalItemInput, ServiceUncheckedCreateWithoutProposalItemInput>
+    connectOrCreate?: ServiceCreateOrConnectWithoutProposalItemInput
+    upsert?: ServiceUpsertWithoutProposalItemInput
+    connect?: ServiceWhereUniqueInput
+    update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutProposalItemInput, ServiceUpdateWithoutProposalItemInput>, ServiceUncheckedUpdateWithoutProposalItemInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -54734,6 +56229,13 @@ export namespace Prisma {
     not?: NestedEnumUnitFilter<$PrismaModel> | $Enums.Unit
   }
 
+  export type NestedEnumServiceStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ServiceStatus | EnumServiceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ServiceStatus[] | ListEnumServiceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ServiceStatus[] | ListEnumServiceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumServiceStatusFilter<$PrismaModel> | $Enums.ServiceStatus
+  }
+
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -54758,6 +56260,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUnitFilter<$PrismaModel>
     _max?: NestedEnumUnitFilter<$PrismaModel>
+  }
+
+  export type NestedEnumServiceStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ServiceStatus | EnumServiceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ServiceStatus[] | ListEnumServiceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ServiceStatus[] | ListEnumServiceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumServiceStatusWithAggregatesFilter<$PrismaModel> | $Enums.ServiceStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumServiceStatusFilter<$PrismaModel>
+    _max?: NestedEnumServiceStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumCompanyTypeFilter<$PrismaModel = never> = {
@@ -55047,31 +56559,22 @@ export namespace Prisma {
     create: XOR<InspectionReportCreateWithoutBookingInput, InspectionReportUncheckedCreateWithoutBookingInput>
   }
 
-  export type ProposedServiceCreateWithoutBookingInput = {
-    quantity?: number
-    price: number
+  export type ProposalCreateWithoutBookingInput = {
     notes?: string | null
     createdAt?: Date | string
-    Service: ServiceCreateNestedOneWithoutProposedServiceInput
+    ProposalItem?: ProposalItemCreateNestedManyWithoutProposalInput
   }
 
-  export type ProposedServiceUncheckedCreateWithoutBookingInput = {
+  export type ProposalUncheckedCreateWithoutBookingInput = {
     id?: number
-    serviceId: number
-    quantity?: number
-    price: number
     notes?: string | null
     createdAt?: Date | string
+    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutProposalInput
   }
 
-  export type ProposedServiceCreateOrConnectWithoutBookingInput = {
-    where: ProposedServiceWhereUniqueInput
-    create: XOR<ProposedServiceCreateWithoutBookingInput, ProposedServiceUncheckedCreateWithoutBookingInput>
-  }
-
-  export type ProposedServiceCreateManyBookingInputEnvelope = {
-    data: ProposedServiceCreateManyBookingInput | ProposedServiceCreateManyBookingInput[]
-    skipDuplicates?: boolean
+  export type ProposalCreateOrConnectWithoutBookingInput = {
+    where: ProposalWhereUniqueInput
+    create: XOR<ProposalCreateWithoutBookingInput, ProposalUncheckedCreateWithoutBookingInput>
   }
 
   export type TransactionCreateWithoutBookingInput = {
@@ -55333,33 +56836,28 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ProposedServiceUpsertWithWhereUniqueWithoutBookingInput = {
-    where: ProposedServiceWhereUniqueInput
-    update: XOR<ProposedServiceUpdateWithoutBookingInput, ProposedServiceUncheckedUpdateWithoutBookingInput>
-    create: XOR<ProposedServiceCreateWithoutBookingInput, ProposedServiceUncheckedCreateWithoutBookingInput>
+  export type ProposalUpsertWithoutBookingInput = {
+    update: XOR<ProposalUpdateWithoutBookingInput, ProposalUncheckedUpdateWithoutBookingInput>
+    create: XOR<ProposalCreateWithoutBookingInput, ProposalUncheckedCreateWithoutBookingInput>
+    where?: ProposalWhereInput
   }
 
-  export type ProposedServiceUpdateWithWhereUniqueWithoutBookingInput = {
-    where: ProposedServiceWhereUniqueInput
-    data: XOR<ProposedServiceUpdateWithoutBookingInput, ProposedServiceUncheckedUpdateWithoutBookingInput>
+  export type ProposalUpdateToOneWithWhereWithoutBookingInput = {
+    where?: ProposalWhereInput
+    data: XOR<ProposalUpdateWithoutBookingInput, ProposalUncheckedUpdateWithoutBookingInput>
   }
 
-  export type ProposedServiceUpdateManyWithWhereWithoutBookingInput = {
-    where: ProposedServiceScalarWhereInput
-    data: XOR<ProposedServiceUpdateManyMutationInput, ProposedServiceUncheckedUpdateManyWithoutBookingInput>
+  export type ProposalUpdateWithoutBookingInput = {
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ProposalItem?: ProposalItemUpdateManyWithoutProposalNestedInput
   }
 
-  export type ProposedServiceScalarWhereInput = {
-    AND?: ProposedServiceScalarWhereInput | ProposedServiceScalarWhereInput[]
-    OR?: ProposedServiceScalarWhereInput[]
-    NOT?: ProposedServiceScalarWhereInput | ProposedServiceScalarWhereInput[]
-    id?: IntFilter<"ProposedService"> | number
-    bookingId?: IntFilter<"ProposedService"> | number
-    serviceId?: IntFilter<"ProposedService"> | number
-    quantity?: IntFilter<"ProposedService"> | number
-    price?: FloatFilter<"ProposedService"> | number
-    notes?: StringNullableFilter<"ProposedService"> | string | null
-    createdAt?: DateTimeFilter<"ProposedService"> | Date | string
+  export type ProposalUncheckedUpdateWithoutBookingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
   }
 
   export type TransactionUpsertWithoutBookingInput = {
@@ -55816,7 +57314,8 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     description?: string
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingCreateNestedManyWithoutServiceInput
     Review?: ReviewCreateNestedManyWithoutServiceInput
     User_Service_createdByIdToUser?: UserCreateNestedOneWithoutService_Service_createdByIdToUserInput
@@ -55844,7 +57343,8 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     description?: string
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
     ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
@@ -56341,6 +57841,7 @@ export namespace Prisma {
     description?: StringFilter<"Service"> | string
     categoryId?: IntFilter<"Service"> | number
     unit?: EnumUnitFilter<"Service"> | $Enums.Unit
+    status?: EnumServiceStatusFilter<"Service"> | $Enums.ServiceStatus
   }
 
   export type ServiceRequestUpsertWithWhereUniqueWithoutCategoryInput = {
@@ -56637,7 +58138,7 @@ export namespace Prisma {
     ServiceRequest?: ServiceRequestCreateNestedOneWithoutBookingInput
     Staff_Booking_staffIdToStaff?: StaffCreateNestedOneWithoutBooking_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalCreateNestedOneWithoutBookingInput
     Transaction?: TransactionCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogCreateNestedManyWithoutBookingInput
   }
@@ -56652,7 +58153,7 @@ export namespace Prisma {
     staffId?: number | null
     serviceRequestId?: number | null
     InspectionReport?: InspectionReportUncheckedCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalUncheckedCreateNestedOneWithoutBookingInput
     Transaction?: TransactionUncheckedCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogUncheckedCreateNestedManyWithoutBookingInput
   }
@@ -59063,7 +60564,8 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     description?: string
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemCreateNestedManyWithoutServiceInput
     Review?: ReviewCreateNestedManyWithoutServiceInput
     Category: CategoryCreateNestedOneWithoutServiceInput
     User_Service_createdByIdToUser?: UserCreateNestedOneWithoutService_Service_createdByIdToUserInput
@@ -59092,7 +60594,8 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
     ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
@@ -59168,7 +60671,8 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUpdateManyWithoutServiceNestedInput
     Review?: ReviewUpdateManyWithoutServiceNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceNestedInput
     User_Service_createdByIdToUser?: UserUpdateOneWithoutService_Service_createdByIdToUserNestedInput
@@ -59197,7 +60701,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
     ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
@@ -59487,7 +60992,8 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     description?: string
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingCreateNestedManyWithoutServiceInput
     Category: CategoryCreateNestedOneWithoutServiceInput
     User_Service_createdByIdToUser?: UserCreateNestedOneWithoutService_Service_createdByIdToUserInput
@@ -59516,7 +61022,8 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
@@ -59531,7 +61038,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportCreateNestedManyWithoutStaffInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutStaffInput
     User: UserCreateNestedOneWithoutStaffInput
@@ -59546,7 +61053,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportUncheckedCreateNestedManyWithoutStaffInput
     StaffCategory?: StaffCategoryUncheckedCreateNestedManyWithoutStaffInput
     WorkLog?: WorkLogUncheckedCreateNestedManyWithoutStaffInput
@@ -59622,7 +61129,8 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUpdateManyWithoutServiceNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceNestedInput
     User_Service_createdByIdToUser?: UserUpdateOneWithoutService_Service_createdByIdToUserNestedInput
@@ -59651,7 +61159,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
@@ -59672,7 +61181,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUpdateManyWithoutStaffNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutStaffNestedInput
     User?: UserUpdateOneRequiredWithoutStaffNestedInput
@@ -59687,7 +61196,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUncheckedUpdateManyWithoutStaffNestedInput
     StaffCategory?: StaffCategoryUncheckedUpdateManyWithoutStaffNestedInput
     WorkLog?: WorkLogUncheckedUpdateManyWithoutStaffNestedInput
@@ -60509,30 +62018,28 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
   }
 
-  export type ProposedServiceCreateWithoutServiceInput = {
+  export type ProposalItemCreateWithoutServiceInput = {
     quantity?: number
     price: number
-    notes?: string | null
     createdAt?: Date | string
-    Booking: BookingCreateNestedOneWithoutProposedServiceInput
+    Proposal: ProposalCreateNestedOneWithoutProposalItemInput
   }
 
-  export type ProposedServiceUncheckedCreateWithoutServiceInput = {
+  export type ProposalItemUncheckedCreateWithoutServiceInput = {
     id?: number
-    bookingId: number
+    proposalId: number
     quantity?: number
     price: number
-    notes?: string | null
     createdAt?: Date | string
   }
 
-  export type ProposedServiceCreateOrConnectWithoutServiceInput = {
-    where: ProposedServiceWhereUniqueInput
-    create: XOR<ProposedServiceCreateWithoutServiceInput, ProposedServiceUncheckedCreateWithoutServiceInput>
+  export type ProposalItemCreateOrConnectWithoutServiceInput = {
+    where: ProposalItemWhereUniqueInput
+    create: XOR<ProposalItemCreateWithoutServiceInput, ProposalItemUncheckedCreateWithoutServiceInput>
   }
 
-  export type ProposedServiceCreateManyServiceInputEnvelope = {
-    data: ProposedServiceCreateManyServiceInput | ProposedServiceCreateManyServiceInput[]
+  export type ProposalItemCreateManyServiceInputEnvelope = {
+    data: ProposalItemCreateManyServiceInput | ProposalItemCreateManyServiceInput[]
     skipDuplicates?: boolean
   }
 
@@ -60989,20 +62496,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ProposedServiceUpsertWithWhereUniqueWithoutServiceInput = {
-    where: ProposedServiceWhereUniqueInput
-    update: XOR<ProposedServiceUpdateWithoutServiceInput, ProposedServiceUncheckedUpdateWithoutServiceInput>
-    create: XOR<ProposedServiceCreateWithoutServiceInput, ProposedServiceUncheckedCreateWithoutServiceInput>
+  export type ProposalItemUpsertWithWhereUniqueWithoutServiceInput = {
+    where: ProposalItemWhereUniqueInput
+    update: XOR<ProposalItemUpdateWithoutServiceInput, ProposalItemUncheckedUpdateWithoutServiceInput>
+    create: XOR<ProposalItemCreateWithoutServiceInput, ProposalItemUncheckedCreateWithoutServiceInput>
   }
 
-  export type ProposedServiceUpdateWithWhereUniqueWithoutServiceInput = {
-    where: ProposedServiceWhereUniqueInput
-    data: XOR<ProposedServiceUpdateWithoutServiceInput, ProposedServiceUncheckedUpdateWithoutServiceInput>
+  export type ProposalItemUpdateWithWhereUniqueWithoutServiceInput = {
+    where: ProposalItemWhereUniqueInput
+    data: XOR<ProposalItemUpdateWithoutServiceInput, ProposalItemUncheckedUpdateWithoutServiceInput>
   }
 
-  export type ProposedServiceUpdateManyWithWhereWithoutServiceInput = {
-    where: ProposedServiceScalarWhereInput
-    data: XOR<ProposedServiceUpdateManyMutationInput, ProposedServiceUncheckedUpdateManyWithoutServiceInput>
+  export type ProposalItemUpdateManyWithWhereWithoutServiceInput = {
+    where: ProposalItemScalarWhereInput
+    data: XOR<ProposalItemUpdateManyMutationInput, ProposalItemUncheckedUpdateManyWithoutServiceInput>
+  }
+
+  export type ProposalItemScalarWhereInput = {
+    AND?: ProposalItemScalarWhereInput | ProposalItemScalarWhereInput[]
+    OR?: ProposalItemScalarWhereInput[]
+    NOT?: ProposalItemScalarWhereInput | ProposalItemScalarWhereInput[]
+    id?: IntFilter<"ProposalItem"> | number
+    proposalId?: IntFilter<"ProposalItem"> | number
+    serviceId?: IntFilter<"ProposalItem"> | number
+    quantity?: IntFilter<"ProposalItem"> | number
+    price?: FloatFilter<"ProposalItem"> | number
+    createdAt?: DateTimeFilter<"ProposalItem"> | Date | string
   }
 
   export type RecurringBookingUpsertWithWhereUniqueWithoutServiceInput = {
@@ -61466,7 +62985,7 @@ export namespace Prisma {
     ServiceRequest?: ServiceRequestCreateNestedOneWithoutBookingInput
     Staff_Booking_staffIdToStaff?: StaffCreateNestedOneWithoutBooking_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalCreateNestedOneWithoutBookingInput
     Transaction?: TransactionCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogCreateNestedManyWithoutBookingInput
   }
@@ -61481,7 +63000,7 @@ export namespace Prisma {
     staffId?: number | null
     serviceRequestId?: number | null
     InspectionReport?: InspectionReportUncheckedCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalUncheckedCreateNestedOneWithoutBookingInput
     Transaction?: TransactionUncheckedCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogUncheckedCreateNestedManyWithoutBookingInput
   }
@@ -61508,7 +63027,8 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     description?: string
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingCreateNestedManyWithoutServiceInput
     Review?: ReviewCreateNestedManyWithoutServiceInput
     Category: CategoryCreateNestedOneWithoutServiceInput
@@ -61536,7 +63056,8 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
     ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
@@ -61842,7 +63363,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportCreateNestedManyWithoutStaffInput
     Review?: ReviewCreateNestedManyWithoutStaffInput
     User: UserCreateNestedOneWithoutStaffInput
@@ -61856,7 +63377,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportUncheckedCreateNestedManyWithoutStaffInput
     Review?: ReviewUncheckedCreateNestedManyWithoutStaffInput
     StaffCategory?: StaffCategoryUncheckedCreateNestedManyWithoutStaffInput
@@ -62402,7 +63923,8 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     description?: string
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingCreateNestedManyWithoutServiceInput
     Review?: ReviewCreateNestedManyWithoutServiceInput
     Category: CategoryCreateNestedOneWithoutServiceInput
@@ -62431,7 +63953,8 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
@@ -62502,7 +64025,8 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUpdateManyWithoutServiceNestedInput
     Review?: ReviewUpdateManyWithoutServiceNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceNestedInput
@@ -62531,7 +64055,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
@@ -62546,7 +64071,7 @@ export namespace Prisma {
     ServiceProvider: ServiceProviderCreateNestedOneWithoutBookingInput
     ServiceRequest?: ServiceRequestCreateNestedOneWithoutBookingInput
     InspectionReport?: InspectionReportCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalCreateNestedOneWithoutBookingInput
     Transaction?: TransactionCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogCreateNestedManyWithoutBookingInput
   }
@@ -62561,7 +64086,7 @@ export namespace Prisma {
     updatedAt: Date | string
     serviceRequestId?: number | null
     InspectionReport?: InspectionReportUncheckedCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalUncheckedCreateNestedOneWithoutBookingInput
     Transaction?: TransactionUncheckedCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogUncheckedCreateNestedManyWithoutBookingInput
   }
@@ -62569,6 +64094,11 @@ export namespace Prisma {
   export type BookingCreateOrConnectWithoutStaff_Booking_staffIdToStaffInput = {
     where: BookingWhereUniqueInput
     create: XOR<BookingCreateWithoutStaff_Booking_staffIdToStaffInput, BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput>
+  }
+
+  export type BookingCreateManyStaff_Booking_staffIdToStaffInputEnvelope = {
+    data: BookingCreateManyStaff_Booking_staffIdToStaffInput | BookingCreateManyStaff_Booking_staffIdToStaffInput[]
+    skipDuplicates?: boolean
   }
 
   export type InspectionReportCreateWithoutStaffInput = {
@@ -62808,44 +64338,20 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type BookingUpsertWithoutStaff_Booking_staffIdToStaffInput = {
+  export type BookingUpsertWithWhereUniqueWithoutStaff_Booking_staffIdToStaffInput = {
+    where: BookingWhereUniqueInput
     update: XOR<BookingUpdateWithoutStaff_Booking_staffIdToStaffInput, BookingUncheckedUpdateWithoutStaff_Booking_staffIdToStaffInput>
     create: XOR<BookingCreateWithoutStaff_Booking_staffIdToStaffInput, BookingUncheckedCreateWithoutStaff_Booking_staffIdToStaffInput>
-    where?: BookingWhereInput
   }
 
-  export type BookingUpdateToOneWithWhereWithoutStaff_Booking_staffIdToStaffInput = {
-    where?: BookingWhereInput
+  export type BookingUpdateWithWhereUniqueWithoutStaff_Booking_staffIdToStaffInput = {
+    where: BookingWhereUniqueInput
     data: XOR<BookingUpdateWithoutStaff_Booking_staffIdToStaffInput, BookingUncheckedUpdateWithoutStaff_Booking_staffIdToStaffInput>
   }
 
-  export type BookingUpdateWithoutStaff_Booking_staffIdToStaffInput = {
-    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CustomerProfile?: CustomerProfileUpdateOneRequiredWithoutBookingNestedInput
-    ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutBookingNestedInput
-    ServiceRequest?: ServiceRequestUpdateOneWithoutBookingNestedInput
-    InspectionReport?: InspectionReportUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUpdateManyWithoutBookingNestedInput
-    Transaction?: TransactionUpdateOneWithoutBookingNestedInput
-    WorkLog?: WorkLogUpdateManyWithoutBookingNestedInput
-  }
-
-  export type BookingUncheckedUpdateWithoutStaff_Booking_staffIdToStaffInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    customerId?: IntFieldUpdateOperationsInput | number
-    providerId?: IntFieldUpdateOperationsInput | number
-    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
-    InspectionReport?: InspectionReportUncheckedUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutBookingNestedInput
-    Transaction?: TransactionUncheckedUpdateOneWithoutBookingNestedInput
-    WorkLog?: WorkLogUncheckedUpdateManyWithoutBookingNestedInput
+  export type BookingUpdateManyWithWhereWithoutStaff_Booking_staffIdToStaffInput = {
+    where: BookingScalarWhereInput
+    data: XOR<BookingUpdateManyMutationInput, BookingUncheckedUpdateManyWithoutStaff_Booking_staffIdToStaffInput>
   }
 
   export type InspectionReportUpsertWithWhereUniqueWithoutStaffInput = {
@@ -63115,7 +64621,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportCreateNestedManyWithoutStaffInput
     Review?: ReviewCreateNestedManyWithoutStaffInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutStaffInput
@@ -63130,7 +64636,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportUncheckedCreateNestedManyWithoutStaffInput
     Review?: ReviewUncheckedCreateNestedManyWithoutStaffInput
     WorkLog?: WorkLogUncheckedCreateNestedManyWithoutStaffInput
@@ -63200,7 +64706,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUpdateManyWithoutStaffNestedInput
     Review?: ReviewUpdateManyWithoutStaffNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutStaffNestedInput
@@ -63215,7 +64721,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUncheckedUpdateManyWithoutStaffNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutStaffNestedInput
     WorkLog?: WorkLogUncheckedUpdateManyWithoutStaffNestedInput
@@ -63231,7 +64737,7 @@ export namespace Prisma {
     ServiceRequest?: ServiceRequestCreateNestedOneWithoutBookingInput
     Staff_Booking_staffIdToStaff?: StaffCreateNestedOneWithoutBooking_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogCreateNestedManyWithoutBookingInput
   }
 
@@ -63246,7 +64752,7 @@ export namespace Prisma {
     staffId?: number | null
     serviceRequestId?: number | null
     InspectionReport?: InspectionReportUncheckedCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalUncheckedCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogUncheckedCreateNestedManyWithoutBookingInput
   }
 
@@ -63276,7 +64782,7 @@ export namespace Prisma {
     ServiceRequest?: ServiceRequestUpdateOneWithoutBookingNestedInput
     Staff_Booking_staffIdToStaff?: StaffUpdateOneWithoutBooking_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUpdateManyWithoutBookingNestedInput
   }
 
@@ -63291,7 +64797,7 @@ export namespace Prisma {
     staffId?: NullableIntFieldUpdateOperationsInput | number | null
     serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
     InspectionReport?: InspectionReportUncheckedUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUncheckedUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUncheckedUpdateManyWithoutBookingNestedInput
   }
 
@@ -63873,7 +65379,8 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     description?: string
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingCreateNestedManyWithoutServiceInput
     Review?: ReviewCreateNestedManyWithoutServiceInput
     Category: CategoryCreateNestedOneWithoutServiceInput
@@ -63901,7 +65408,8 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
     ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
@@ -63930,7 +65438,8 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     description?: string
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingCreateNestedManyWithoutServiceInput
     Review?: ReviewCreateNestedManyWithoutServiceInput
     Category: CategoryCreateNestedOneWithoutServiceInput
@@ -63958,7 +65467,8 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
     ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
@@ -63987,7 +65497,8 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     description?: string
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingCreateNestedManyWithoutServiceInput
     Review?: ReviewCreateNestedManyWithoutServiceInput
     Category: CategoryCreateNestedOneWithoutServiceInput
@@ -64015,7 +65526,8 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
     ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
@@ -64137,7 +65649,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportCreateNestedManyWithoutStaffInput
     Review?: ReviewCreateNestedManyWithoutStaffInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutStaffInput
@@ -64151,7 +65663,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportUncheckedCreateNestedManyWithoutStaffInput
     Review?: ReviewUncheckedCreateNestedManyWithoutStaffInput
     StaffCategory?: StaffCategoryUncheckedCreateNestedManyWithoutStaffInput
@@ -65207,7 +66719,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUpdateManyWithoutStaffNestedInput
     Review?: ReviewUpdateManyWithoutStaffNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutStaffNestedInput
@@ -65221,7 +66733,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUncheckedUpdateManyWithoutStaffNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutStaffNestedInput
     StaffCategory?: StaffCategoryUncheckedUpdateManyWithoutStaffNestedInput
@@ -65584,7 +67096,7 @@ export namespace Prisma {
     ServiceRequest?: ServiceRequestCreateNestedOneWithoutBookingInput
     Staff_Booking_staffIdToStaff?: StaffCreateNestedOneWithoutBooking_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalCreateNestedOneWithoutBookingInput
     Transaction?: TransactionCreateNestedOneWithoutBookingInput
   }
 
@@ -65599,7 +67111,7 @@ export namespace Prisma {
     staffId?: number | null
     serviceRequestId?: number | null
     InspectionReport?: InspectionReportUncheckedCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalUncheckedCreateNestedOneWithoutBookingInput
     Transaction?: TransactionUncheckedCreateNestedOneWithoutBookingInput
   }
 
@@ -65612,7 +67124,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportCreateNestedManyWithoutStaffInput
     Review?: ReviewCreateNestedManyWithoutStaffInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutStaffInput
@@ -65627,7 +67139,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportUncheckedCreateNestedManyWithoutStaffInput
     Review?: ReviewUncheckedCreateNestedManyWithoutStaffInput
     StaffCategory?: StaffCategoryUncheckedCreateNestedManyWithoutStaffInput
@@ -65659,7 +67171,7 @@ export namespace Prisma {
     ServiceRequest?: ServiceRequestUpdateOneWithoutBookingNestedInput
     Staff_Booking_staffIdToStaff?: StaffUpdateOneWithoutBooking_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUpdateOneWithoutBookingNestedInput
   }
 
@@ -65674,7 +67186,7 @@ export namespace Prisma {
     staffId?: NullableIntFieldUpdateOperationsInput | number | null
     serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
     InspectionReport?: InspectionReportUncheckedUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUncheckedUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUncheckedUpdateOneWithoutBookingNestedInput
   }
 
@@ -65693,7 +67205,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUpdateManyWithoutStaffNestedInput
     Review?: ReviewUpdateManyWithoutStaffNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutStaffNestedInput
@@ -65708,7 +67220,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUncheckedUpdateManyWithoutStaffNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutStaffNestedInput
     StaffCategory?: StaffCategoryUncheckedUpdateManyWithoutStaffNestedInput
@@ -65723,7 +67235,7 @@ export namespace Prisma {
     ServiceProvider: ServiceProviderCreateNestedOneWithoutBookingInput
     ServiceRequest?: ServiceRequestCreateNestedOneWithoutBookingInput
     Staff_Booking_staffIdToStaff?: StaffCreateNestedOneWithoutBooking_Booking_staffIdToStaffInput
-    ProposedService?: ProposedServiceCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalCreateNestedOneWithoutBookingInput
     Transaction?: TransactionCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogCreateNestedManyWithoutBookingInput
   }
@@ -65738,7 +67250,7 @@ export namespace Prisma {
     updatedAt: Date | string
     staffId?: number | null
     serviceRequestId?: number | null
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalUncheckedCreateNestedOneWithoutBookingInput
     Transaction?: TransactionUncheckedCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogUncheckedCreateNestedManyWithoutBookingInput
   }
@@ -65752,7 +67264,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     Review?: ReviewCreateNestedManyWithoutStaffInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutStaffInput
     User: UserCreateNestedOneWithoutStaffInput
@@ -65767,7 +67279,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt: Date | string
     isActive?: boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedOneWithoutStaff_Booking_staffIdToStaffInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput
     Review?: ReviewUncheckedCreateNestedManyWithoutStaffInput
     StaffCategory?: StaffCategoryUncheckedCreateNestedManyWithoutStaffInput
     WorkLog?: WorkLogUncheckedCreateNestedManyWithoutStaffInput
@@ -65798,7 +67310,7 @@ export namespace Prisma {
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutBookingNestedInput
     ServiceRequest?: ServiceRequestUpdateOneWithoutBookingNestedInput
     Staff_Booking_staffIdToStaff?: StaffUpdateOneWithoutBooking_Booking_staffIdToStaffNestedInput
-    ProposedService?: ProposedServiceUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUpdateManyWithoutBookingNestedInput
   }
@@ -65813,7 +67325,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     staffId?: NullableIntFieldUpdateOperationsInput | number | null
     serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUncheckedUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUncheckedUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUncheckedUpdateManyWithoutBookingNestedInput
   }
@@ -65833,7 +67345,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     Review?: ReviewUpdateManyWithoutStaffNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutStaffNestedInput
     User?: UserUpdateOneRequiredWithoutStaffNestedInput
@@ -65848,194 +67360,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutStaffNestedInput
     StaffCategory?: StaffCategoryUncheckedUpdateManyWithoutStaffNestedInput
     WorkLog?: WorkLogUncheckedUpdateManyWithoutStaffNestedInput
-  }
-
-  export type BookingCreateWithoutProposedServiceInput = {
-    status: $Enums.BookingStatus
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CustomerProfile: CustomerProfileCreateNestedOneWithoutBookingInput
-    ServiceProvider: ServiceProviderCreateNestedOneWithoutBookingInput
-    ServiceRequest?: ServiceRequestCreateNestedOneWithoutBookingInput
-    Staff_Booking_staffIdToStaff?: StaffCreateNestedOneWithoutBooking_Booking_staffIdToStaffInput
-    InspectionReport?: InspectionReportCreateNestedOneWithoutBookingInput
-    Transaction?: TransactionCreateNestedOneWithoutBookingInput
-    WorkLog?: WorkLogCreateNestedManyWithoutBookingInput
-  }
-
-  export type BookingUncheckedCreateWithoutProposedServiceInput = {
-    id?: number
-    customerId: number
-    providerId: number
-    status: $Enums.BookingStatus
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    staffId?: number | null
-    serviceRequestId?: number | null
-    InspectionReport?: InspectionReportUncheckedCreateNestedOneWithoutBookingInput
-    Transaction?: TransactionUncheckedCreateNestedOneWithoutBookingInput
-    WorkLog?: WorkLogUncheckedCreateNestedManyWithoutBookingInput
-  }
-
-  export type BookingCreateOrConnectWithoutProposedServiceInput = {
-    where: BookingWhereUniqueInput
-    create: XOR<BookingCreateWithoutProposedServiceInput, BookingUncheckedCreateWithoutProposedServiceInput>
-  }
-
-  export type ServiceCreateWithoutProposedServiceInput = {
-    basePrice: number
-    virtualPrice: number
-    images?: ServiceCreateimagesInput | string[]
-    durationMinutes: number
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    name?: string
-    publishedAt?: Date | string | null
-    description?: string
-    unit?: $Enums.Unit
-    RecurringBooking?: RecurringBookingCreateNestedManyWithoutServiceInput
-    Review?: ReviewCreateNestedManyWithoutServiceInput
-    Category: CategoryCreateNestedOneWithoutServiceInput
-    User_Service_createdByIdToUser?: UserCreateNestedOneWithoutService_Service_createdByIdToUserInput
-    User_Service_deletedByIdToUser?: UserCreateNestedOneWithoutService_Service_deletedByIdToUserInput
-    ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceInput
-    User_Service_updatedByIdToUser?: UserCreateNestedOneWithoutService_Service_updatedByIdToUserInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutServiceInput
-    Service_ServiceItems?: Service_ServiceItemsCreateNestedManyWithoutServiceInput
-  }
-
-  export type ServiceUncheckedCreateWithoutProposedServiceInput = {
-    id?: number
-    basePrice: number
-    virtualPrice: number
-    images?: ServiceCreateimagesInput | string[]
-    durationMinutes: number
-    providerId: number
-    createdById?: number | null
-    updatedById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    name?: string
-    publishedAt?: Date | string | null
-    description?: string
-    categoryId: number
-    unit?: $Enums.Unit
-    RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
-    Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
-    Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
-  }
-
-  export type ServiceCreateOrConnectWithoutProposedServiceInput = {
-    where: ServiceWhereUniqueInput
-    create: XOR<ServiceCreateWithoutProposedServiceInput, ServiceUncheckedCreateWithoutProposedServiceInput>
-  }
-
-  export type BookingUpsertWithoutProposedServiceInput = {
-    update: XOR<BookingUpdateWithoutProposedServiceInput, BookingUncheckedUpdateWithoutProposedServiceInput>
-    create: XOR<BookingCreateWithoutProposedServiceInput, BookingUncheckedCreateWithoutProposedServiceInput>
-    where?: BookingWhereInput
-  }
-
-  export type BookingUpdateToOneWithWhereWithoutProposedServiceInput = {
-    where?: BookingWhereInput
-    data: XOR<BookingUpdateWithoutProposedServiceInput, BookingUncheckedUpdateWithoutProposedServiceInput>
-  }
-
-  export type BookingUpdateWithoutProposedServiceInput = {
-    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CustomerProfile?: CustomerProfileUpdateOneRequiredWithoutBookingNestedInput
-    ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutBookingNestedInput
-    ServiceRequest?: ServiceRequestUpdateOneWithoutBookingNestedInput
-    Staff_Booking_staffIdToStaff?: StaffUpdateOneWithoutBooking_Booking_staffIdToStaffNestedInput
-    InspectionReport?: InspectionReportUpdateOneWithoutBookingNestedInput
-    Transaction?: TransactionUpdateOneWithoutBookingNestedInput
-    WorkLog?: WorkLogUpdateManyWithoutBookingNestedInput
-  }
-
-  export type BookingUncheckedUpdateWithoutProposedServiceInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    customerId?: IntFieldUpdateOperationsInput | number
-    providerId?: IntFieldUpdateOperationsInput | number
-    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    staffId?: NullableIntFieldUpdateOperationsInput | number | null
-    serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
-    InspectionReport?: InspectionReportUncheckedUpdateOneWithoutBookingNestedInput
-    Transaction?: TransactionUncheckedUpdateOneWithoutBookingNestedInput
-    WorkLog?: WorkLogUncheckedUpdateManyWithoutBookingNestedInput
-  }
-
-  export type ServiceUpsertWithoutProposedServiceInput = {
-    update: XOR<ServiceUpdateWithoutProposedServiceInput, ServiceUncheckedUpdateWithoutProposedServiceInput>
-    create: XOR<ServiceCreateWithoutProposedServiceInput, ServiceUncheckedCreateWithoutProposedServiceInput>
-    where?: ServiceWhereInput
-  }
-
-  export type ServiceUpdateToOneWithWhereWithoutProposedServiceInput = {
-    where?: ServiceWhereInput
-    data: XOR<ServiceUpdateWithoutProposedServiceInput, ServiceUncheckedUpdateWithoutProposedServiceInput>
-  }
-
-  export type ServiceUpdateWithoutProposedServiceInput = {
-    basePrice?: FloatFieldUpdateOperationsInput | number
-    virtualPrice?: FloatFieldUpdateOperationsInput | number
-    images?: ServiceUpdateimagesInput | string[]
-    durationMinutes?: IntFieldUpdateOperationsInput | number
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    description?: StringFieldUpdateOperationsInput | string
-    unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    RecurringBooking?: RecurringBookingUpdateManyWithoutServiceNestedInput
-    Review?: ReviewUpdateManyWithoutServiceNestedInput
-    Category?: CategoryUpdateOneRequiredWithoutServiceNestedInput
-    User_Service_createdByIdToUser?: UserUpdateOneWithoutService_Service_createdByIdToUserNestedInput
-    User_Service_deletedByIdToUser?: UserUpdateOneWithoutService_Service_deletedByIdToUserNestedInput
-    ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceNestedInput
-    User_Service_updatedByIdToUser?: UserUpdateOneWithoutService_Service_updatedByIdToUserNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutServiceNestedInput
-    Service_ServiceItems?: Service_ServiceItemsUpdateManyWithoutServiceNestedInput
-  }
-
-  export type ServiceUncheckedUpdateWithoutProposedServiceInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    basePrice?: FloatFieldUpdateOperationsInput | number
-    virtualPrice?: FloatFieldUpdateOperationsInput | number
-    images?: ServiceUpdateimagesInput | string[]
-    durationMinutes?: IntFieldUpdateOperationsInput | number
-    providerId?: IntFieldUpdateOperationsInput | number
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    description?: StringFieldUpdateOperationsInput | string
-    categoryId?: IntFieldUpdateOperationsInput | number
-    unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
-    Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
-    Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceProviderCreateWithoutServiceItemInput = {
@@ -66183,7 +67511,7 @@ export namespace Prisma {
     ServiceProvider: ServiceProviderCreateNestedOneWithoutBookingInput
     Staff_Booking_staffIdToStaff?: StaffCreateNestedOneWithoutBooking_Booking_staffIdToStaffInput
     InspectionReport?: InspectionReportCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalCreateNestedOneWithoutBookingInput
     Transaction?: TransactionCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogCreateNestedManyWithoutBookingInput
   }
@@ -66198,7 +67526,7 @@ export namespace Prisma {
     updatedAt: Date | string
     staffId?: number | null
     InspectionReport?: InspectionReportUncheckedCreateNestedOneWithoutBookingInput
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutBookingInput
+    Proposal?: ProposalUncheckedCreateNestedOneWithoutBookingInput
     Transaction?: TransactionUncheckedCreateNestedOneWithoutBookingInput
     WorkLog?: WorkLogUncheckedCreateNestedManyWithoutBookingInput
   }
@@ -66350,7 +67678,7 @@ export namespace Prisma {
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutBookingNestedInput
     Staff_Booking_staffIdToStaff?: StaffUpdateOneWithoutBooking_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUpdateManyWithoutBookingNestedInput
   }
@@ -66365,7 +67693,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     staffId?: NullableIntFieldUpdateOperationsInput | number | null
     InspectionReport?: InspectionReportUncheckedUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUncheckedUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUncheckedUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUncheckedUpdateManyWithoutBookingNestedInput
   }
@@ -66522,7 +67850,8 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     description?: string
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingCreateNestedManyWithoutServiceInput
     Review?: ReviewCreateNestedManyWithoutServiceInput
     Category: CategoryCreateNestedOneWithoutServiceInput
@@ -66551,7 +67880,8 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedCreateNestedManyWithoutServiceInput
+    status?: $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
     ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
@@ -66623,7 +67953,8 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUpdateManyWithoutServiceNestedInput
     Review?: ReviewUpdateManyWithoutServiceNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceNestedInput
@@ -66652,7 +67983,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
     ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
@@ -66702,13 +68034,275 @@ export namespace Prisma {
     providerId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type ProposedServiceCreateManyBookingInput = {
+  export type BookingCreateWithoutProposalInput = {
+    status: $Enums.BookingStatus
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt: Date | string
+    CustomerProfile: CustomerProfileCreateNestedOneWithoutBookingInput
+    ServiceProvider: ServiceProviderCreateNestedOneWithoutBookingInput
+    ServiceRequest?: ServiceRequestCreateNestedOneWithoutBookingInput
+    Staff_Booking_staffIdToStaff?: StaffCreateNestedOneWithoutBooking_Booking_staffIdToStaffInput
+    InspectionReport?: InspectionReportCreateNestedOneWithoutBookingInput
+    Transaction?: TransactionCreateNestedOneWithoutBookingInput
+    WorkLog?: WorkLogCreateNestedManyWithoutBookingInput
+  }
+
+  export type BookingUncheckedCreateWithoutProposalInput = {
+    id?: number
+    customerId: number
+    providerId: number
+    status: $Enums.BookingStatus
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt: Date | string
+    staffId?: number | null
+    serviceRequestId?: number | null
+    InspectionReport?: InspectionReportUncheckedCreateNestedOneWithoutBookingInput
+    Transaction?: TransactionUncheckedCreateNestedOneWithoutBookingInput
+    WorkLog?: WorkLogUncheckedCreateNestedManyWithoutBookingInput
+  }
+
+  export type BookingCreateOrConnectWithoutProposalInput = {
+    where: BookingWhereUniqueInput
+    create: XOR<BookingCreateWithoutProposalInput, BookingUncheckedCreateWithoutProposalInput>
+  }
+
+  export type ProposalItemCreateWithoutProposalInput = {
+    quantity?: number
+    price: number
+    createdAt?: Date | string
+    Service: ServiceCreateNestedOneWithoutProposalItemInput
+  }
+
+  export type ProposalItemUncheckedCreateWithoutProposalInput = {
     id?: number
     serviceId: number
     quantity?: number
     price: number
+    createdAt?: Date | string
+  }
+
+  export type ProposalItemCreateOrConnectWithoutProposalInput = {
+    where: ProposalItemWhereUniqueInput
+    create: XOR<ProposalItemCreateWithoutProposalInput, ProposalItemUncheckedCreateWithoutProposalInput>
+  }
+
+  export type ProposalItemCreateManyProposalInputEnvelope = {
+    data: ProposalItemCreateManyProposalInput | ProposalItemCreateManyProposalInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type BookingUpsertWithoutProposalInput = {
+    update: XOR<BookingUpdateWithoutProposalInput, BookingUncheckedUpdateWithoutProposalInput>
+    create: XOR<BookingCreateWithoutProposalInput, BookingUncheckedCreateWithoutProposalInput>
+    where?: BookingWhereInput
+  }
+
+  export type BookingUpdateToOneWithWhereWithoutProposalInput = {
+    where?: BookingWhereInput
+    data: XOR<BookingUpdateWithoutProposalInput, BookingUncheckedUpdateWithoutProposalInput>
+  }
+
+  export type BookingUpdateWithoutProposalInput = {
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    CustomerProfile?: CustomerProfileUpdateOneRequiredWithoutBookingNestedInput
+    ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutBookingNestedInput
+    ServiceRequest?: ServiceRequestUpdateOneWithoutBookingNestedInput
+    Staff_Booking_staffIdToStaff?: StaffUpdateOneWithoutBooking_Booking_staffIdToStaffNestedInput
+    InspectionReport?: InspectionReportUpdateOneWithoutBookingNestedInput
+    Transaction?: TransactionUpdateOneWithoutBookingNestedInput
+    WorkLog?: WorkLogUpdateManyWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateWithoutProposalInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    customerId?: IntFieldUpdateOperationsInput | number
+    providerId?: IntFieldUpdateOperationsInput | number
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    staffId?: NullableIntFieldUpdateOperationsInput | number | null
+    serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
+    InspectionReport?: InspectionReportUncheckedUpdateOneWithoutBookingNestedInput
+    Transaction?: TransactionUncheckedUpdateOneWithoutBookingNestedInput
+    WorkLog?: WorkLogUncheckedUpdateManyWithoutBookingNestedInput
+  }
+
+  export type ProposalItemUpsertWithWhereUniqueWithoutProposalInput = {
+    where: ProposalItemWhereUniqueInput
+    update: XOR<ProposalItemUpdateWithoutProposalInput, ProposalItemUncheckedUpdateWithoutProposalInput>
+    create: XOR<ProposalItemCreateWithoutProposalInput, ProposalItemUncheckedCreateWithoutProposalInput>
+  }
+
+  export type ProposalItemUpdateWithWhereUniqueWithoutProposalInput = {
+    where: ProposalItemWhereUniqueInput
+    data: XOR<ProposalItemUpdateWithoutProposalInput, ProposalItemUncheckedUpdateWithoutProposalInput>
+  }
+
+  export type ProposalItemUpdateManyWithWhereWithoutProposalInput = {
+    where: ProposalItemScalarWhereInput
+    data: XOR<ProposalItemUpdateManyMutationInput, ProposalItemUncheckedUpdateManyWithoutProposalInput>
+  }
+
+  export type ProposalCreateWithoutProposalItemInput = {
     notes?: string | null
     createdAt?: Date | string
+    Booking: BookingCreateNestedOneWithoutProposalInput
+  }
+
+  export type ProposalUncheckedCreateWithoutProposalItemInput = {
+    id?: number
+    bookingId: number
+    notes?: string | null
+    createdAt?: Date | string
+  }
+
+  export type ProposalCreateOrConnectWithoutProposalItemInput = {
+    where: ProposalWhereUniqueInput
+    create: XOR<ProposalCreateWithoutProposalItemInput, ProposalUncheckedCreateWithoutProposalItemInput>
+  }
+
+  export type ServiceCreateWithoutProposalItemInput = {
+    basePrice: number
+    virtualPrice: number
+    images?: ServiceCreateimagesInput | string[]
+    durationMinutes: number
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt: Date | string
+    name?: string
+    publishedAt?: Date | string | null
+    description?: string
+    unit?: $Enums.Unit
+    status?: $Enums.ServiceStatus
+    RecurringBooking?: RecurringBookingCreateNestedManyWithoutServiceInput
+    Review?: ReviewCreateNestedManyWithoutServiceInput
+    Category: CategoryCreateNestedOneWithoutServiceInput
+    User_Service_createdByIdToUser?: UserCreateNestedOneWithoutService_Service_createdByIdToUserInput
+    User_Service_deletedByIdToUser?: UserCreateNestedOneWithoutService_Service_deletedByIdToUserInput
+    ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceInput
+    User_Service_updatedByIdToUser?: UserCreateNestedOneWithoutService_Service_updatedByIdToUserInput
+    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutServiceInput
+    Service_ServiceItems?: Service_ServiceItemsCreateNestedManyWithoutServiceInput
+  }
+
+  export type ServiceUncheckedCreateWithoutProposalItemInput = {
+    id?: number
+    basePrice: number
+    virtualPrice: number
+    images?: ServiceCreateimagesInput | string[]
+    durationMinutes: number
+    providerId: number
+    createdById?: number | null
+    updatedById?: number | null
+    deletedById?: number | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt: Date | string
+    name?: string
+    publishedAt?: Date | string | null
+    description?: string
+    categoryId: number
+    unit?: $Enums.Unit
+    status?: $Enums.ServiceStatus
+    RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
+    Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
+    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
+    Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
+  }
+
+  export type ServiceCreateOrConnectWithoutProposalItemInput = {
+    where: ServiceWhereUniqueInput
+    create: XOR<ServiceCreateWithoutProposalItemInput, ServiceUncheckedCreateWithoutProposalItemInput>
+  }
+
+  export type ProposalUpsertWithoutProposalItemInput = {
+    update: XOR<ProposalUpdateWithoutProposalItemInput, ProposalUncheckedUpdateWithoutProposalItemInput>
+    create: XOR<ProposalCreateWithoutProposalItemInput, ProposalUncheckedCreateWithoutProposalItemInput>
+    where?: ProposalWhereInput
+  }
+
+  export type ProposalUpdateToOneWithWhereWithoutProposalItemInput = {
+    where?: ProposalWhereInput
+    data: XOR<ProposalUpdateWithoutProposalItemInput, ProposalUncheckedUpdateWithoutProposalItemInput>
+  }
+
+  export type ProposalUpdateWithoutProposalItemInput = {
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Booking?: BookingUpdateOneRequiredWithoutProposalNestedInput
+  }
+
+  export type ProposalUncheckedUpdateWithoutProposalItemInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    bookingId?: IntFieldUpdateOperationsInput | number
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ServiceUpsertWithoutProposalItemInput = {
+    update: XOR<ServiceUpdateWithoutProposalItemInput, ServiceUncheckedUpdateWithoutProposalItemInput>
+    create: XOR<ServiceCreateWithoutProposalItemInput, ServiceUncheckedCreateWithoutProposalItemInput>
+    where?: ServiceWhereInput
+  }
+
+  export type ServiceUpdateToOneWithWhereWithoutProposalItemInput = {
+    where?: ServiceWhereInput
+    data: XOR<ServiceUpdateWithoutProposalItemInput, ServiceUncheckedUpdateWithoutProposalItemInput>
+  }
+
+  export type ServiceUpdateWithoutProposalItemInput = {
+    basePrice?: FloatFieldUpdateOperationsInput | number
+    virtualPrice?: FloatFieldUpdateOperationsInput | number
+    images?: ServiceUpdateimagesInput | string[]
+    durationMinutes?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    RecurringBooking?: RecurringBookingUpdateManyWithoutServiceNestedInput
+    Review?: ReviewUpdateManyWithoutServiceNestedInput
+    Category?: CategoryUpdateOneRequiredWithoutServiceNestedInput
+    User_Service_createdByIdToUser?: UserUpdateOneWithoutService_Service_createdByIdToUserNestedInput
+    User_Service_deletedByIdToUser?: UserUpdateOneWithoutService_Service_deletedByIdToUserNestedInput
+    ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceNestedInput
+    User_Service_updatedByIdToUser?: UserUpdateOneWithoutService_Service_updatedByIdToUserNestedInput
+    ServiceTranslation?: ServiceTranslationUpdateManyWithoutServiceNestedInput
+    Service_ServiceItems?: Service_ServiceItemsUpdateManyWithoutServiceNestedInput
+  }
+
+  export type ServiceUncheckedUpdateWithoutProposalItemInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    basePrice?: FloatFieldUpdateOperationsInput | number
+    virtualPrice?: FloatFieldUpdateOperationsInput | number
+    images?: ServiceUpdateimagesInput | string[]
+    durationMinutes?: IntFieldUpdateOperationsInput | number
+    providerId?: IntFieldUpdateOperationsInput | number
+    createdById?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
+    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    description?: StringFieldUpdateOperationsInput | string
+    categoryId?: IntFieldUpdateOperationsInput | number
+    unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
+    Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
+    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
+    Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type WorkLogCreateManyBookingInput = {
@@ -66719,32 +68313,6 @@ export namespace Prisma {
     note?: string | null
     createdAt?: Date | string
     updatedAt: Date | string
-  }
-
-  export type ProposedServiceUpdateWithoutBookingInput = {
-    quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Service?: ServiceUpdateOneRequiredWithoutProposedServiceNestedInput
-  }
-
-  export type ProposedServiceUncheckedUpdateWithoutBookingInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    serviceId?: IntFieldUpdateOperationsInput | number
-    quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ProposedServiceUncheckedUpdateManyWithoutBookingInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    serviceId?: IntFieldUpdateOperationsInput | number
-    quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WorkLogUpdateWithoutBookingInput = {
@@ -66815,6 +68383,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     description?: string
     unit?: $Enums.Unit
+    status?: $Enums.ServiceStatus
   }
 
   export type ServiceRequestCreateManyCategoryInput = {
@@ -66920,7 +68489,8 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUpdateManyWithoutServiceNestedInput
     Review?: ReviewUpdateManyWithoutServiceNestedInput
     User_Service_createdByIdToUser?: UserUpdateOneWithoutService_Service_createdByIdToUserNestedInput
@@ -66948,7 +68518,8 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
     ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
@@ -66972,6 +68543,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
   }
 
   export type ServiceRequestUpdateWithoutCategoryInput = {
@@ -67102,7 +68674,7 @@ export namespace Prisma {
     ServiceRequest?: ServiceRequestUpdateOneWithoutBookingNestedInput
     Staff_Booking_staffIdToStaff?: StaffUpdateOneWithoutBooking_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUpdateManyWithoutBookingNestedInput
   }
@@ -67117,7 +68689,7 @@ export namespace Prisma {
     staffId?: NullableIntFieldUpdateOperationsInput | number | null
     serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
     InspectionReport?: InspectionReportUncheckedUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUncheckedUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUncheckedUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUncheckedUpdateManyWithoutBookingNestedInput
   }
@@ -67623,12 +69195,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ProposedServiceCreateManyServiceInput = {
+  export type ProposalItemCreateManyServiceInput = {
     id?: number
-    bookingId: number
+    proposalId: number
     quantity?: number
     price: number
-    notes?: string | null
     createdAt?: Date | string
   }
 
@@ -67665,29 +69236,26 @@ export namespace Prisma {
     serviceItemId: number
   }
 
-  export type ProposedServiceUpdateWithoutServiceInput = {
+  export type ProposalItemUpdateWithoutServiceInput = {
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Booking?: BookingUpdateOneRequiredWithoutProposedServiceNestedInput
+    Proposal?: ProposalUpdateOneRequiredWithoutProposalItemNestedInput
   }
 
-  export type ProposedServiceUncheckedUpdateWithoutServiceInput = {
+  export type ProposalItemUncheckedUpdateWithoutServiceInput = {
     id?: IntFieldUpdateOperationsInput | number
-    bookingId?: IntFieldUpdateOperationsInput | number
+    proposalId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ProposedServiceUncheckedUpdateManyWithoutServiceInput = {
+  export type ProposalItemUncheckedUpdateManyWithoutServiceInput = {
     id?: IntFieldUpdateOperationsInput | number
-    bookingId?: IntFieldUpdateOperationsInput | number
+    proposalId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -67815,6 +69383,7 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
+    status?: $Enums.ServiceStatus
   }
 
   export type ServiceItemCreateManyServiceProviderInput = {
@@ -67873,7 +69442,7 @@ export namespace Prisma {
     ServiceRequest?: ServiceRequestUpdateOneWithoutBookingNestedInput
     Staff_Booking_staffIdToStaff?: StaffUpdateOneWithoutBooking_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUpdateManyWithoutBookingNestedInput
   }
@@ -67888,7 +69457,7 @@ export namespace Prisma {
     staffId?: NullableIntFieldUpdateOperationsInput | number | null
     serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
     InspectionReport?: InspectionReportUncheckedUpdateOneWithoutBookingNestedInput
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutBookingNestedInput
+    Proposal?: ProposalUncheckedUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUncheckedUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUncheckedUpdateManyWithoutBookingNestedInput
   }
@@ -67916,7 +69485,8 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUpdateManyWithoutServiceNestedInput
     Review?: ReviewUpdateManyWithoutServiceNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceNestedInput
@@ -67944,7 +69514,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
     ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
@@ -67968,6 +69539,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
   }
 
   export type ServiceItemUpdateWithoutServiceProviderInput = {
@@ -68092,7 +69664,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUpdateManyWithoutStaffNestedInput
     Review?: ReviewUpdateManyWithoutStaffNestedInput
     User?: UserUpdateOneRequiredWithoutStaffNestedInput
@@ -68106,7 +69678,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
-    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateOneWithoutStaff_Booking_staffIdToStaffNestedInput
+    Booking_Booking_staffIdToStaff?: BookingUncheckedUpdateManyWithoutStaff_Booking_staffIdToStaffNestedInput
     InspectionReport?: InspectionReportUncheckedUpdateManyWithoutStaffNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutStaffNestedInput
     StaffCategory?: StaffCategoryUncheckedUpdateManyWithoutStaffNestedInput
@@ -68119,6 +69691,17 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type BookingCreateManyStaff_Booking_staffIdToStaffInput = {
+    id?: number
+    customerId: number
+    providerId: number
+    status: $Enums.BookingStatus
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt: Date | string
+    serviceRequestId?: number | null
   }
 
   export type InspectionReportCreateManyStaffInput = {
@@ -68151,6 +69734,46 @@ export namespace Prisma {
     note?: string | null
     createdAt?: Date | string
     updatedAt: Date | string
+  }
+
+  export type BookingUpdateWithoutStaff_Booking_staffIdToStaffInput = {
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    CustomerProfile?: CustomerProfileUpdateOneRequiredWithoutBookingNestedInput
+    ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutBookingNestedInput
+    ServiceRequest?: ServiceRequestUpdateOneWithoutBookingNestedInput
+    InspectionReport?: InspectionReportUpdateOneWithoutBookingNestedInput
+    Proposal?: ProposalUpdateOneWithoutBookingNestedInput
+    Transaction?: TransactionUpdateOneWithoutBookingNestedInput
+    WorkLog?: WorkLogUpdateManyWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateWithoutStaff_Booking_staffIdToStaffInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    customerId?: IntFieldUpdateOperationsInput | number
+    providerId?: IntFieldUpdateOperationsInput | number
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
+    InspectionReport?: InspectionReportUncheckedUpdateOneWithoutBookingNestedInput
+    Proposal?: ProposalUncheckedUpdateOneWithoutBookingNestedInput
+    Transaction?: TransactionUncheckedUpdateOneWithoutBookingNestedInput
+    WorkLog?: WorkLogUncheckedUpdateManyWithoutBookingNestedInput
+  }
+
+  export type BookingUncheckedUpdateManyWithoutStaff_Booking_staffIdToStaffInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    customerId?: IntFieldUpdateOperationsInput | number
+    providerId?: IntFieldUpdateOperationsInput | number
+    status?: EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type InspectionReportUpdateWithoutStaffInput = {
@@ -68425,6 +70048,7 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
+    status?: $Enums.ServiceStatus
   }
 
   export type ServiceCreateManyUser_Service_deletedByIdToUserInput = {
@@ -68444,6 +70068,7 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
+    status?: $Enums.ServiceStatus
   }
 
   export type ServiceCreateManyUser_Service_updatedByIdToUserInput = {
@@ -68463,6 +70088,7 @@ export namespace Prisma {
     description?: string
     categoryId: number
     unit?: $Enums.Unit
+    status?: $Enums.ServiceStatus
   }
 
   export type ServiceProviderCreateManyUser_ServiceProvider_verifiedByIdToUserInput = {
@@ -69083,7 +70709,8 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUpdateManyWithoutServiceNestedInput
     Review?: ReviewUpdateManyWithoutServiceNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceNestedInput
@@ -69111,7 +70738,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
     ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
@@ -69135,6 +70763,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
   }
 
   export type ServiceUpdateWithoutUser_Service_deletedByIdToUserInput = {
@@ -69149,7 +70778,8 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUpdateManyWithoutServiceNestedInput
     Review?: ReviewUpdateManyWithoutServiceNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceNestedInput
@@ -69177,7 +70807,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
     ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
@@ -69201,6 +70832,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
   }
 
   export type ServiceUpdateWithoutUser_Service_updatedByIdToUserInput = {
@@ -69215,7 +70847,8 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     description?: StringFieldUpdateOperationsInput | string
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUpdateManyWithoutServiceNestedInput
     Review?: ReviewUpdateManyWithoutServiceNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceNestedInput
@@ -69243,7 +70876,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    ProposedService?: ProposedServiceUncheckedUpdateManyWithoutServiceNestedInput
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
     ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
@@ -69267,6 +70901,7 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
+    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
   }
 
   export type ServiceProviderUpdateWithoutUser_ServiceProvider_verifiedByIdToUserInput = {
@@ -69673,6 +71308,37 @@ export namespace Prisma {
 
   export type Service_ServiceItemsUncheckedUpdateManyWithoutServiceItemInput = {
     serviceId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProposalItemCreateManyProposalInput = {
+    id?: number
+    serviceId: number
+    quantity?: number
+    price: number
+    createdAt?: Date | string
+  }
+
+  export type ProposalItemUpdateWithoutProposalInput = {
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Service?: ServiceUpdateOneRequiredWithoutProposalItemNestedInput
+  }
+
+  export type ProposalItemUncheckedUpdateWithoutProposalInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    serviceId?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProposalItemUncheckedUpdateManyWithoutProposalInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    serviceId?: IntFieldUpdateOperationsInput | number
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

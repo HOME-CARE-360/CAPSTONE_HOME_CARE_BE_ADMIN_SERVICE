@@ -310,7 +310,8 @@ exports.Prisma.ServiceScalarFieldEnum = {
   publishedAt: 'publishedAt',
   description: 'description',
   categoryId: 'categoryId',
-  unit: 'unit'
+  unit: 'unit',
+  status: 'status'
 };
 
 exports.Prisma.ServiceProviderScalarFieldEnum = {
@@ -428,16 +429,6 @@ exports.Prisma.InspectionReportScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.ProposedServiceScalarFieldEnum = {
-  id: 'id',
-  bookingId: 'bookingId',
-  serviceId: 'serviceId',
-  quantity: 'quantity',
-  price: 'price',
-  notes: 'notes',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.ServiceItemScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -472,6 +463,22 @@ exports.Prisma.ServiceRequestScalarFieldEnum = {
 exports.Prisma.Service_ServiceItemsScalarFieldEnum = {
   serviceId: 'serviceId',
   serviceItemId: 'serviceItemId'
+};
+
+exports.Prisma.ProposalScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  notes: 'notes',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ProposalItemScalarFieldEnum = {
+  id: 'id',
+  proposalId: 'proposalId',
+  serviceId: 'serviceId',
+  quantity: 'quantity',
+  price: 'price',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -518,6 +525,12 @@ exports.Unit = exports.$Enums.Unit = {
   PER_JOB: 'PER_JOB'
 };
 
+exports.ServiceStatus = exports.$Enums.ServiceStatus = {
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  ACCEPTED: 'ACCEPTED'
+};
+
 exports.CompanyType = exports.$Enums.CompanyType = {
   SOLE_PROPRIETORSHIP: 'SOLE_PROPRIETORSHIP',
   LIMITED_LIABILITY: 'LIMITED_LIABILITY',
@@ -562,7 +575,8 @@ exports.VerificationCodeType = exports.$Enums.VerificationCodeType = {
 exports.RequestStatus = exports.$Enums.RequestStatus = {
   PENDING: 'PENDING',
   IN_PROGRESS: 'IN_PROGRESS',
-  ESTIMATED: 'ESTIMATED'
+  ESTIMATED: 'ESTIMATED',
+  CANCELLED: 'CANCELLED'
 };
 
 exports.Prisma.ModelName = {
@@ -593,10 +607,11 @@ exports.Prisma.ModelName = {
   VerificationCode: 'VerificationCode',
   WorkLog: 'WorkLog',
   InspectionReport: 'InspectionReport',
-  ProposedService: 'ProposedService',
   ServiceItem: 'ServiceItem',
   ServiceRequest: 'ServiceRequest',
-  Service_ServiceItems: 'Service_ServiceItems'
+  Service_ServiceItems: 'Service_ServiceItems',
+  Proposal: 'Proposal',
+  ProposalItem: 'ProposalItem'
 };
 
 /**
