@@ -32,9 +32,9 @@ class AdminUserTCPTest {
         // await this.testResetPassword();
 
         // // === STATUS ===
-        // await this.testBlockUser();
-        // await this.testUnblockUser();
-        // await this.testActivateUser();
+        await this.testBlockUser();
+        await this.testUnblockUser();
+        await this.testActivateUser();
 
         // // === ROLE & PERMISSION ===
         // await this.testGetAllRoles();

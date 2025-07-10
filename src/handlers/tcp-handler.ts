@@ -140,7 +140,7 @@ async function handleCreateUser(data: any): Promise<HandlerResult> {
 
     await assertIsAdmin(parsed.adminId);
     const user = await service.createUser(parsed, parsed.adminId);
-    return { message: 'Manager created successfully', data: user, statusCode: 201 };
+    return { message: 'Manager created successfully', data: user};
 }
 
 async function handleUpdateUser(data: any): Promise<HandlerResult> {
@@ -233,7 +233,7 @@ async function handleCreateRole(data: any): Promise<HandlerResult> {
 
     await assertIsAdmin(parsed.adminId);
     const role = await service.createRole(parsed.name, parsed.adminId);
-    return { message: 'Role created successfully', data: role, statusCode: 201 };
+    return { message: 'Role created successfully', data: role};
 }
 
 async function handleUpdateRole(data: any): Promise<HandlerResult> {
