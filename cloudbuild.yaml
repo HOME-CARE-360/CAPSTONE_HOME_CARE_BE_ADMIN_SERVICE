@@ -4,14 +4,17 @@ steps:
       [
         "build",
         "-t",
-        "asia-southeast1-docker.pkg.dev/home-care-360/admin/production",
+        "asia-southeast1-docker.pkg.dev/melodic-media-465615-c6/admin/production",
         "-f",
         "Dockerfile",
         ".",
       ]
   - name: "gcr.io/cloud-builders/docker"
     args:
-      ["push", "asia-southeast1-docker.pkg.dev/home-care-360/admin/production"]
+      [
+        "push",
+        "asia-southeast1-docker.pkg.dev/melodic-media-465615-c6/admin/production",
+      ]
   - name: "gcr.io/cloud-builders/kubectl"
     args: ["rollout", "restart", "deployment/admin"]
     env:
