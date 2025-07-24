@@ -63,7 +63,6 @@ model CategoryTranslation {
   updatedAt   DateTime
   deletedAt   DateTime?
   Category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  Language    Language  @relation(fields: [languageId], references: [id], onDelete: Cascade)
 }
 
 model ChatMessage {
@@ -106,25 +105,6 @@ model Device {
   RefreshToken RefreshToken[]
 }
 
-model Language {
-  id                              String                       @id @db.VarChar(10)
-  name                            String                       @db.VarChar(500)
-  createdById                     Int?
-  updatedById                     Int?
-  deletedById                     Int?
-  deletedAt                       DateTime?
-  createdAt                       DateTime                     @default(now())
-  updatedAt                       DateTime
-  CategoryTranslation             CategoryTranslation[]
-  User_Language_createdByIdToUser User?                        @relation("Language_createdByIdToUser", fields: [createdById], references: [id])
-  User_Language_deletedByIdToUser User?                        @relation("Language_deletedByIdToUser", fields: [deletedById], references: [id])
-  User_Language_updatedByIdToUser User?                        @relation("Language_updatedByIdToUser", fields: [updatedById], references: [id])
-  ServiceProviderTranslation      ServiceProviderTranslation[]
-  ServiceTranslation              ServiceTranslation[]
-
-  @@index([deletedAt])
-}
-
 model Notification {
   id        Int      @id @default(autoincrement())
   userId    Int
@@ -146,18 +126,20 @@ model PackageRecommendation {
 }
 
 model PaymentTransaction {
-  id                 Int      @id @default(autoincrement())
-  gateway            String   @db.VarChar(100)
-  transactionDate    DateTime @default(now())
-  accountNumber      String?  @db.VarChar(100)
-  subAccount         String?  @db.VarChar(250)
-  amountIn           Int      @default(0)
-  amountOut          Int      @default(0)
-  accumulated        Int      @default(0)
-  referenceNumber    String?  @db.VarChar(255)
+  id                 Int             @id @default(autoincrement())
+  gateway            String          @db.VarChar(100)
+  transactionDate    DateTime        @default(now())
+  accountNumber      String?         @db.VarChar(100)
+  subAccount         String?         @db.VarChar(250)
+  amountIn           Int             @default(0)
+  amountOut          Int             @default(0)
+  accumulated        Int             @default(0)
+  referenceNumber    String?         @db.VarChar(255)
   transactionContent String?
   body               String?
-  createdAt          DateTime @default(now())
+  createdAt          DateTime        @default(now())
+  serviceRequestId   Int?            @unique
+  ServiceRequest     ServiceRequest? @relation(fields: [serviceRequestId], references: [id])
 }
 
 model Permission {
@@ -274,7 +256,6 @@ model Service {
   User_Service_deletedByIdToUser User?                  @relation("Service_deletedByIdToUser", fields: [deletedById], references: [id])
   ServiceProvider                ServiceProvider        @relation(fields: [providerId], references: [id], onDelete: Cascade)
   User_Service_updatedByIdToUser User?                  @relation("Service_updatedByIdToUser", fields: [updatedById], references: [id])
-  ServiceTranslation             ServiceTranslation[]
   Service_ServiceItems           Service_ServiceItems[]
 
   @@index([deletedAt])
@@ -314,21 +295,7 @@ model ServiceProviderTranslation {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime
   deletedAt       DateTime?
-  Language        Language        @relation(fields: [languageId], references: [id], onDelete: Cascade)
   ServiceProvider ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
-}
-
-model ServiceTranslation {
-  id          Int       @id @default(autoincrement())
-  serviceId   Int
-  languageId  String
-  name        String    @db.VarChar(500)
-  description String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime
-  deletedAt   DateTime?
-  Language    Language  @relation(fields: [languageId], references: [id], onDelete: Cascade)
-  Service     Service   @relation(fields: [serviceId], references: [id], onDelete: Cascade)
 }
 
 model Staff {
@@ -392,9 +359,6 @@ model User {
   Category_Category_updatedByIdToUser                Category[]        @relation("Category_updatedByIdToUser")
   CustomerProfile                                    CustomerProfile?
   Device                                             Device[]
-  Language_Language_createdByIdToUser                Language[]        @relation("Language_createdByIdToUser")
-  Language_Language_deletedByIdToUser                Language[]        @relation("Language_deletedByIdToUser")
-  Language_Language_updatedByIdToUser                Language[]        @relation("Language_updatedByIdToUser")
   Notification                                       Notification[]
   Permission_Permission_createdByIdToUser            Permission[]      @relation("Permission_createdByIdToUser")
   Permission_Permission_deletedByIdToUser            Permission[]      @relation("Permission_deletedByIdToUser")
@@ -415,6 +379,7 @@ model User {
   other_User_User_deletedByIdToUser                  User[]            @relation("User_deletedByIdToUser")
   User_User_updatedByIdToUser                        User?             @relation("User_updatedByIdToUser", fields: [updatedById], references: [id])
   other_User_User_updatedByIdToUser                  User[]            @relation("User_updatedByIdToUser")
+  Wallet                                             Wallet?
   Role_UserRoles                                     Role[]            @relation("UserRoles")
 
   @@index([deletedAt])
@@ -477,21 +442,22 @@ model ServiceItem {
 }
 
 model ServiceRequest {
-  id              Int             @id @default(autoincrement())
-  customerId      Int
-  providerId      Int
-  note            String?
-  preferredDate   DateTime
-  status          RequestStatus   @default(PENDING)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime
-  location        String          @db.VarChar(500)
-  phoneNumber     String
-  categoryId      Int
-  Booking         Booking?
-  Category        Category        @relation(fields: [categoryId], references: [id])
-  CustomerProfile CustomerProfile @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  ServiceProvider ServiceProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  id                 Int                 @id @default(autoincrement())
+  customerId         Int
+  providerId         Int
+  note               String?
+  preferredDate      DateTime
+  status             RequestStatus       @default(PENDING)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime
+  location           String              @db.VarChar(500)
+  phoneNumber        String
+  categoryId         Int
+  Booking            Booking?
+  PaymentTransaction PaymentTransaction?
+  Category           Category            @relation(fields: [categoryId], references: [id])
+  CustomerProfile    CustomerProfile     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  ServiceProvider    ServiceProvider     @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   @@index([status])
 }
@@ -510,6 +476,7 @@ model Proposal {
   bookingId    Int            @unique
   notes        String?
   createdAt    DateTime       @default(now())
+  status       ProposalStatus @default(ACCEPTED)
   Booking      Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   ProposalItem ProposalItem[]
 }
@@ -519,10 +486,18 @@ model ProposalItem {
   proposalId Int
   serviceId  Int
   quantity   Int      @default(1)
-  price      Float
   createdAt  DateTime @default(now())
   Proposal   Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
   Service    Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+}
+
+model Wallet {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  balance   Float    @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum BookingStatus {
@@ -628,4 +603,10 @@ enum ServiceStatus {
   PENDING
   REJECTED
   ACCEPTED
+}
+
+enum ProposalStatus {
+  ACCEPTED
+  REJECTED
+  PENDING
 }

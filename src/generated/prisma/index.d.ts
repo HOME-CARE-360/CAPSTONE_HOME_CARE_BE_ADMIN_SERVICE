@@ -44,11 +44,6 @@ export type CustomerProfile = $Result.DefaultSelection<Prisma.$CustomerProfilePa
  */
 export type Device = $Result.DefaultSelection<Prisma.$DevicePayload>
 /**
- * Model Language
- * 
- */
-export type Language = $Result.DefaultSelection<Prisma.$LanguagePayload>
-/**
  * Model Notification
  * 
  */
@@ -109,11 +104,6 @@ export type ServiceProvider = $Result.DefaultSelection<Prisma.$ServiceProviderPa
  */
 export type ServiceProviderTranslation = $Result.DefaultSelection<Prisma.$ServiceProviderTranslationPayload>
 /**
- * Model ServiceTranslation
- * 
- */
-export type ServiceTranslation = $Result.DefaultSelection<Prisma.$ServiceTranslationPayload>
-/**
  * Model Staff
  * 
  */
@@ -173,6 +163,11 @@ export type Proposal = $Result.DefaultSelection<Prisma.$ProposalPayload>
  * 
  */
 export type ProposalItem = $Result.DefaultSelection<Prisma.$ProposalItemPayload>
+/**
+ * Model Wallet
+ * 
+ */
+export type Wallet = $Result.DefaultSelection<Prisma.$WalletPayload>
 
 /**
  * Enums
@@ -327,6 +322,15 @@ export const ServiceStatus: {
 
 export type ServiceStatus = (typeof ServiceStatus)[keyof typeof ServiceStatus]
 
+
+export const ProposalStatus: {
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  PENDING: 'PENDING'
+};
+
+export type ProposalStatus = (typeof ProposalStatus)[keyof typeof ProposalStatus]
+
 }
 
 export type BookingStatus = $Enums.BookingStatus
@@ -388,6 +392,10 @@ export const Unit: typeof $Enums.Unit
 export type ServiceStatus = $Enums.ServiceStatus
 
 export const ServiceStatus: typeof $Enums.ServiceStatus
+
+export type ProposalStatus = $Enums.ProposalStatus
+
+export const ProposalStatus: typeof $Enums.ProposalStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -575,16 +583,6 @@ export class PrismaClient<
   get device(): Prisma.DeviceDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.language`: Exposes CRUD operations for the **Language** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Languages
-    * const languages = await prisma.language.findMany()
-    * ```
-    */
-  get language(): Prisma.LanguageDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
     * Example usage:
     * ```ts
@@ -705,16 +703,6 @@ export class PrismaClient<
   get serviceProviderTranslation(): Prisma.ServiceProviderTranslationDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.serviceTranslation`: Exposes CRUD operations for the **ServiceTranslation** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more ServiceTranslations
-    * const serviceTranslations = await prisma.serviceTranslation.findMany()
-    * ```
-    */
-  get serviceTranslation(): Prisma.ServiceTranslationDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.staff`: Exposes CRUD operations for the **Staff** model.
     * Example usage:
     * ```ts
@@ -833,6 +821,16 @@ export class PrismaClient<
     * ```
     */
   get proposalItem(): Prisma.ProposalItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.wallet`: Exposes CRUD operations for the **Wallet** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Wallets
+    * const wallets = await prisma.wallet.findMany()
+    * ```
+    */
+  get wallet(): Prisma.WalletDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1279,7 +1277,6 @@ export namespace Prisma {
     ChatMessage: 'ChatMessage',
     CustomerProfile: 'CustomerProfile',
     Device: 'Device',
-    Language: 'Language',
     Notification: 'Notification',
     PackageRecommendation: 'PackageRecommendation',
     PaymentTransaction: 'PaymentTransaction',
@@ -1292,7 +1289,6 @@ export namespace Prisma {
     Service: 'Service',
     ServiceProvider: 'ServiceProvider',
     ServiceProviderTranslation: 'ServiceProviderTranslation',
-    ServiceTranslation: 'ServiceTranslation',
     Staff: 'Staff',
     StaffCategory: 'StaffCategory',
     Transaction: 'Transaction',
@@ -1304,7 +1300,8 @@ export namespace Prisma {
     ServiceRequest: 'ServiceRequest',
     Service_ServiceItems: 'Service_ServiceItems',
     Proposal: 'Proposal',
-    ProposalItem: 'ProposalItem'
+    ProposalItem: 'ProposalItem',
+    Wallet: 'Wallet'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1323,7 +1320,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "booking" | "category" | "categoryTranslation" | "chatMessage" | "customerProfile" | "device" | "language" | "notification" | "packageRecommendation" | "paymentTransaction" | "permission" | "recurringBooking" | "refreshToken" | "review" | "rewardPoint" | "role" | "service" | "serviceProvider" | "serviceProviderTranslation" | "serviceTranslation" | "staff" | "staffCategory" | "transaction" | "user" | "verificationCode" | "workLog" | "inspectionReport" | "serviceItem" | "serviceRequest" | "service_ServiceItems" | "proposal" | "proposalItem"
+      modelProps: "booking" | "category" | "categoryTranslation" | "chatMessage" | "customerProfile" | "device" | "notification" | "packageRecommendation" | "paymentTransaction" | "permission" | "recurringBooking" | "refreshToken" | "review" | "rewardPoint" | "role" | "service" | "serviceProvider" | "serviceProviderTranslation" | "staff" | "staffCategory" | "transaction" | "user" | "verificationCode" | "workLog" | "inspectionReport" | "serviceItem" | "serviceRequest" | "service_ServiceItems" | "proposal" | "proposalItem" | "wallet"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1768,80 +1765,6 @@ export namespace Prisma {
           count: {
             args: Prisma.DeviceCountArgs<ExtArgs>
             result: $Utils.Optional<DeviceCountAggregateOutputType> | number
-          }
-        }
-      }
-      Language: {
-        payload: Prisma.$LanguagePayload<ExtArgs>
-        fields: Prisma.LanguageFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.LanguageFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LanguagePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.LanguageFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LanguagePayload>
-          }
-          findFirst: {
-            args: Prisma.LanguageFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LanguagePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.LanguageFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LanguagePayload>
-          }
-          findMany: {
-            args: Prisma.LanguageFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LanguagePayload>[]
-          }
-          create: {
-            args: Prisma.LanguageCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LanguagePayload>
-          }
-          createMany: {
-            args: Prisma.LanguageCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.LanguageCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LanguagePayload>[]
-          }
-          delete: {
-            args: Prisma.LanguageDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LanguagePayload>
-          }
-          update: {
-            args: Prisma.LanguageUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LanguagePayload>
-          }
-          deleteMany: {
-            args: Prisma.LanguageDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.LanguageUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.LanguageUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LanguagePayload>[]
-          }
-          upsert: {
-            args: Prisma.LanguageUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LanguagePayload>
-          }
-          aggregate: {
-            args: Prisma.LanguageAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateLanguage>
-          }
-          groupBy: {
-            args: Prisma.LanguageGroupByArgs<ExtArgs>
-            result: $Utils.Optional<LanguageGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.LanguageCountArgs<ExtArgs>
-            result: $Utils.Optional<LanguageCountAggregateOutputType> | number
           }
         }
       }
@@ -2733,80 +2656,6 @@ export namespace Prisma {
           }
         }
       }
-      ServiceTranslation: {
-        payload: Prisma.$ServiceTranslationPayload<ExtArgs>
-        fields: Prisma.ServiceTranslationFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.ServiceTranslationFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServiceTranslationPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.ServiceTranslationFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServiceTranslationPayload>
-          }
-          findFirst: {
-            args: Prisma.ServiceTranslationFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServiceTranslationPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.ServiceTranslationFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServiceTranslationPayload>
-          }
-          findMany: {
-            args: Prisma.ServiceTranslationFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServiceTranslationPayload>[]
-          }
-          create: {
-            args: Prisma.ServiceTranslationCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServiceTranslationPayload>
-          }
-          createMany: {
-            args: Prisma.ServiceTranslationCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.ServiceTranslationCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServiceTranslationPayload>[]
-          }
-          delete: {
-            args: Prisma.ServiceTranslationDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServiceTranslationPayload>
-          }
-          update: {
-            args: Prisma.ServiceTranslationUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServiceTranslationPayload>
-          }
-          deleteMany: {
-            args: Prisma.ServiceTranslationDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.ServiceTranslationUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.ServiceTranslationUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServiceTranslationPayload>[]
-          }
-          upsert: {
-            args: Prisma.ServiceTranslationUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ServiceTranslationPayload>
-          }
-          aggregate: {
-            args: Prisma.ServiceTranslationAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateServiceTranslation>
-          }
-          groupBy: {
-            args: Prisma.ServiceTranslationGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ServiceTranslationGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.ServiceTranslationCountArgs<ExtArgs>
-            result: $Utils.Optional<ServiceTranslationCountAggregateOutputType> | number
-          }
-        }
-      }
       Staff: {
         payload: Prisma.$StaffPayload<ExtArgs>
         fields: Prisma.StaffFieldRefs
@@ -3695,6 +3544,80 @@ export namespace Prisma {
           }
         }
       }
+      Wallet: {
+        payload: Prisma.$WalletPayload<ExtArgs>
+        fields: Prisma.WalletFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WalletFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WalletFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>
+          }
+          findFirst: {
+            args: Prisma.WalletFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WalletFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>
+          }
+          findMany: {
+            args: Prisma.WalletFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>[]
+          }
+          create: {
+            args: Prisma.WalletCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>
+          }
+          createMany: {
+            args: Prisma.WalletCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WalletCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>[]
+          }
+          delete: {
+            args: Prisma.WalletDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>
+          }
+          update: {
+            args: Prisma.WalletUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>
+          }
+          deleteMany: {
+            args: Prisma.WalletDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WalletUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WalletUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>[]
+          }
+          upsert: {
+            args: Prisma.WalletUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>
+          }
+          aggregate: {
+            args: Prisma.WalletAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWallet>
+          }
+          groupBy: {
+            args: Prisma.WalletGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WalletGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WalletCountArgs<ExtArgs>
+            result: $Utils.Optional<WalletCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3785,7 +3708,6 @@ export namespace Prisma {
     chatMessage?: ChatMessageOmit
     customerProfile?: CustomerProfileOmit
     device?: DeviceOmit
-    language?: LanguageOmit
     notification?: NotificationOmit
     packageRecommendation?: PackageRecommendationOmit
     paymentTransaction?: PaymentTransactionOmit
@@ -3798,7 +3720,6 @@ export namespace Prisma {
     service?: ServiceOmit
     serviceProvider?: ServiceProviderOmit
     serviceProviderTranslation?: ServiceProviderTranslationOmit
-    serviceTranslation?: ServiceTranslationOmit
     staff?: StaffOmit
     staffCategory?: StaffCategoryOmit
     transaction?: TransactionOmit
@@ -3811,6 +3732,7 @@ export namespace Prisma {
     service_ServiceItems?: Service_ServiceItemsOmit
     proposal?: ProposalOmit
     proposalItem?: ProposalItemOmit
+    wallet?: WalletOmit
   }
 
   /* Types for Logging */
@@ -4115,55 +4037,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type LanguageCountOutputType
-   */
-
-  export type LanguageCountOutputType = {
-    CategoryTranslation: number
-    ServiceProviderTranslation: number
-    ServiceTranslation: number
-  }
-
-  export type LanguageCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    CategoryTranslation?: boolean | LanguageCountOutputTypeCountCategoryTranslationArgs
-    ServiceProviderTranslation?: boolean | LanguageCountOutputTypeCountServiceProviderTranslationArgs
-    ServiceTranslation?: boolean | LanguageCountOutputTypeCountServiceTranslationArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * LanguageCountOutputType without action
-   */
-  export type LanguageCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LanguageCountOutputType
-     */
-    select?: LanguageCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * LanguageCountOutputType without action
-   */
-  export type LanguageCountOutputTypeCountCategoryTranslationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CategoryTranslationWhereInput
-  }
-
-  /**
-   * LanguageCountOutputType without action
-   */
-  export type LanguageCountOutputTypeCountServiceProviderTranslationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ServiceProviderTranslationWhereInput
-  }
-
-  /**
-   * LanguageCountOutputType without action
-   */
-  export type LanguageCountOutputTypeCountServiceTranslationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ServiceTranslationWhereInput
-  }
-
-
-  /**
    * Count Type PermissionCountOutputType
    */
 
@@ -4242,7 +4115,6 @@ export namespace Prisma {
     ProposalItem: number
     RecurringBooking: number
     Review: number
-    ServiceTranslation: number
     Service_ServiceItems: number
   }
 
@@ -4250,7 +4122,6 @@ export namespace Prisma {
     ProposalItem?: boolean | ServiceCountOutputTypeCountProposalItemArgs
     RecurringBooking?: boolean | ServiceCountOutputTypeCountRecurringBookingArgs
     Review?: boolean | ServiceCountOutputTypeCountReviewArgs
-    ServiceTranslation?: boolean | ServiceCountOutputTypeCountServiceTranslationArgs
     Service_ServiceItems?: boolean | ServiceCountOutputTypeCountService_ServiceItemsArgs
   }
 
@@ -4284,13 +4155,6 @@ export namespace Prisma {
    */
   export type ServiceCountOutputTypeCountReviewArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewWhereInput
-  }
-
-  /**
-   * ServiceCountOutputType without action
-   */
-  export type ServiceCountOutputTypeCountServiceTranslationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ServiceTranslationWhereInput
   }
 
   /**
@@ -4453,9 +4317,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser: number
     Category_Category_updatedByIdToUser: number
     Device: number
-    Language_Language_createdByIdToUser: number
-    Language_Language_deletedByIdToUser: number
-    Language_Language_updatedByIdToUser: number
     Notification: number
     Permission_Permission_createdByIdToUser: number
     Permission_Permission_deletedByIdToUser: number
@@ -4479,9 +4340,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: boolean | UserCountOutputTypeCountCategory_Category_deletedByIdToUserArgs
     Category_Category_updatedByIdToUser?: boolean | UserCountOutputTypeCountCategory_Category_updatedByIdToUserArgs
     Device?: boolean | UserCountOutputTypeCountDeviceArgs
-    Language_Language_createdByIdToUser?: boolean | UserCountOutputTypeCountLanguage_Language_createdByIdToUserArgs
-    Language_Language_deletedByIdToUser?: boolean | UserCountOutputTypeCountLanguage_Language_deletedByIdToUserArgs
-    Language_Language_updatedByIdToUser?: boolean | UserCountOutputTypeCountLanguage_Language_updatedByIdToUserArgs
     Notification?: boolean | UserCountOutputTypeCountNotificationArgs
     Permission_Permission_createdByIdToUser?: boolean | UserCountOutputTypeCountPermission_Permission_createdByIdToUserArgs
     Permission_Permission_deletedByIdToUser?: boolean | UserCountOutputTypeCountPermission_Permission_deletedByIdToUserArgs
@@ -4537,27 +4395,6 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountDeviceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DeviceWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountLanguage_Language_createdByIdToUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LanguageWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountLanguage_Language_deletedByIdToUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LanguageWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountLanguage_Language_updatedByIdToUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LanguageWhereInput
   }
 
   /**
@@ -7702,7 +7539,6 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     Category?: boolean | CategoryDefaultArgs<ExtArgs>
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["categoryTranslation"]>
 
   export type CategoryTranslationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7715,7 +7551,6 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     Category?: boolean | CategoryDefaultArgs<ExtArgs>
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["categoryTranslation"]>
 
   export type CategoryTranslationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7728,7 +7563,6 @@ export namespace Prisma {
     updatedAt?: boolean
     deletedAt?: boolean
     Category?: boolean | CategoryDefaultArgs<ExtArgs>
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["categoryTranslation"]>
 
   export type CategoryTranslationSelectScalar = {
@@ -7745,22 +7579,18 @@ export namespace Prisma {
   export type CategoryTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "categoryId" | "languageId" | "name" | "description" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["categoryTranslation"]>
   export type CategoryTranslationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Category?: boolean | CategoryDefaultArgs<ExtArgs>
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
   }
   export type CategoryTranslationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Category?: boolean | CategoryDefaultArgs<ExtArgs>
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
   }
   export type CategoryTranslationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Category?: boolean | CategoryDefaultArgs<ExtArgs>
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
   }
 
   export type $CategoryTranslationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CategoryTranslation"
     objects: {
       Category: Prisma.$CategoryPayload<ExtArgs>
-      Language: Prisma.$LanguagePayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -8166,7 +7996,6 @@ export namespace Prisma {
   export interface Prisma__CategoryTranslationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     Category<T extends CategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoryDefaultArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    Language<T extends LanguageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LanguageDefaultArgs<ExtArgs>>): Prisma__LanguageClient<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12200,1304 +12029,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Language
-   */
-
-  export type AggregateLanguage = {
-    _count: LanguageCountAggregateOutputType | null
-    _avg: LanguageAvgAggregateOutputType | null
-    _sum: LanguageSumAggregateOutputType | null
-    _min: LanguageMinAggregateOutputType | null
-    _max: LanguageMaxAggregateOutputType | null
-  }
-
-  export type LanguageAvgAggregateOutputType = {
-    createdById: number | null
-    updatedById: number | null
-    deletedById: number | null
-  }
-
-  export type LanguageSumAggregateOutputType = {
-    createdById: number | null
-    updatedById: number | null
-    deletedById: number | null
-  }
-
-  export type LanguageMinAggregateOutputType = {
-    id: string | null
-    name: string | null
-    createdById: number | null
-    updatedById: number | null
-    deletedById: number | null
-    deletedAt: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type LanguageMaxAggregateOutputType = {
-    id: string | null
-    name: string | null
-    createdById: number | null
-    updatedById: number | null
-    deletedById: number | null
-    deletedAt: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type LanguageCountAggregateOutputType = {
-    id: number
-    name: number
-    createdById: number
-    updatedById: number
-    deletedById: number
-    deletedAt: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type LanguageAvgAggregateInputType = {
-    createdById?: true
-    updatedById?: true
-    deletedById?: true
-  }
-
-  export type LanguageSumAggregateInputType = {
-    createdById?: true
-    updatedById?: true
-    deletedById?: true
-  }
-
-  export type LanguageMinAggregateInputType = {
-    id?: true
-    name?: true
-    createdById?: true
-    updatedById?: true
-    deletedById?: true
-    deletedAt?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type LanguageMaxAggregateInputType = {
-    id?: true
-    name?: true
-    createdById?: true
-    updatedById?: true
-    deletedById?: true
-    deletedAt?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type LanguageCountAggregateInputType = {
-    id?: true
-    name?: true
-    createdById?: true
-    updatedById?: true
-    deletedById?: true
-    deletedAt?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type LanguageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Language to aggregate.
-     */
-    where?: LanguageWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Languages to fetch.
-     */
-    orderBy?: LanguageOrderByWithRelationInput | LanguageOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: LanguageWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Languages from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Languages.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Languages
-    **/
-    _count?: true | LanguageCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: LanguageAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: LanguageSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: LanguageMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: LanguageMaxAggregateInputType
-  }
-
-  export type GetLanguageAggregateType<T extends LanguageAggregateArgs> = {
-        [P in keyof T & keyof AggregateLanguage]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateLanguage[P]>
-      : GetScalarType<T[P], AggregateLanguage[P]>
-  }
-
-
-
-
-  export type LanguageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LanguageWhereInput
-    orderBy?: LanguageOrderByWithAggregationInput | LanguageOrderByWithAggregationInput[]
-    by: LanguageScalarFieldEnum[] | LanguageScalarFieldEnum
-    having?: LanguageScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: LanguageCountAggregateInputType | true
-    _avg?: LanguageAvgAggregateInputType
-    _sum?: LanguageSumAggregateInputType
-    _min?: LanguageMinAggregateInputType
-    _max?: LanguageMaxAggregateInputType
-  }
-
-  export type LanguageGroupByOutputType = {
-    id: string
-    name: string
-    createdById: number | null
-    updatedById: number | null
-    deletedById: number | null
-    deletedAt: Date | null
-    createdAt: Date
-    updatedAt: Date
-    _count: LanguageCountAggregateOutputType | null
-    _avg: LanguageAvgAggregateOutputType | null
-    _sum: LanguageSumAggregateOutputType | null
-    _min: LanguageMinAggregateOutputType | null
-    _max: LanguageMaxAggregateOutputType | null
-  }
-
-  type GetLanguageGroupByPayload<T extends LanguageGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<LanguageGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof LanguageGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], LanguageGroupByOutputType[P]>
-            : GetScalarType<T[P], LanguageGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type LanguageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    createdById?: boolean
-    updatedById?: boolean
-    deletedById?: boolean
-    deletedAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    CategoryTranslation?: boolean | Language$CategoryTranslationArgs<ExtArgs>
-    User_Language_createdByIdToUser?: boolean | Language$User_Language_createdByIdToUserArgs<ExtArgs>
-    User_Language_deletedByIdToUser?: boolean | Language$User_Language_deletedByIdToUserArgs<ExtArgs>
-    User_Language_updatedByIdToUser?: boolean | Language$User_Language_updatedByIdToUserArgs<ExtArgs>
-    ServiceProviderTranslation?: boolean | Language$ServiceProviderTranslationArgs<ExtArgs>
-    ServiceTranslation?: boolean | Language$ServiceTranslationArgs<ExtArgs>
-    _count?: boolean | LanguageCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["language"]>
-
-  export type LanguageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    createdById?: boolean
-    updatedById?: boolean
-    deletedById?: boolean
-    deletedAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    User_Language_createdByIdToUser?: boolean | Language$User_Language_createdByIdToUserArgs<ExtArgs>
-    User_Language_deletedByIdToUser?: boolean | Language$User_Language_deletedByIdToUserArgs<ExtArgs>
-    User_Language_updatedByIdToUser?: boolean | Language$User_Language_updatedByIdToUserArgs<ExtArgs>
-  }, ExtArgs["result"]["language"]>
-
-  export type LanguageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    name?: boolean
-    createdById?: boolean
-    updatedById?: boolean
-    deletedById?: boolean
-    deletedAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    User_Language_createdByIdToUser?: boolean | Language$User_Language_createdByIdToUserArgs<ExtArgs>
-    User_Language_deletedByIdToUser?: boolean | Language$User_Language_deletedByIdToUserArgs<ExtArgs>
-    User_Language_updatedByIdToUser?: boolean | Language$User_Language_updatedByIdToUserArgs<ExtArgs>
-  }, ExtArgs["result"]["language"]>
-
-  export type LanguageSelectScalar = {
-    id?: boolean
-    name?: boolean
-    createdById?: boolean
-    updatedById?: boolean
-    deletedById?: boolean
-    deletedAt?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type LanguageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdById" | "updatedById" | "deletedById" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["language"]>
-  export type LanguageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    CategoryTranslation?: boolean | Language$CategoryTranslationArgs<ExtArgs>
-    User_Language_createdByIdToUser?: boolean | Language$User_Language_createdByIdToUserArgs<ExtArgs>
-    User_Language_deletedByIdToUser?: boolean | Language$User_Language_deletedByIdToUserArgs<ExtArgs>
-    User_Language_updatedByIdToUser?: boolean | Language$User_Language_updatedByIdToUserArgs<ExtArgs>
-    ServiceProviderTranslation?: boolean | Language$ServiceProviderTranslationArgs<ExtArgs>
-    ServiceTranslation?: boolean | Language$ServiceTranslationArgs<ExtArgs>
-    _count?: boolean | LanguageCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type LanguageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    User_Language_createdByIdToUser?: boolean | Language$User_Language_createdByIdToUserArgs<ExtArgs>
-    User_Language_deletedByIdToUser?: boolean | Language$User_Language_deletedByIdToUserArgs<ExtArgs>
-    User_Language_updatedByIdToUser?: boolean | Language$User_Language_updatedByIdToUserArgs<ExtArgs>
-  }
-  export type LanguageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    User_Language_createdByIdToUser?: boolean | Language$User_Language_createdByIdToUserArgs<ExtArgs>
-    User_Language_deletedByIdToUser?: boolean | Language$User_Language_deletedByIdToUserArgs<ExtArgs>
-    User_Language_updatedByIdToUser?: boolean | Language$User_Language_updatedByIdToUserArgs<ExtArgs>
-  }
-
-  export type $LanguagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Language"
-    objects: {
-      CategoryTranslation: Prisma.$CategoryTranslationPayload<ExtArgs>[]
-      User_Language_createdByIdToUser: Prisma.$UserPayload<ExtArgs> | null
-      User_Language_deletedByIdToUser: Prisma.$UserPayload<ExtArgs> | null
-      User_Language_updatedByIdToUser: Prisma.$UserPayload<ExtArgs> | null
-      ServiceProviderTranslation: Prisma.$ServiceProviderTranslationPayload<ExtArgs>[]
-      ServiceTranslation: Prisma.$ServiceTranslationPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      name: string
-      createdById: number | null
-      updatedById: number | null
-      deletedById: number | null
-      deletedAt: Date | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["language"]>
-    composites: {}
-  }
-
-  type LanguageGetPayload<S extends boolean | null | undefined | LanguageDefaultArgs> = $Result.GetResult<Prisma.$LanguagePayload, S>
-
-  type LanguageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<LanguageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: LanguageCountAggregateInputType | true
-    }
-
-  export interface LanguageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Language'], meta: { name: 'Language' } }
-    /**
-     * Find zero or one Language that matches the filter.
-     * @param {LanguageFindUniqueArgs} args - Arguments to find a Language
-     * @example
-     * // Get one Language
-     * const language = await prisma.language.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends LanguageFindUniqueArgs>(args: SelectSubset<T, LanguageFindUniqueArgs<ExtArgs>>): Prisma__LanguageClient<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Language that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {LanguageFindUniqueOrThrowArgs} args - Arguments to find a Language
-     * @example
-     * // Get one Language
-     * const language = await prisma.language.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends LanguageFindUniqueOrThrowArgs>(args: SelectSubset<T, LanguageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LanguageClient<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Language that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LanguageFindFirstArgs} args - Arguments to find a Language
-     * @example
-     * // Get one Language
-     * const language = await prisma.language.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends LanguageFindFirstArgs>(args?: SelectSubset<T, LanguageFindFirstArgs<ExtArgs>>): Prisma__LanguageClient<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Language that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LanguageFindFirstOrThrowArgs} args - Arguments to find a Language
-     * @example
-     * // Get one Language
-     * const language = await prisma.language.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends LanguageFindFirstOrThrowArgs>(args?: SelectSubset<T, LanguageFindFirstOrThrowArgs<ExtArgs>>): Prisma__LanguageClient<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Languages that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LanguageFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Languages
-     * const languages = await prisma.language.findMany()
-     * 
-     * // Get first 10 Languages
-     * const languages = await prisma.language.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const languageWithIdOnly = await prisma.language.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends LanguageFindManyArgs>(args?: SelectSubset<T, LanguageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Language.
-     * @param {LanguageCreateArgs} args - Arguments to create a Language.
-     * @example
-     * // Create one Language
-     * const Language = await prisma.language.create({
-     *   data: {
-     *     // ... data to create a Language
-     *   }
-     * })
-     * 
-     */
-    create<T extends LanguageCreateArgs>(args: SelectSubset<T, LanguageCreateArgs<ExtArgs>>): Prisma__LanguageClient<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Languages.
-     * @param {LanguageCreateManyArgs} args - Arguments to create many Languages.
-     * @example
-     * // Create many Languages
-     * const language = await prisma.language.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends LanguageCreateManyArgs>(args?: SelectSubset<T, LanguageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Languages and returns the data saved in the database.
-     * @param {LanguageCreateManyAndReturnArgs} args - Arguments to create many Languages.
-     * @example
-     * // Create many Languages
-     * const language = await prisma.language.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Languages and only return the `id`
-     * const languageWithIdOnly = await prisma.language.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends LanguageCreateManyAndReturnArgs>(args?: SelectSubset<T, LanguageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Language.
-     * @param {LanguageDeleteArgs} args - Arguments to delete one Language.
-     * @example
-     * // Delete one Language
-     * const Language = await prisma.language.delete({
-     *   where: {
-     *     // ... filter to delete one Language
-     *   }
-     * })
-     * 
-     */
-    delete<T extends LanguageDeleteArgs>(args: SelectSubset<T, LanguageDeleteArgs<ExtArgs>>): Prisma__LanguageClient<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Language.
-     * @param {LanguageUpdateArgs} args - Arguments to update one Language.
-     * @example
-     * // Update one Language
-     * const language = await prisma.language.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends LanguageUpdateArgs>(args: SelectSubset<T, LanguageUpdateArgs<ExtArgs>>): Prisma__LanguageClient<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Languages.
-     * @param {LanguageDeleteManyArgs} args - Arguments to filter Languages to delete.
-     * @example
-     * // Delete a few Languages
-     * const { count } = await prisma.language.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends LanguageDeleteManyArgs>(args?: SelectSubset<T, LanguageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Languages.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LanguageUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Languages
-     * const language = await prisma.language.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends LanguageUpdateManyArgs>(args: SelectSubset<T, LanguageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Languages and returns the data updated in the database.
-     * @param {LanguageUpdateManyAndReturnArgs} args - Arguments to update many Languages.
-     * @example
-     * // Update many Languages
-     * const language = await prisma.language.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Languages and only return the `id`
-     * const languageWithIdOnly = await prisma.language.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends LanguageUpdateManyAndReturnArgs>(args: SelectSubset<T, LanguageUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Language.
-     * @param {LanguageUpsertArgs} args - Arguments to update or create a Language.
-     * @example
-     * // Update or create a Language
-     * const language = await prisma.language.upsert({
-     *   create: {
-     *     // ... data to create a Language
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Language we want to update
-     *   }
-     * })
-     */
-    upsert<T extends LanguageUpsertArgs>(args: SelectSubset<T, LanguageUpsertArgs<ExtArgs>>): Prisma__LanguageClient<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Languages.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LanguageCountArgs} args - Arguments to filter Languages to count.
-     * @example
-     * // Count the number of Languages
-     * const count = await prisma.language.count({
-     *   where: {
-     *     // ... the filter for the Languages we want to count
-     *   }
-     * })
-    **/
-    count<T extends LanguageCountArgs>(
-      args?: Subset<T, LanguageCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], LanguageCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Language.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LanguageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends LanguageAggregateArgs>(args: Subset<T, LanguageAggregateArgs>): Prisma.PrismaPromise<GetLanguageAggregateType<T>>
-
-    /**
-     * Group by Language.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LanguageGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends LanguageGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: LanguageGroupByArgs['orderBy'] }
-        : { orderBy?: LanguageGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, LanguageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLanguageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Language model
-   */
-  readonly fields: LanguageFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Language.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__LanguageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    CategoryTranslation<T extends Language$CategoryTranslationArgs<ExtArgs> = {}>(args?: Subset<T, Language$CategoryTranslationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    User_Language_createdByIdToUser<T extends Language$User_Language_createdByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, Language$User_Language_createdByIdToUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    User_Language_deletedByIdToUser<T extends Language$User_Language_deletedByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, Language$User_Language_deletedByIdToUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    User_Language_updatedByIdToUser<T extends Language$User_Language_updatedByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, Language$User_Language_updatedByIdToUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    ServiceProviderTranslation<T extends Language$ServiceProviderTranslationArgs<ExtArgs> = {}>(args?: Subset<T, Language$ServiceProviderTranslationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceProviderTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    ServiceTranslation<T extends Language$ServiceTranslationArgs<ExtArgs> = {}>(args?: Subset<T, Language$ServiceTranslationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Language model
-   */
-  interface LanguageFieldRefs {
-    readonly id: FieldRef<"Language", 'String'>
-    readonly name: FieldRef<"Language", 'String'>
-    readonly createdById: FieldRef<"Language", 'Int'>
-    readonly updatedById: FieldRef<"Language", 'Int'>
-    readonly deletedById: FieldRef<"Language", 'Int'>
-    readonly deletedAt: FieldRef<"Language", 'DateTime'>
-    readonly createdAt: FieldRef<"Language", 'DateTime'>
-    readonly updatedAt: FieldRef<"Language", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Language findUnique
-   */
-  export type LanguageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-    /**
-     * Filter, which Language to fetch.
-     */
-    where: LanguageWhereUniqueInput
-  }
-
-  /**
-   * Language findUniqueOrThrow
-   */
-  export type LanguageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-    /**
-     * Filter, which Language to fetch.
-     */
-    where: LanguageWhereUniqueInput
-  }
-
-  /**
-   * Language findFirst
-   */
-  export type LanguageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-    /**
-     * Filter, which Language to fetch.
-     */
-    where?: LanguageWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Languages to fetch.
-     */
-    orderBy?: LanguageOrderByWithRelationInput | LanguageOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Languages.
-     */
-    cursor?: LanguageWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Languages from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Languages.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Languages.
-     */
-    distinct?: LanguageScalarFieldEnum | LanguageScalarFieldEnum[]
-  }
-
-  /**
-   * Language findFirstOrThrow
-   */
-  export type LanguageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-    /**
-     * Filter, which Language to fetch.
-     */
-    where?: LanguageWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Languages to fetch.
-     */
-    orderBy?: LanguageOrderByWithRelationInput | LanguageOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Languages.
-     */
-    cursor?: LanguageWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Languages from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Languages.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Languages.
-     */
-    distinct?: LanguageScalarFieldEnum | LanguageScalarFieldEnum[]
-  }
-
-  /**
-   * Language findMany
-   */
-  export type LanguageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-    /**
-     * Filter, which Languages to fetch.
-     */
-    where?: LanguageWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Languages to fetch.
-     */
-    orderBy?: LanguageOrderByWithRelationInput | LanguageOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Languages.
-     */
-    cursor?: LanguageWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Languages from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Languages.
-     */
-    skip?: number
-    distinct?: LanguageScalarFieldEnum | LanguageScalarFieldEnum[]
-  }
-
-  /**
-   * Language create
-   */
-  export type LanguageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Language.
-     */
-    data: XOR<LanguageCreateInput, LanguageUncheckedCreateInput>
-  }
-
-  /**
-   * Language createMany
-   */
-  export type LanguageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Languages.
-     */
-    data: LanguageCreateManyInput | LanguageCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Language createManyAndReturn
-   */
-  export type LanguageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * The data used to create many Languages.
-     */
-    data: LanguageCreateManyInput | LanguageCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Language update
-   */
-  export type LanguageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Language.
-     */
-    data: XOR<LanguageUpdateInput, LanguageUncheckedUpdateInput>
-    /**
-     * Choose, which Language to update.
-     */
-    where: LanguageWhereUniqueInput
-  }
-
-  /**
-   * Language updateMany
-   */
-  export type LanguageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Languages.
-     */
-    data: XOR<LanguageUpdateManyMutationInput, LanguageUncheckedUpdateManyInput>
-    /**
-     * Filter which Languages to update
-     */
-    where?: LanguageWhereInput
-    /**
-     * Limit how many Languages to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Language updateManyAndReturn
-   */
-  export type LanguageUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * The data used to update Languages.
-     */
-    data: XOR<LanguageUpdateManyMutationInput, LanguageUncheckedUpdateManyInput>
-    /**
-     * Filter which Languages to update
-     */
-    where?: LanguageWhereInput
-    /**
-     * Limit how many Languages to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Language upsert
-   */
-  export type LanguageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Language to update in case it exists.
-     */
-    where: LanguageWhereUniqueInput
-    /**
-     * In case the Language found by the `where` argument doesn't exist, create a new Language with this data.
-     */
-    create: XOR<LanguageCreateInput, LanguageUncheckedCreateInput>
-    /**
-     * In case the Language was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<LanguageUpdateInput, LanguageUncheckedUpdateInput>
-  }
-
-  /**
-   * Language delete
-   */
-  export type LanguageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-    /**
-     * Filter which Language to delete.
-     */
-    where: LanguageWhereUniqueInput
-  }
-
-  /**
-   * Language deleteMany
-   */
-  export type LanguageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Languages to delete
-     */
-    where?: LanguageWhereInput
-    /**
-     * Limit how many Languages to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Language.CategoryTranslation
-   */
-  export type Language$CategoryTranslationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CategoryTranslation
-     */
-    select?: CategoryTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CategoryTranslation
-     */
-    omit?: CategoryTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CategoryTranslationInclude<ExtArgs> | null
-    where?: CategoryTranslationWhereInput
-    orderBy?: CategoryTranslationOrderByWithRelationInput | CategoryTranslationOrderByWithRelationInput[]
-    cursor?: CategoryTranslationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: CategoryTranslationScalarFieldEnum | CategoryTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * Language.User_Language_createdByIdToUser
-   */
-  export type Language$User_Language_createdByIdToUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-  }
-
-  /**
-   * Language.User_Language_deletedByIdToUser
-   */
-  export type Language$User_Language_deletedByIdToUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-  }
-
-  /**
-   * Language.User_Language_updatedByIdToUser
-   */
-  export type Language$User_Language_updatedByIdToUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-  }
-
-  /**
-   * Language.ServiceProviderTranslation
-   */
-  export type Language$ServiceProviderTranslationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceProviderTranslation
-     */
-    select?: ServiceProviderTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceProviderTranslation
-     */
-    omit?: ServiceProviderTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceProviderTranslationInclude<ExtArgs> | null
-    where?: ServiceProviderTranslationWhereInput
-    orderBy?: ServiceProviderTranslationOrderByWithRelationInput | ServiceProviderTranslationOrderByWithRelationInput[]
-    cursor?: ServiceProviderTranslationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ServiceProviderTranslationScalarFieldEnum | ServiceProviderTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * Language.ServiceTranslation
-   */
-  export type Language$ServiceTranslationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationInclude<ExtArgs> | null
-    where?: ServiceTranslationWhereInput
-    orderBy?: ServiceTranslationOrderByWithRelationInput | ServiceTranslationOrderByWithRelationInput[]
-    cursor?: ServiceTranslationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ServiceTranslationScalarFieldEnum | ServiceTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * Language without action
-   */
-  export type LanguageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model Notification
    */
 
@@ -15736,6 +14267,7 @@ export namespace Prisma {
     amountIn: number | null
     amountOut: number | null
     accumulated: number | null
+    serviceRequestId: number | null
   }
 
   export type PaymentTransactionSumAggregateOutputType = {
@@ -15743,6 +14275,7 @@ export namespace Prisma {
     amountIn: number | null
     amountOut: number | null
     accumulated: number | null
+    serviceRequestId: number | null
   }
 
   export type PaymentTransactionMinAggregateOutputType = {
@@ -15758,6 +14291,7 @@ export namespace Prisma {
     transactionContent: string | null
     body: string | null
     createdAt: Date | null
+    serviceRequestId: number | null
   }
 
   export type PaymentTransactionMaxAggregateOutputType = {
@@ -15773,6 +14307,7 @@ export namespace Prisma {
     transactionContent: string | null
     body: string | null
     createdAt: Date | null
+    serviceRequestId: number | null
   }
 
   export type PaymentTransactionCountAggregateOutputType = {
@@ -15788,6 +14323,7 @@ export namespace Prisma {
     transactionContent: number
     body: number
     createdAt: number
+    serviceRequestId: number
     _all: number
   }
 
@@ -15797,6 +14333,7 @@ export namespace Prisma {
     amountIn?: true
     amountOut?: true
     accumulated?: true
+    serviceRequestId?: true
   }
 
   export type PaymentTransactionSumAggregateInputType = {
@@ -15804,6 +14341,7 @@ export namespace Prisma {
     amountIn?: true
     amountOut?: true
     accumulated?: true
+    serviceRequestId?: true
   }
 
   export type PaymentTransactionMinAggregateInputType = {
@@ -15819,6 +14357,7 @@ export namespace Prisma {
     transactionContent?: true
     body?: true
     createdAt?: true
+    serviceRequestId?: true
   }
 
   export type PaymentTransactionMaxAggregateInputType = {
@@ -15834,6 +14373,7 @@ export namespace Prisma {
     transactionContent?: true
     body?: true
     createdAt?: true
+    serviceRequestId?: true
   }
 
   export type PaymentTransactionCountAggregateInputType = {
@@ -15849,6 +14389,7 @@ export namespace Prisma {
     transactionContent?: true
     body?: true
     createdAt?: true
+    serviceRequestId?: true
     _all?: true
   }
 
@@ -15951,6 +14492,7 @@ export namespace Prisma {
     transactionContent: string | null
     body: string | null
     createdAt: Date
+    serviceRequestId: number | null
     _count: PaymentTransactionCountAggregateOutputType | null
     _avg: PaymentTransactionAvgAggregateOutputType | null
     _sum: PaymentTransactionSumAggregateOutputType | null
@@ -15985,6 +14527,8 @@ export namespace Prisma {
     transactionContent?: boolean
     body?: boolean
     createdAt?: boolean
+    serviceRequestId?: boolean
+    ServiceRequest?: boolean | PaymentTransaction$ServiceRequestArgs<ExtArgs>
   }, ExtArgs["result"]["paymentTransaction"]>
 
   export type PaymentTransactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16000,6 +14544,8 @@ export namespace Prisma {
     transactionContent?: boolean
     body?: boolean
     createdAt?: boolean
+    serviceRequestId?: boolean
+    ServiceRequest?: boolean | PaymentTransaction$ServiceRequestArgs<ExtArgs>
   }, ExtArgs["result"]["paymentTransaction"]>
 
   export type PaymentTransactionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16015,6 +14561,8 @@ export namespace Prisma {
     transactionContent?: boolean
     body?: boolean
     createdAt?: boolean
+    serviceRequestId?: boolean
+    ServiceRequest?: boolean | PaymentTransaction$ServiceRequestArgs<ExtArgs>
   }, ExtArgs["result"]["paymentTransaction"]>
 
   export type PaymentTransactionSelectScalar = {
@@ -16030,13 +14578,25 @@ export namespace Prisma {
     transactionContent?: boolean
     body?: boolean
     createdAt?: boolean
+    serviceRequestId?: boolean
   }
 
-  export type PaymentTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gateway" | "transactionDate" | "accountNumber" | "subAccount" | "amountIn" | "amountOut" | "accumulated" | "referenceNumber" | "transactionContent" | "body" | "createdAt", ExtArgs["result"]["paymentTransaction"]>
+  export type PaymentTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gateway" | "transactionDate" | "accountNumber" | "subAccount" | "amountIn" | "amountOut" | "accumulated" | "referenceNumber" | "transactionContent" | "body" | "createdAt" | "serviceRequestId", ExtArgs["result"]["paymentTransaction"]>
+  export type PaymentTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ServiceRequest?: boolean | PaymentTransaction$ServiceRequestArgs<ExtArgs>
+  }
+  export type PaymentTransactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ServiceRequest?: boolean | PaymentTransaction$ServiceRequestArgs<ExtArgs>
+  }
+  export type PaymentTransactionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    ServiceRequest?: boolean | PaymentTransaction$ServiceRequestArgs<ExtArgs>
+  }
 
   export type $PaymentTransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PaymentTransaction"
-    objects: {}
+    objects: {
+      ServiceRequest: Prisma.$ServiceRequestPayload<ExtArgs> | null
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       gateway: string
@@ -16050,6 +14610,7 @@ export namespace Prisma {
       transactionContent: string | null
       body: string | null
       createdAt: Date
+      serviceRequestId: number | null
     }, ExtArgs["result"]["paymentTransaction"]>
     composites: {}
   }
@@ -16444,6 +15005,7 @@ export namespace Prisma {
    */
   export interface Prisma__PaymentTransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    ServiceRequest<T extends PaymentTransaction$ServiceRequestArgs<ExtArgs> = {}>(args?: Subset<T, PaymentTransaction$ServiceRequestArgs<ExtArgs>>): Prisma__ServiceRequestClient<$Result.GetResult<Prisma.$ServiceRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16485,6 +15047,7 @@ export namespace Prisma {
     readonly transactionContent: FieldRef<"PaymentTransaction", 'String'>
     readonly body: FieldRef<"PaymentTransaction", 'String'>
     readonly createdAt: FieldRef<"PaymentTransaction", 'DateTime'>
+    readonly serviceRequestId: FieldRef<"PaymentTransaction", 'Int'>
   }
     
 
@@ -16501,6 +15064,10 @@ export namespace Prisma {
      * Omit specific fields from the PaymentTransaction
      */
     omit?: PaymentTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionInclude<ExtArgs> | null
     /**
      * Filter, which PaymentTransaction to fetch.
      */
@@ -16520,6 +15087,10 @@ export namespace Prisma {
      */
     omit?: PaymentTransactionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionInclude<ExtArgs> | null
+    /**
      * Filter, which PaymentTransaction to fetch.
      */
     where: PaymentTransactionWhereUniqueInput
@@ -16537,6 +15108,10 @@ export namespace Prisma {
      * Omit specific fields from the PaymentTransaction
      */
     omit?: PaymentTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionInclude<ExtArgs> | null
     /**
      * Filter, which PaymentTransaction to fetch.
      */
@@ -16586,6 +15161,10 @@ export namespace Prisma {
      */
     omit?: PaymentTransactionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionInclude<ExtArgs> | null
+    /**
      * Filter, which PaymentTransaction to fetch.
      */
     where?: PaymentTransactionWhereInput
@@ -16634,6 +15213,10 @@ export namespace Prisma {
      */
     omit?: PaymentTransactionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionInclude<ExtArgs> | null
+    /**
      * Filter, which PaymentTransactions to fetch.
      */
     where?: PaymentTransactionWhereInput
@@ -16677,6 +15260,10 @@ export namespace Prisma {
      */
     omit?: PaymentTransactionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionInclude<ExtArgs> | null
+    /**
      * The data needed to create a PaymentTransaction.
      */
     data: XOR<PaymentTransactionCreateInput, PaymentTransactionUncheckedCreateInput>
@@ -16710,6 +15297,10 @@ export namespace Prisma {
      */
     data: PaymentTransactionCreateManyInput | PaymentTransactionCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -16724,6 +15315,10 @@ export namespace Prisma {
      * Omit specific fields from the PaymentTransaction
      */
     omit?: PaymentTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionInclude<ExtArgs> | null
     /**
      * The data needed to update a PaymentTransaction.
      */
@@ -16776,6 +15371,10 @@ export namespace Prisma {
      * Limit how many PaymentTransactions to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -16790,6 +15389,10 @@ export namespace Prisma {
      * Omit specific fields from the PaymentTransaction
      */
     omit?: PaymentTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionInclude<ExtArgs> | null
     /**
      * The filter to search for the PaymentTransaction to update in case it exists.
      */
@@ -16817,6 +15420,10 @@ export namespace Prisma {
      */
     omit?: PaymentTransactionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionInclude<ExtArgs> | null
+    /**
      * Filter which PaymentTransaction to delete.
      */
     where: PaymentTransactionWhereUniqueInput
@@ -16837,6 +15444,25 @@ export namespace Prisma {
   }
 
   /**
+   * PaymentTransaction.ServiceRequest
+   */
+  export type PaymentTransaction$ServiceRequestArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ServiceRequest
+     */
+    select?: ServiceRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ServiceRequest
+     */
+    omit?: ServiceRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ServiceRequestInclude<ExtArgs> | null
+    where?: ServiceRequestWhereInput
+  }
+
+  /**
    * PaymentTransaction without action
    */
   export type PaymentTransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16848,6 +15474,10 @@ export namespace Prisma {
      * Omit specific fields from the PaymentTransaction
      */
     omit?: PaymentTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionInclude<ExtArgs> | null
   }
 
 
@@ -24279,7 +22909,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: boolean | Service$User_Service_deletedByIdToUserArgs<ExtArgs>
     ServiceProvider?: boolean | ServiceProviderDefaultArgs<ExtArgs>
     User_Service_updatedByIdToUser?: boolean | Service$User_Service_updatedByIdToUserArgs<ExtArgs>
-    ServiceTranslation?: boolean | Service$ServiceTranslationArgs<ExtArgs>
     Service_ServiceItems?: boolean | Service$Service_ServiceItemsArgs<ExtArgs>
     _count?: boolean | ServiceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["service"]>
@@ -24367,7 +22996,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: boolean | Service$User_Service_deletedByIdToUserArgs<ExtArgs>
     ServiceProvider?: boolean | ServiceProviderDefaultArgs<ExtArgs>
     User_Service_updatedByIdToUser?: boolean | Service$User_Service_updatedByIdToUserArgs<ExtArgs>
-    ServiceTranslation?: boolean | Service$ServiceTranslationArgs<ExtArgs>
     Service_ServiceItems?: boolean | Service$Service_ServiceItemsArgs<ExtArgs>
     _count?: boolean | ServiceCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -24397,7 +23025,6 @@ export namespace Prisma {
       User_Service_deletedByIdToUser: Prisma.$UserPayload<ExtArgs> | null
       ServiceProvider: Prisma.$ServiceProviderPayload<ExtArgs>
       User_Service_updatedByIdToUser: Prisma.$UserPayload<ExtArgs> | null
-      ServiceTranslation: Prisma.$ServiceTranslationPayload<ExtArgs>[]
       Service_ServiceItems: Prisma.$Service_ServiceItemsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -24821,7 +23448,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser<T extends Service$User_Service_deletedByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, Service$User_Service_deletedByIdToUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     ServiceProvider<T extends ServiceProviderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceProviderDefaultArgs<ExtArgs>>): Prisma__ServiceProviderClient<$Result.GetResult<Prisma.$ServiceProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     User_Service_updatedByIdToUser<T extends Service$User_Service_updatedByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, Service$User_Service_updatedByIdToUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    ServiceTranslation<T extends Service$ServiceTranslationArgs<ExtArgs> = {}>(args?: Subset<T, Service$ServiceTranslationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Service_ServiceItems<T extends Service$Service_ServiceItemsArgs<ExtArgs> = {}>(args?: Subset<T, Service$Service_ServiceItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Service_ServiceItemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -25392,30 +24018,6 @@ export namespace Prisma {
      */
     include?: UserInclude<ExtArgs> | null
     where?: UserWhereInput
-  }
-
-  /**
-   * Service.ServiceTranslation
-   */
-  export type Service$ServiceTranslationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationInclude<ExtArgs> | null
-    where?: ServiceTranslationWhereInput
-    orderBy?: ServiceTranslationOrderByWithRelationInput | ServiceTranslationOrderByWithRelationInput[]
-    cursor?: ServiceTranslationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ServiceTranslationScalarFieldEnum | ServiceTranslationScalarFieldEnum[]
   }
 
   /**
@@ -27101,7 +25703,6 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
     ServiceProvider?: boolean | ServiceProviderDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["serviceProviderTranslation"]>
 
@@ -27114,7 +25715,6 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
     ServiceProvider?: boolean | ServiceProviderDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["serviceProviderTranslation"]>
 
@@ -27127,7 +25727,6 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
     ServiceProvider?: boolean | ServiceProviderDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["serviceProviderTranslation"]>
 
@@ -27144,22 +25743,18 @@ export namespace Prisma {
 
   export type ServiceProviderTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "providerId" | "languageId" | "name" | "description" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["serviceProviderTranslation"]>
   export type ServiceProviderTranslationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
     ServiceProvider?: boolean | ServiceProviderDefaultArgs<ExtArgs>
   }
   export type ServiceProviderTranslationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
     ServiceProvider?: boolean | ServiceProviderDefaultArgs<ExtArgs>
   }
   export type ServiceProviderTranslationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
     ServiceProvider?: boolean | ServiceProviderDefaultArgs<ExtArgs>
   }
 
   export type $ServiceProviderTranslationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ServiceProviderTranslation"
     objects: {
-      Language: Prisma.$LanguagePayload<ExtArgs>
       ServiceProvider: Prisma.$ServiceProviderPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -27565,7 +26160,6 @@ export namespace Prisma {
    */
   export interface Prisma__ServiceProviderTranslationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    Language<T extends LanguageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LanguageDefaultArgs<ExtArgs>>): Prisma__LanguageClient<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     ServiceProvider<T extends ServiceProviderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceProviderDefaultArgs<ExtArgs>>): Prisma__ServiceProviderClient<$Result.GetResult<Prisma.$ServiceProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -28015,1149 +26609,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ServiceProviderTranslationInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model ServiceTranslation
-   */
-
-  export type AggregateServiceTranslation = {
-    _count: ServiceTranslationCountAggregateOutputType | null
-    _avg: ServiceTranslationAvgAggregateOutputType | null
-    _sum: ServiceTranslationSumAggregateOutputType | null
-    _min: ServiceTranslationMinAggregateOutputType | null
-    _max: ServiceTranslationMaxAggregateOutputType | null
-  }
-
-  export type ServiceTranslationAvgAggregateOutputType = {
-    id: number | null
-    serviceId: number | null
-  }
-
-  export type ServiceTranslationSumAggregateOutputType = {
-    id: number | null
-    serviceId: number | null
-  }
-
-  export type ServiceTranslationMinAggregateOutputType = {
-    id: number | null
-    serviceId: number | null
-    languageId: string | null
-    name: string | null
-    description: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    deletedAt: Date | null
-  }
-
-  export type ServiceTranslationMaxAggregateOutputType = {
-    id: number | null
-    serviceId: number | null
-    languageId: string | null
-    name: string | null
-    description: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    deletedAt: Date | null
-  }
-
-  export type ServiceTranslationCountAggregateOutputType = {
-    id: number
-    serviceId: number
-    languageId: number
-    name: number
-    description: number
-    createdAt: number
-    updatedAt: number
-    deletedAt: number
-    _all: number
-  }
-
-
-  export type ServiceTranslationAvgAggregateInputType = {
-    id?: true
-    serviceId?: true
-  }
-
-  export type ServiceTranslationSumAggregateInputType = {
-    id?: true
-    serviceId?: true
-  }
-
-  export type ServiceTranslationMinAggregateInputType = {
-    id?: true
-    serviceId?: true
-    languageId?: true
-    name?: true
-    description?: true
-    createdAt?: true
-    updatedAt?: true
-    deletedAt?: true
-  }
-
-  export type ServiceTranslationMaxAggregateInputType = {
-    id?: true
-    serviceId?: true
-    languageId?: true
-    name?: true
-    description?: true
-    createdAt?: true
-    updatedAt?: true
-    deletedAt?: true
-  }
-
-  export type ServiceTranslationCountAggregateInputType = {
-    id?: true
-    serviceId?: true
-    languageId?: true
-    name?: true
-    description?: true
-    createdAt?: true
-    updatedAt?: true
-    deletedAt?: true
-    _all?: true
-  }
-
-  export type ServiceTranslationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which ServiceTranslation to aggregate.
-     */
-    where?: ServiceTranslationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ServiceTranslations to fetch.
-     */
-    orderBy?: ServiceTranslationOrderByWithRelationInput | ServiceTranslationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: ServiceTranslationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ServiceTranslations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ServiceTranslations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned ServiceTranslations
-    **/
-    _count?: true | ServiceTranslationCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: ServiceTranslationAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: ServiceTranslationSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: ServiceTranslationMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: ServiceTranslationMaxAggregateInputType
-  }
-
-  export type GetServiceTranslationAggregateType<T extends ServiceTranslationAggregateArgs> = {
-        [P in keyof T & keyof AggregateServiceTranslation]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateServiceTranslation[P]>
-      : GetScalarType<T[P], AggregateServiceTranslation[P]>
-  }
-
-
-
-
-  export type ServiceTranslationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ServiceTranslationWhereInput
-    orderBy?: ServiceTranslationOrderByWithAggregationInput | ServiceTranslationOrderByWithAggregationInput[]
-    by: ServiceTranslationScalarFieldEnum[] | ServiceTranslationScalarFieldEnum
-    having?: ServiceTranslationScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: ServiceTranslationCountAggregateInputType | true
-    _avg?: ServiceTranslationAvgAggregateInputType
-    _sum?: ServiceTranslationSumAggregateInputType
-    _min?: ServiceTranslationMinAggregateInputType
-    _max?: ServiceTranslationMaxAggregateInputType
-  }
-
-  export type ServiceTranslationGroupByOutputType = {
-    id: number
-    serviceId: number
-    languageId: string
-    name: string
-    description: string
-    createdAt: Date
-    updatedAt: Date
-    deletedAt: Date | null
-    _count: ServiceTranslationCountAggregateOutputType | null
-    _avg: ServiceTranslationAvgAggregateOutputType | null
-    _sum: ServiceTranslationSumAggregateOutputType | null
-    _min: ServiceTranslationMinAggregateOutputType | null
-    _max: ServiceTranslationMaxAggregateOutputType | null
-  }
-
-  type GetServiceTranslationGroupByPayload<T extends ServiceTranslationGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<ServiceTranslationGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof ServiceTranslationGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], ServiceTranslationGroupByOutputType[P]>
-            : GetScalarType<T[P], ServiceTranslationGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type ServiceTranslationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    serviceId?: boolean
-    languageId?: boolean
-    name?: boolean
-    description?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    deletedAt?: boolean
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
-    Service?: boolean | ServiceDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["serviceTranslation"]>
-
-  export type ServiceTranslationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    serviceId?: boolean
-    languageId?: boolean
-    name?: boolean
-    description?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    deletedAt?: boolean
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
-    Service?: boolean | ServiceDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["serviceTranslation"]>
-
-  export type ServiceTranslationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    serviceId?: boolean
-    languageId?: boolean
-    name?: boolean
-    description?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    deletedAt?: boolean
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
-    Service?: boolean | ServiceDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["serviceTranslation"]>
-
-  export type ServiceTranslationSelectScalar = {
-    id?: boolean
-    serviceId?: boolean
-    languageId?: boolean
-    name?: boolean
-    description?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    deletedAt?: boolean
-  }
-
-  export type ServiceTranslationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serviceId" | "languageId" | "name" | "description" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["serviceTranslation"]>
-  export type ServiceTranslationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
-    Service?: boolean | ServiceDefaultArgs<ExtArgs>
-  }
-  export type ServiceTranslationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
-    Service?: boolean | ServiceDefaultArgs<ExtArgs>
-  }
-  export type ServiceTranslationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Language?: boolean | LanguageDefaultArgs<ExtArgs>
-    Service?: boolean | ServiceDefaultArgs<ExtArgs>
-  }
-
-  export type $ServiceTranslationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "ServiceTranslation"
-    objects: {
-      Language: Prisma.$LanguagePayload<ExtArgs>
-      Service: Prisma.$ServicePayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      serviceId: number
-      languageId: string
-      name: string
-      description: string
-      createdAt: Date
-      updatedAt: Date
-      deletedAt: Date | null
-    }, ExtArgs["result"]["serviceTranslation"]>
-    composites: {}
-  }
-
-  type ServiceTranslationGetPayload<S extends boolean | null | undefined | ServiceTranslationDefaultArgs> = $Result.GetResult<Prisma.$ServiceTranslationPayload, S>
-
-  type ServiceTranslationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ServiceTranslationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ServiceTranslationCountAggregateInputType | true
-    }
-
-  export interface ServiceTranslationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ServiceTranslation'], meta: { name: 'ServiceTranslation' } }
-    /**
-     * Find zero or one ServiceTranslation that matches the filter.
-     * @param {ServiceTranslationFindUniqueArgs} args - Arguments to find a ServiceTranslation
-     * @example
-     * // Get one ServiceTranslation
-     * const serviceTranslation = await prisma.serviceTranslation.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends ServiceTranslationFindUniqueArgs>(args: SelectSubset<T, ServiceTranslationFindUniqueArgs<ExtArgs>>): Prisma__ServiceTranslationClient<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one ServiceTranslation that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {ServiceTranslationFindUniqueOrThrowArgs} args - Arguments to find a ServiceTranslation
-     * @example
-     * // Get one ServiceTranslation
-     * const serviceTranslation = await prisma.serviceTranslation.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends ServiceTranslationFindUniqueOrThrowArgs>(args: SelectSubset<T, ServiceTranslationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ServiceTranslationClient<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first ServiceTranslation that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceTranslationFindFirstArgs} args - Arguments to find a ServiceTranslation
-     * @example
-     * // Get one ServiceTranslation
-     * const serviceTranslation = await prisma.serviceTranslation.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends ServiceTranslationFindFirstArgs>(args?: SelectSubset<T, ServiceTranslationFindFirstArgs<ExtArgs>>): Prisma__ServiceTranslationClient<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first ServiceTranslation that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceTranslationFindFirstOrThrowArgs} args - Arguments to find a ServiceTranslation
-     * @example
-     * // Get one ServiceTranslation
-     * const serviceTranslation = await prisma.serviceTranslation.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends ServiceTranslationFindFirstOrThrowArgs>(args?: SelectSubset<T, ServiceTranslationFindFirstOrThrowArgs<ExtArgs>>): Prisma__ServiceTranslationClient<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more ServiceTranslations that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceTranslationFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all ServiceTranslations
-     * const serviceTranslations = await prisma.serviceTranslation.findMany()
-     * 
-     * // Get first 10 ServiceTranslations
-     * const serviceTranslations = await prisma.serviceTranslation.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const serviceTranslationWithIdOnly = await prisma.serviceTranslation.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends ServiceTranslationFindManyArgs>(args?: SelectSubset<T, ServiceTranslationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a ServiceTranslation.
-     * @param {ServiceTranslationCreateArgs} args - Arguments to create a ServiceTranslation.
-     * @example
-     * // Create one ServiceTranslation
-     * const ServiceTranslation = await prisma.serviceTranslation.create({
-     *   data: {
-     *     // ... data to create a ServiceTranslation
-     *   }
-     * })
-     * 
-     */
-    create<T extends ServiceTranslationCreateArgs>(args: SelectSubset<T, ServiceTranslationCreateArgs<ExtArgs>>): Prisma__ServiceTranslationClient<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many ServiceTranslations.
-     * @param {ServiceTranslationCreateManyArgs} args - Arguments to create many ServiceTranslations.
-     * @example
-     * // Create many ServiceTranslations
-     * const serviceTranslation = await prisma.serviceTranslation.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends ServiceTranslationCreateManyArgs>(args?: SelectSubset<T, ServiceTranslationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many ServiceTranslations and returns the data saved in the database.
-     * @param {ServiceTranslationCreateManyAndReturnArgs} args - Arguments to create many ServiceTranslations.
-     * @example
-     * // Create many ServiceTranslations
-     * const serviceTranslation = await prisma.serviceTranslation.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many ServiceTranslations and only return the `id`
-     * const serviceTranslationWithIdOnly = await prisma.serviceTranslation.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends ServiceTranslationCreateManyAndReturnArgs>(args?: SelectSubset<T, ServiceTranslationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a ServiceTranslation.
-     * @param {ServiceTranslationDeleteArgs} args - Arguments to delete one ServiceTranslation.
-     * @example
-     * // Delete one ServiceTranslation
-     * const ServiceTranslation = await prisma.serviceTranslation.delete({
-     *   where: {
-     *     // ... filter to delete one ServiceTranslation
-     *   }
-     * })
-     * 
-     */
-    delete<T extends ServiceTranslationDeleteArgs>(args: SelectSubset<T, ServiceTranslationDeleteArgs<ExtArgs>>): Prisma__ServiceTranslationClient<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one ServiceTranslation.
-     * @param {ServiceTranslationUpdateArgs} args - Arguments to update one ServiceTranslation.
-     * @example
-     * // Update one ServiceTranslation
-     * const serviceTranslation = await prisma.serviceTranslation.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends ServiceTranslationUpdateArgs>(args: SelectSubset<T, ServiceTranslationUpdateArgs<ExtArgs>>): Prisma__ServiceTranslationClient<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more ServiceTranslations.
-     * @param {ServiceTranslationDeleteManyArgs} args - Arguments to filter ServiceTranslations to delete.
-     * @example
-     * // Delete a few ServiceTranslations
-     * const { count } = await prisma.serviceTranslation.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends ServiceTranslationDeleteManyArgs>(args?: SelectSubset<T, ServiceTranslationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more ServiceTranslations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceTranslationUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many ServiceTranslations
-     * const serviceTranslation = await prisma.serviceTranslation.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends ServiceTranslationUpdateManyArgs>(args: SelectSubset<T, ServiceTranslationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more ServiceTranslations and returns the data updated in the database.
-     * @param {ServiceTranslationUpdateManyAndReturnArgs} args - Arguments to update many ServiceTranslations.
-     * @example
-     * // Update many ServiceTranslations
-     * const serviceTranslation = await prisma.serviceTranslation.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more ServiceTranslations and only return the `id`
-     * const serviceTranslationWithIdOnly = await prisma.serviceTranslation.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends ServiceTranslationUpdateManyAndReturnArgs>(args: SelectSubset<T, ServiceTranslationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one ServiceTranslation.
-     * @param {ServiceTranslationUpsertArgs} args - Arguments to update or create a ServiceTranslation.
-     * @example
-     * // Update or create a ServiceTranslation
-     * const serviceTranslation = await prisma.serviceTranslation.upsert({
-     *   create: {
-     *     // ... data to create a ServiceTranslation
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the ServiceTranslation we want to update
-     *   }
-     * })
-     */
-    upsert<T extends ServiceTranslationUpsertArgs>(args: SelectSubset<T, ServiceTranslationUpsertArgs<ExtArgs>>): Prisma__ServiceTranslationClient<$Result.GetResult<Prisma.$ServiceTranslationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of ServiceTranslations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceTranslationCountArgs} args - Arguments to filter ServiceTranslations to count.
-     * @example
-     * // Count the number of ServiceTranslations
-     * const count = await prisma.serviceTranslation.count({
-     *   where: {
-     *     // ... the filter for the ServiceTranslations we want to count
-     *   }
-     * })
-    **/
-    count<T extends ServiceTranslationCountArgs>(
-      args?: Subset<T, ServiceTranslationCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], ServiceTranslationCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a ServiceTranslation.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceTranslationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends ServiceTranslationAggregateArgs>(args: Subset<T, ServiceTranslationAggregateArgs>): Prisma.PrismaPromise<GetServiceTranslationAggregateType<T>>
-
-    /**
-     * Group by ServiceTranslation.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ServiceTranslationGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends ServiceTranslationGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ServiceTranslationGroupByArgs['orderBy'] }
-        : { orderBy?: ServiceTranslationGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, ServiceTranslationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetServiceTranslationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the ServiceTranslation model
-   */
-  readonly fields: ServiceTranslationFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for ServiceTranslation.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__ServiceTranslationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    Language<T extends LanguageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LanguageDefaultArgs<ExtArgs>>): Prisma__LanguageClient<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    Service<T extends ServiceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceDefaultArgs<ExtArgs>>): Prisma__ServiceClient<$Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the ServiceTranslation model
-   */
-  interface ServiceTranslationFieldRefs {
-    readonly id: FieldRef<"ServiceTranslation", 'Int'>
-    readonly serviceId: FieldRef<"ServiceTranslation", 'Int'>
-    readonly languageId: FieldRef<"ServiceTranslation", 'String'>
-    readonly name: FieldRef<"ServiceTranslation", 'String'>
-    readonly description: FieldRef<"ServiceTranslation", 'String'>
-    readonly createdAt: FieldRef<"ServiceTranslation", 'DateTime'>
-    readonly updatedAt: FieldRef<"ServiceTranslation", 'DateTime'>
-    readonly deletedAt: FieldRef<"ServiceTranslation", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * ServiceTranslation findUnique
-   */
-  export type ServiceTranslationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which ServiceTranslation to fetch.
-     */
-    where: ServiceTranslationWhereUniqueInput
-  }
-
-  /**
-   * ServiceTranslation findUniqueOrThrow
-   */
-  export type ServiceTranslationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which ServiceTranslation to fetch.
-     */
-    where: ServiceTranslationWhereUniqueInput
-  }
-
-  /**
-   * ServiceTranslation findFirst
-   */
-  export type ServiceTranslationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which ServiceTranslation to fetch.
-     */
-    where?: ServiceTranslationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ServiceTranslations to fetch.
-     */
-    orderBy?: ServiceTranslationOrderByWithRelationInput | ServiceTranslationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for ServiceTranslations.
-     */
-    cursor?: ServiceTranslationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ServiceTranslations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ServiceTranslations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of ServiceTranslations.
-     */
-    distinct?: ServiceTranslationScalarFieldEnum | ServiceTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * ServiceTranslation findFirstOrThrow
-   */
-  export type ServiceTranslationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which ServiceTranslation to fetch.
-     */
-    where?: ServiceTranslationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ServiceTranslations to fetch.
-     */
-    orderBy?: ServiceTranslationOrderByWithRelationInput | ServiceTranslationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for ServiceTranslations.
-     */
-    cursor?: ServiceTranslationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ServiceTranslations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ServiceTranslations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of ServiceTranslations.
-     */
-    distinct?: ServiceTranslationScalarFieldEnum | ServiceTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * ServiceTranslation findMany
-   */
-  export type ServiceTranslationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationInclude<ExtArgs> | null
-    /**
-     * Filter, which ServiceTranslations to fetch.
-     */
-    where?: ServiceTranslationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ServiceTranslations to fetch.
-     */
-    orderBy?: ServiceTranslationOrderByWithRelationInput | ServiceTranslationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing ServiceTranslations.
-     */
-    cursor?: ServiceTranslationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ServiceTranslations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ServiceTranslations.
-     */
-    skip?: number
-    distinct?: ServiceTranslationScalarFieldEnum | ServiceTranslationScalarFieldEnum[]
-  }
-
-  /**
-   * ServiceTranslation create
-   */
-  export type ServiceTranslationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationInclude<ExtArgs> | null
-    /**
-     * The data needed to create a ServiceTranslation.
-     */
-    data: XOR<ServiceTranslationCreateInput, ServiceTranslationUncheckedCreateInput>
-  }
-
-  /**
-   * ServiceTranslation createMany
-   */
-  export type ServiceTranslationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many ServiceTranslations.
-     */
-    data: ServiceTranslationCreateManyInput | ServiceTranslationCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * ServiceTranslation createManyAndReturn
-   */
-  export type ServiceTranslationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * The data used to create many ServiceTranslations.
-     */
-    data: ServiceTranslationCreateManyInput | ServiceTranslationCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * ServiceTranslation update
-   */
-  export type ServiceTranslationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationInclude<ExtArgs> | null
-    /**
-     * The data needed to update a ServiceTranslation.
-     */
-    data: XOR<ServiceTranslationUpdateInput, ServiceTranslationUncheckedUpdateInput>
-    /**
-     * Choose, which ServiceTranslation to update.
-     */
-    where: ServiceTranslationWhereUniqueInput
-  }
-
-  /**
-   * ServiceTranslation updateMany
-   */
-  export type ServiceTranslationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update ServiceTranslations.
-     */
-    data: XOR<ServiceTranslationUpdateManyMutationInput, ServiceTranslationUncheckedUpdateManyInput>
-    /**
-     * Filter which ServiceTranslations to update
-     */
-    where?: ServiceTranslationWhereInput
-    /**
-     * Limit how many ServiceTranslations to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * ServiceTranslation updateManyAndReturn
-   */
-  export type ServiceTranslationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * The data used to update ServiceTranslations.
-     */
-    data: XOR<ServiceTranslationUpdateManyMutationInput, ServiceTranslationUncheckedUpdateManyInput>
-    /**
-     * Filter which ServiceTranslations to update
-     */
-    where?: ServiceTranslationWhereInput
-    /**
-     * Limit how many ServiceTranslations to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * ServiceTranslation upsert
-   */
-  export type ServiceTranslationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationInclude<ExtArgs> | null
-    /**
-     * The filter to search for the ServiceTranslation to update in case it exists.
-     */
-    where: ServiceTranslationWhereUniqueInput
-    /**
-     * In case the ServiceTranslation found by the `where` argument doesn't exist, create a new ServiceTranslation with this data.
-     */
-    create: XOR<ServiceTranslationCreateInput, ServiceTranslationUncheckedCreateInput>
-    /**
-     * In case the ServiceTranslation was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<ServiceTranslationUpdateInput, ServiceTranslationUncheckedUpdateInput>
-  }
-
-  /**
-   * ServiceTranslation delete
-   */
-  export type ServiceTranslationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationInclude<ExtArgs> | null
-    /**
-     * Filter which ServiceTranslation to delete.
-     */
-    where: ServiceTranslationWhereUniqueInput
-  }
-
-  /**
-   * ServiceTranslation deleteMany
-   */
-  export type ServiceTranslationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which ServiceTranslations to delete
-     */
-    where?: ServiceTranslationWhereInput
-    /**
-     * Limit how many ServiceTranslations to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * ServiceTranslation without action
-   */
-  export type ServiceTranslationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ServiceTranslation
-     */
-    select?: ServiceTranslationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ServiceTranslation
-     */
-    omit?: ServiceTranslationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ServiceTranslationInclude<ExtArgs> | null
   }
 
 
@@ -32979,9 +30430,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: boolean | User$Category_Category_updatedByIdToUserArgs<ExtArgs>
     CustomerProfile?: boolean | User$CustomerProfileArgs<ExtArgs>
     Device?: boolean | User$DeviceArgs<ExtArgs>
-    Language_Language_createdByIdToUser?: boolean | User$Language_Language_createdByIdToUserArgs<ExtArgs>
-    Language_Language_deletedByIdToUser?: boolean | User$Language_Language_deletedByIdToUserArgs<ExtArgs>
-    Language_Language_updatedByIdToUser?: boolean | User$Language_Language_updatedByIdToUserArgs<ExtArgs>
     Notification?: boolean | User$NotificationArgs<ExtArgs>
     Permission_Permission_createdByIdToUser?: boolean | User$Permission_Permission_createdByIdToUserArgs<ExtArgs>
     Permission_Permission_deletedByIdToUser?: boolean | User$Permission_Permission_deletedByIdToUserArgs<ExtArgs>
@@ -33002,6 +30450,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: boolean | User$other_User_User_deletedByIdToUserArgs<ExtArgs>
     User_User_updatedByIdToUser?: boolean | User$User_User_updatedByIdToUserArgs<ExtArgs>
     other_User_User_updatedByIdToUser?: boolean | User$other_User_User_updatedByIdToUserArgs<ExtArgs>
+    Wallet?: boolean | User$WalletArgs<ExtArgs>
     Role_UserRoles?: boolean | User$Role_UserRolesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -33070,9 +30519,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: boolean | User$Category_Category_updatedByIdToUserArgs<ExtArgs>
     CustomerProfile?: boolean | User$CustomerProfileArgs<ExtArgs>
     Device?: boolean | User$DeviceArgs<ExtArgs>
-    Language_Language_createdByIdToUser?: boolean | User$Language_Language_createdByIdToUserArgs<ExtArgs>
-    Language_Language_deletedByIdToUser?: boolean | User$Language_Language_deletedByIdToUserArgs<ExtArgs>
-    Language_Language_updatedByIdToUser?: boolean | User$Language_Language_updatedByIdToUserArgs<ExtArgs>
     Notification?: boolean | User$NotificationArgs<ExtArgs>
     Permission_Permission_createdByIdToUser?: boolean | User$Permission_Permission_createdByIdToUserArgs<ExtArgs>
     Permission_Permission_deletedByIdToUser?: boolean | User$Permission_Permission_deletedByIdToUserArgs<ExtArgs>
@@ -33093,6 +30539,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: boolean | User$other_User_User_deletedByIdToUserArgs<ExtArgs>
     User_User_updatedByIdToUser?: boolean | User$User_User_updatedByIdToUserArgs<ExtArgs>
     other_User_User_updatedByIdToUser?: boolean | User$other_User_User_updatedByIdToUserArgs<ExtArgs>
+    Wallet?: boolean | User$WalletArgs<ExtArgs>
     Role_UserRoles?: boolean | User$Role_UserRolesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -33115,9 +30562,6 @@ export namespace Prisma {
       Category_Category_updatedByIdToUser: Prisma.$CategoryPayload<ExtArgs>[]
       CustomerProfile: Prisma.$CustomerProfilePayload<ExtArgs> | null
       Device: Prisma.$DevicePayload<ExtArgs>[]
-      Language_Language_createdByIdToUser: Prisma.$LanguagePayload<ExtArgs>[]
-      Language_Language_deletedByIdToUser: Prisma.$LanguagePayload<ExtArgs>[]
-      Language_Language_updatedByIdToUser: Prisma.$LanguagePayload<ExtArgs>[]
       Notification: Prisma.$NotificationPayload<ExtArgs>[]
       Permission_Permission_createdByIdToUser: Prisma.$PermissionPayload<ExtArgs>[]
       Permission_Permission_deletedByIdToUser: Prisma.$PermissionPayload<ExtArgs>[]
@@ -33138,6 +30582,7 @@ export namespace Prisma {
       other_User_User_deletedByIdToUser: Prisma.$UserPayload<ExtArgs>[]
       User_User_updatedByIdToUser: Prisma.$UserPayload<ExtArgs> | null
       other_User_User_updatedByIdToUser: Prisma.$UserPayload<ExtArgs>[]
+      Wallet: Prisma.$WalletPayload<ExtArgs> | null
       Role_UserRoles: Prisma.$RolePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -33554,9 +30999,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser<T extends User$Category_Category_updatedByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, User$Category_Category_updatedByIdToUserArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     CustomerProfile<T extends User$CustomerProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$CustomerProfileArgs<ExtArgs>>): Prisma__CustomerProfileClient<$Result.GetResult<Prisma.$CustomerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     Device<T extends User$DeviceArgs<ExtArgs> = {}>(args?: Subset<T, User$DeviceArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Language_Language_createdByIdToUser<T extends User$Language_Language_createdByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, User$Language_Language_createdByIdToUserArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Language_Language_deletedByIdToUser<T extends User$Language_Language_deletedByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, User$Language_Language_deletedByIdToUserArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Language_Language_updatedByIdToUser<T extends User$Language_Language_updatedByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, User$Language_Language_updatedByIdToUserArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LanguagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Notification<T extends User$NotificationArgs<ExtArgs> = {}>(args?: Subset<T, User$NotificationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Permission_Permission_createdByIdToUser<T extends User$Permission_Permission_createdByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, User$Permission_Permission_createdByIdToUserArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Permission_Permission_deletedByIdToUser<T extends User$Permission_Permission_deletedByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, User$Permission_Permission_deletedByIdToUserArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -33577,6 +31019,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser<T extends User$other_User_User_deletedByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, User$other_User_User_deletedByIdToUserArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     User_User_updatedByIdToUser<T extends User$User_User_updatedByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, User$User_User_updatedByIdToUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     other_User_User_updatedByIdToUser<T extends User$other_User_User_updatedByIdToUserArgs<ExtArgs> = {}>(args?: Subset<T, User$other_User_User_updatedByIdToUserArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    Wallet<T extends User$WalletArgs<ExtArgs> = {}>(args?: Subset<T, User$WalletArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     Role_UserRoles<T extends User$Role_UserRolesArgs<ExtArgs> = {}>(args?: Subset<T, User$Role_UserRolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -34132,78 +31575,6 @@ export namespace Prisma {
   }
 
   /**
-   * User.Language_Language_createdByIdToUser
-   */
-  export type User$Language_Language_createdByIdToUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-    where?: LanguageWhereInput
-    orderBy?: LanguageOrderByWithRelationInput | LanguageOrderByWithRelationInput[]
-    cursor?: LanguageWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: LanguageScalarFieldEnum | LanguageScalarFieldEnum[]
-  }
-
-  /**
-   * User.Language_Language_deletedByIdToUser
-   */
-  export type User$Language_Language_deletedByIdToUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-    where?: LanguageWhereInput
-    orderBy?: LanguageOrderByWithRelationInput | LanguageOrderByWithRelationInput[]
-    cursor?: LanguageWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: LanguageScalarFieldEnum | LanguageScalarFieldEnum[]
-  }
-
-  /**
-   * User.Language_Language_updatedByIdToUser
-   */
-  export type User$Language_Language_updatedByIdToUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Language
-     */
-    select?: LanguageSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Language
-     */
-    omit?: LanguageOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LanguageInclude<ExtArgs> | null
-    where?: LanguageWhereInput
-    orderBy?: LanguageOrderByWithRelationInput | LanguageOrderByWithRelationInput[]
-    cursor?: LanguageWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: LanguageScalarFieldEnum | LanguageScalarFieldEnum[]
-  }
-
-  /**
    * User.Notification
    */
   export type User$NotificationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -34656,6 +32027,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * User.Wallet
+   */
+  export type User$WalletArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    where?: WalletWhereInput
   }
 
   /**
@@ -39538,6 +36928,7 @@ export namespace Prisma {
     phoneNumber?: boolean
     categoryId?: boolean
     Booking?: boolean | ServiceRequest$BookingArgs<ExtArgs>
+    PaymentTransaction?: boolean | ServiceRequest$PaymentTransactionArgs<ExtArgs>
     Category?: boolean | CategoryDefaultArgs<ExtArgs>
     CustomerProfile?: boolean | CustomerProfileDefaultArgs<ExtArgs>
     ServiceProvider?: boolean | ServiceProviderDefaultArgs<ExtArgs>
@@ -39594,6 +36985,7 @@ export namespace Prisma {
   export type ServiceRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "providerId" | "note" | "preferredDate" | "status" | "createdAt" | "updatedAt" | "location" | "phoneNumber" | "categoryId", ExtArgs["result"]["serviceRequest"]>
   export type ServiceRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Booking?: boolean | ServiceRequest$BookingArgs<ExtArgs>
+    PaymentTransaction?: boolean | ServiceRequest$PaymentTransactionArgs<ExtArgs>
     Category?: boolean | CategoryDefaultArgs<ExtArgs>
     CustomerProfile?: boolean | CustomerProfileDefaultArgs<ExtArgs>
     ServiceProvider?: boolean | ServiceProviderDefaultArgs<ExtArgs>
@@ -39613,6 +37005,7 @@ export namespace Prisma {
     name: "ServiceRequest"
     objects: {
       Booking: Prisma.$BookingPayload<ExtArgs> | null
+      PaymentTransaction: Prisma.$PaymentTransactionPayload<ExtArgs> | null
       Category: Prisma.$CategoryPayload<ExtArgs>
       CustomerProfile: Prisma.$CustomerProfilePayload<ExtArgs>
       ServiceProvider: Prisma.$ServiceProviderPayload<ExtArgs>
@@ -40024,6 +37417,7 @@ export namespace Prisma {
   export interface Prisma__ServiceRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     Booking<T extends ServiceRequest$BookingArgs<ExtArgs> = {}>(args?: Subset<T, ServiceRequest$BookingArgs<ExtArgs>>): Prisma__BookingClient<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    PaymentTransaction<T extends ServiceRequest$PaymentTransactionArgs<ExtArgs> = {}>(args?: Subset<T, ServiceRequest$PaymentTransactionArgs<ExtArgs>>): Prisma__PaymentTransactionClient<$Result.GetResult<Prisma.$PaymentTransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     Category<T extends CategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoryDefaultArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     CustomerProfile<T extends CustomerProfileDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerProfileDefaultArgs<ExtArgs>>): Prisma__CustomerProfileClient<$Result.GetResult<Prisma.$CustomerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     ServiceProvider<T extends ServiceProviderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ServiceProviderDefaultArgs<ExtArgs>>): Prisma__ServiceProviderClient<$Result.GetResult<Prisma.$ServiceProviderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -40479,6 +37873,25 @@ export namespace Prisma {
      */
     include?: BookingInclude<ExtArgs> | null
     where?: BookingWhereInput
+  }
+
+  /**
+   * ServiceRequest.PaymentTransaction
+   */
+  export type ServiceRequest$PaymentTransactionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentTransaction
+     */
+    select?: PaymentTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentTransaction
+     */
+    omit?: PaymentTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentTransactionInclude<ExtArgs> | null
+    where?: PaymentTransactionWhereInput
   }
 
   /**
@@ -41592,6 +39005,7 @@ export namespace Prisma {
     bookingId: number | null
     notes: string | null
     createdAt: Date | null
+    status: $Enums.ProposalStatus | null
   }
 
   export type ProposalMaxAggregateOutputType = {
@@ -41599,6 +39013,7 @@ export namespace Prisma {
     bookingId: number | null
     notes: string | null
     createdAt: Date | null
+    status: $Enums.ProposalStatus | null
   }
 
   export type ProposalCountAggregateOutputType = {
@@ -41606,6 +39021,7 @@ export namespace Prisma {
     bookingId: number
     notes: number
     createdAt: number
+    status: number
     _all: number
   }
 
@@ -41625,6 +39041,7 @@ export namespace Prisma {
     bookingId?: true
     notes?: true
     createdAt?: true
+    status?: true
   }
 
   export type ProposalMaxAggregateInputType = {
@@ -41632,6 +39049,7 @@ export namespace Prisma {
     bookingId?: true
     notes?: true
     createdAt?: true
+    status?: true
   }
 
   export type ProposalCountAggregateInputType = {
@@ -41639,6 +39057,7 @@ export namespace Prisma {
     bookingId?: true
     notes?: true
     createdAt?: true
+    status?: true
     _all?: true
   }
 
@@ -41733,6 +39152,7 @@ export namespace Prisma {
     bookingId: number
     notes: string | null
     createdAt: Date
+    status: $Enums.ProposalStatus
     _count: ProposalCountAggregateOutputType | null
     _avg: ProposalAvgAggregateOutputType | null
     _sum: ProposalSumAggregateOutputType | null
@@ -41759,6 +39179,7 @@ export namespace Prisma {
     bookingId?: boolean
     notes?: boolean
     createdAt?: boolean
+    status?: boolean
     Booking?: boolean | BookingDefaultArgs<ExtArgs>
     ProposalItem?: boolean | Proposal$ProposalItemArgs<ExtArgs>
     _count?: boolean | ProposalCountOutputTypeDefaultArgs<ExtArgs>
@@ -41769,6 +39190,7 @@ export namespace Prisma {
     bookingId?: boolean
     notes?: boolean
     createdAt?: boolean
+    status?: boolean
     Booking?: boolean | BookingDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["proposal"]>
 
@@ -41777,6 +39199,7 @@ export namespace Prisma {
     bookingId?: boolean
     notes?: boolean
     createdAt?: boolean
+    status?: boolean
     Booking?: boolean | BookingDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["proposal"]>
 
@@ -41785,9 +39208,10 @@ export namespace Prisma {
     bookingId?: boolean
     notes?: boolean
     createdAt?: boolean
+    status?: boolean
   }
 
-  export type ProposalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingId" | "notes" | "createdAt", ExtArgs["result"]["proposal"]>
+  export type ProposalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingId" | "notes" | "createdAt" | "status", ExtArgs["result"]["proposal"]>
   export type ProposalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Booking?: boolean | BookingDefaultArgs<ExtArgs>
     ProposalItem?: boolean | Proposal$ProposalItemArgs<ExtArgs>
@@ -41811,6 +39235,7 @@ export namespace Prisma {
       bookingId: number
       notes: string | null
       createdAt: Date
+      status: $Enums.ProposalStatus
     }, ExtArgs["result"]["proposal"]>
     composites: {}
   }
@@ -42240,6 +39665,7 @@ export namespace Prisma {
     readonly bookingId: FieldRef<"Proposal", 'Int'>
     readonly notes: FieldRef<"Proposal", 'String'>
     readonly createdAt: FieldRef<"Proposal", 'DateTime'>
+    readonly status: FieldRef<"Proposal", 'ProposalStatus'>
   }
     
 
@@ -42695,7 +40121,6 @@ export namespace Prisma {
     proposalId: number | null
     serviceId: number | null
     quantity: number | null
-    price: number | null
   }
 
   export type ProposalItemSumAggregateOutputType = {
@@ -42703,7 +40128,6 @@ export namespace Prisma {
     proposalId: number | null
     serviceId: number | null
     quantity: number | null
-    price: number | null
   }
 
   export type ProposalItemMinAggregateOutputType = {
@@ -42711,7 +40135,6 @@ export namespace Prisma {
     proposalId: number | null
     serviceId: number | null
     quantity: number | null
-    price: number | null
     createdAt: Date | null
   }
 
@@ -42720,7 +40143,6 @@ export namespace Prisma {
     proposalId: number | null
     serviceId: number | null
     quantity: number | null
-    price: number | null
     createdAt: Date | null
   }
 
@@ -42729,7 +40151,6 @@ export namespace Prisma {
     proposalId: number
     serviceId: number
     quantity: number
-    price: number
     createdAt: number
     _all: number
   }
@@ -42740,7 +40161,6 @@ export namespace Prisma {
     proposalId?: true
     serviceId?: true
     quantity?: true
-    price?: true
   }
 
   export type ProposalItemSumAggregateInputType = {
@@ -42748,7 +40168,6 @@ export namespace Prisma {
     proposalId?: true
     serviceId?: true
     quantity?: true
-    price?: true
   }
 
   export type ProposalItemMinAggregateInputType = {
@@ -42756,7 +40175,6 @@ export namespace Prisma {
     proposalId?: true
     serviceId?: true
     quantity?: true
-    price?: true
     createdAt?: true
   }
 
@@ -42765,7 +40183,6 @@ export namespace Prisma {
     proposalId?: true
     serviceId?: true
     quantity?: true
-    price?: true
     createdAt?: true
   }
 
@@ -42774,7 +40191,6 @@ export namespace Prisma {
     proposalId?: true
     serviceId?: true
     quantity?: true
-    price?: true
     createdAt?: true
     _all?: true
   }
@@ -42870,7 +40286,6 @@ export namespace Prisma {
     proposalId: number
     serviceId: number
     quantity: number
-    price: number
     createdAt: Date
     _count: ProposalItemCountAggregateOutputType | null
     _avg: ProposalItemAvgAggregateOutputType | null
@@ -42898,7 +40313,6 @@ export namespace Prisma {
     proposalId?: boolean
     serviceId?: boolean
     quantity?: boolean
-    price?: boolean
     createdAt?: boolean
     Proposal?: boolean | ProposalDefaultArgs<ExtArgs>
     Service?: boolean | ServiceDefaultArgs<ExtArgs>
@@ -42909,7 +40323,6 @@ export namespace Prisma {
     proposalId?: boolean
     serviceId?: boolean
     quantity?: boolean
-    price?: boolean
     createdAt?: boolean
     Proposal?: boolean | ProposalDefaultArgs<ExtArgs>
     Service?: boolean | ServiceDefaultArgs<ExtArgs>
@@ -42920,7 +40333,6 @@ export namespace Prisma {
     proposalId?: boolean
     serviceId?: boolean
     quantity?: boolean
-    price?: boolean
     createdAt?: boolean
     Proposal?: boolean | ProposalDefaultArgs<ExtArgs>
     Service?: boolean | ServiceDefaultArgs<ExtArgs>
@@ -42931,11 +40343,10 @@ export namespace Prisma {
     proposalId?: boolean
     serviceId?: boolean
     quantity?: boolean
-    price?: boolean
     createdAt?: boolean
   }
 
-  export type ProposalItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "proposalId" | "serviceId" | "quantity" | "price" | "createdAt", ExtArgs["result"]["proposalItem"]>
+  export type ProposalItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "proposalId" | "serviceId" | "quantity" | "createdAt", ExtArgs["result"]["proposalItem"]>
   export type ProposalItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Proposal?: boolean | ProposalDefaultArgs<ExtArgs>
     Service?: boolean | ServiceDefaultArgs<ExtArgs>
@@ -42960,7 +40371,6 @@ export namespace Prisma {
       proposalId: number
       serviceId: number
       quantity: number
-      price: number
       createdAt: Date
     }, ExtArgs["result"]["proposalItem"]>
     composites: {}
@@ -43391,7 +40801,6 @@ export namespace Prisma {
     readonly proposalId: FieldRef<"ProposalItem", 'Int'>
     readonly serviceId: FieldRef<"ProposalItem", 'Int'>
     readonly quantity: FieldRef<"ProposalItem", 'Int'>
-    readonly price: FieldRef<"ProposalItem", 'Float'>
     readonly createdAt: FieldRef<"ProposalItem", 'DateTime'>
   }
     
@@ -43808,6 +41217,1106 @@ export namespace Prisma {
 
 
   /**
+   * Model Wallet
+   */
+
+  export type AggregateWallet = {
+    _count: WalletCountAggregateOutputType | null
+    _avg: WalletAvgAggregateOutputType | null
+    _sum: WalletSumAggregateOutputType | null
+    _min: WalletMinAggregateOutputType | null
+    _max: WalletMaxAggregateOutputType | null
+  }
+
+  export type WalletAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    balance: number | null
+  }
+
+  export type WalletSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    balance: number | null
+  }
+
+  export type WalletMinAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    balance: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WalletMaxAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    balance: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type WalletCountAggregateOutputType = {
+    id: number
+    userId: number
+    balance: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type WalletAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    balance?: true
+  }
+
+  export type WalletSumAggregateInputType = {
+    id?: true
+    userId?: true
+    balance?: true
+  }
+
+  export type WalletMinAggregateInputType = {
+    id?: true
+    userId?: true
+    balance?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WalletMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    balance?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type WalletCountAggregateInputType = {
+    id?: true
+    userId?: true
+    balance?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type WalletAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Wallet to aggregate.
+     */
+    where?: WalletWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Wallets to fetch.
+     */
+    orderBy?: WalletOrderByWithRelationInput | WalletOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WalletWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Wallets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Wallets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Wallets
+    **/
+    _count?: true | WalletCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WalletAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WalletSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WalletMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WalletMaxAggregateInputType
+  }
+
+  export type GetWalletAggregateType<T extends WalletAggregateArgs> = {
+        [P in keyof T & keyof AggregateWallet]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWallet[P]>
+      : GetScalarType<T[P], AggregateWallet[P]>
+  }
+
+
+
+
+  export type WalletGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WalletWhereInput
+    orderBy?: WalletOrderByWithAggregationInput | WalletOrderByWithAggregationInput[]
+    by: WalletScalarFieldEnum[] | WalletScalarFieldEnum
+    having?: WalletScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WalletCountAggregateInputType | true
+    _avg?: WalletAvgAggregateInputType
+    _sum?: WalletSumAggregateInputType
+    _min?: WalletMinAggregateInputType
+    _max?: WalletMaxAggregateInputType
+  }
+
+  export type WalletGroupByOutputType = {
+    id: number
+    userId: number
+    balance: number
+    createdAt: Date
+    updatedAt: Date
+    _count: WalletCountAggregateOutputType | null
+    _avg: WalletAvgAggregateOutputType | null
+    _sum: WalletSumAggregateOutputType | null
+    _min: WalletMinAggregateOutputType | null
+    _max: WalletMaxAggregateOutputType | null
+  }
+
+  type GetWalletGroupByPayload<T extends WalletGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WalletGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WalletGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WalletGroupByOutputType[P]>
+            : GetScalarType<T[P], WalletGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WalletSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    balance?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wallet"]>
+
+  export type WalletSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    balance?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wallet"]>
+
+  export type WalletSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    balance?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wallet"]>
+
+  export type WalletSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    balance?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type WalletOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "balance" | "createdAt" | "updatedAt", ExtArgs["result"]["wallet"]>
+  export type WalletInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type WalletIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type WalletIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    User?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $WalletPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Wallet"
+    objects: {
+      User: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userId: number
+      balance: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["wallet"]>
+    composites: {}
+  }
+
+  type WalletGetPayload<S extends boolean | null | undefined | WalletDefaultArgs> = $Result.GetResult<Prisma.$WalletPayload, S>
+
+  type WalletCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WalletFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WalletCountAggregateInputType | true
+    }
+
+  export interface WalletDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Wallet'], meta: { name: 'Wallet' } }
+    /**
+     * Find zero or one Wallet that matches the filter.
+     * @param {WalletFindUniqueArgs} args - Arguments to find a Wallet
+     * @example
+     * // Get one Wallet
+     * const wallet = await prisma.wallet.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WalletFindUniqueArgs>(args: SelectSubset<T, WalletFindUniqueArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Wallet that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WalletFindUniqueOrThrowArgs} args - Arguments to find a Wallet
+     * @example
+     * // Get one Wallet
+     * const wallet = await prisma.wallet.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WalletFindUniqueOrThrowArgs>(args: SelectSubset<T, WalletFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Wallet that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletFindFirstArgs} args - Arguments to find a Wallet
+     * @example
+     * // Get one Wallet
+     * const wallet = await prisma.wallet.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WalletFindFirstArgs>(args?: SelectSubset<T, WalletFindFirstArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Wallet that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletFindFirstOrThrowArgs} args - Arguments to find a Wallet
+     * @example
+     * // Get one Wallet
+     * const wallet = await prisma.wallet.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WalletFindFirstOrThrowArgs>(args?: SelectSubset<T, WalletFindFirstOrThrowArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Wallets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Wallets
+     * const wallets = await prisma.wallet.findMany()
+     * 
+     * // Get first 10 Wallets
+     * const wallets = await prisma.wallet.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const walletWithIdOnly = await prisma.wallet.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WalletFindManyArgs>(args?: SelectSubset<T, WalletFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Wallet.
+     * @param {WalletCreateArgs} args - Arguments to create a Wallet.
+     * @example
+     * // Create one Wallet
+     * const Wallet = await prisma.wallet.create({
+     *   data: {
+     *     // ... data to create a Wallet
+     *   }
+     * })
+     * 
+     */
+    create<T extends WalletCreateArgs>(args: SelectSubset<T, WalletCreateArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Wallets.
+     * @param {WalletCreateManyArgs} args - Arguments to create many Wallets.
+     * @example
+     * // Create many Wallets
+     * const wallet = await prisma.wallet.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WalletCreateManyArgs>(args?: SelectSubset<T, WalletCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Wallets and returns the data saved in the database.
+     * @param {WalletCreateManyAndReturnArgs} args - Arguments to create many Wallets.
+     * @example
+     * // Create many Wallets
+     * const wallet = await prisma.wallet.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Wallets and only return the `id`
+     * const walletWithIdOnly = await prisma.wallet.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WalletCreateManyAndReturnArgs>(args?: SelectSubset<T, WalletCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Wallet.
+     * @param {WalletDeleteArgs} args - Arguments to delete one Wallet.
+     * @example
+     * // Delete one Wallet
+     * const Wallet = await prisma.wallet.delete({
+     *   where: {
+     *     // ... filter to delete one Wallet
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WalletDeleteArgs>(args: SelectSubset<T, WalletDeleteArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Wallet.
+     * @param {WalletUpdateArgs} args - Arguments to update one Wallet.
+     * @example
+     * // Update one Wallet
+     * const wallet = await prisma.wallet.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WalletUpdateArgs>(args: SelectSubset<T, WalletUpdateArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Wallets.
+     * @param {WalletDeleteManyArgs} args - Arguments to filter Wallets to delete.
+     * @example
+     * // Delete a few Wallets
+     * const { count } = await prisma.wallet.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WalletDeleteManyArgs>(args?: SelectSubset<T, WalletDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Wallets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Wallets
+     * const wallet = await prisma.wallet.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WalletUpdateManyArgs>(args: SelectSubset<T, WalletUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Wallets and returns the data updated in the database.
+     * @param {WalletUpdateManyAndReturnArgs} args - Arguments to update many Wallets.
+     * @example
+     * // Update many Wallets
+     * const wallet = await prisma.wallet.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Wallets and only return the `id`
+     * const walletWithIdOnly = await prisma.wallet.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WalletUpdateManyAndReturnArgs>(args: SelectSubset<T, WalletUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Wallet.
+     * @param {WalletUpsertArgs} args - Arguments to update or create a Wallet.
+     * @example
+     * // Update or create a Wallet
+     * const wallet = await prisma.wallet.upsert({
+     *   create: {
+     *     // ... data to create a Wallet
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Wallet we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WalletUpsertArgs>(args: SelectSubset<T, WalletUpsertArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Wallets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletCountArgs} args - Arguments to filter Wallets to count.
+     * @example
+     * // Count the number of Wallets
+     * const count = await prisma.wallet.count({
+     *   where: {
+     *     // ... the filter for the Wallets we want to count
+     *   }
+     * })
+    **/
+    count<T extends WalletCountArgs>(
+      args?: Subset<T, WalletCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WalletCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Wallet.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WalletAggregateArgs>(args: Subset<T, WalletAggregateArgs>): Prisma.PrismaPromise<GetWalletAggregateType<T>>
+
+    /**
+     * Group by Wallet.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WalletGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WalletGroupByArgs['orderBy'] }
+        : { orderBy?: WalletGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WalletGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWalletGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Wallet model
+   */
+  readonly fields: WalletFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Wallet.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WalletClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    User<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Wallet model
+   */
+  interface WalletFieldRefs {
+    readonly id: FieldRef<"Wallet", 'Int'>
+    readonly userId: FieldRef<"Wallet", 'Int'>
+    readonly balance: FieldRef<"Wallet", 'Float'>
+    readonly createdAt: FieldRef<"Wallet", 'DateTime'>
+    readonly updatedAt: FieldRef<"Wallet", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Wallet findUnique
+   */
+  export type WalletFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * Filter, which Wallet to fetch.
+     */
+    where: WalletWhereUniqueInput
+  }
+
+  /**
+   * Wallet findUniqueOrThrow
+   */
+  export type WalletFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * Filter, which Wallet to fetch.
+     */
+    where: WalletWhereUniqueInput
+  }
+
+  /**
+   * Wallet findFirst
+   */
+  export type WalletFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * Filter, which Wallet to fetch.
+     */
+    where?: WalletWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Wallets to fetch.
+     */
+    orderBy?: WalletOrderByWithRelationInput | WalletOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Wallets.
+     */
+    cursor?: WalletWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Wallets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Wallets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Wallets.
+     */
+    distinct?: WalletScalarFieldEnum | WalletScalarFieldEnum[]
+  }
+
+  /**
+   * Wallet findFirstOrThrow
+   */
+  export type WalletFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * Filter, which Wallet to fetch.
+     */
+    where?: WalletWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Wallets to fetch.
+     */
+    orderBy?: WalletOrderByWithRelationInput | WalletOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Wallets.
+     */
+    cursor?: WalletWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Wallets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Wallets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Wallets.
+     */
+    distinct?: WalletScalarFieldEnum | WalletScalarFieldEnum[]
+  }
+
+  /**
+   * Wallet findMany
+   */
+  export type WalletFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * Filter, which Wallets to fetch.
+     */
+    where?: WalletWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Wallets to fetch.
+     */
+    orderBy?: WalletOrderByWithRelationInput | WalletOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Wallets.
+     */
+    cursor?: WalletWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Wallets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Wallets.
+     */
+    skip?: number
+    distinct?: WalletScalarFieldEnum | WalletScalarFieldEnum[]
+  }
+
+  /**
+   * Wallet create
+   */
+  export type WalletCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Wallet.
+     */
+    data: XOR<WalletCreateInput, WalletUncheckedCreateInput>
+  }
+
+  /**
+   * Wallet createMany
+   */
+  export type WalletCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Wallets.
+     */
+    data: WalletCreateManyInput | WalletCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Wallet createManyAndReturn
+   */
+  export type WalletCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * The data used to create many Wallets.
+     */
+    data: WalletCreateManyInput | WalletCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Wallet update
+   */
+  export type WalletUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Wallet.
+     */
+    data: XOR<WalletUpdateInput, WalletUncheckedUpdateInput>
+    /**
+     * Choose, which Wallet to update.
+     */
+    where: WalletWhereUniqueInput
+  }
+
+  /**
+   * Wallet updateMany
+   */
+  export type WalletUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Wallets.
+     */
+    data: XOR<WalletUpdateManyMutationInput, WalletUncheckedUpdateManyInput>
+    /**
+     * Filter which Wallets to update
+     */
+    where?: WalletWhereInput
+    /**
+     * Limit how many Wallets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Wallet updateManyAndReturn
+   */
+  export type WalletUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * The data used to update Wallets.
+     */
+    data: XOR<WalletUpdateManyMutationInput, WalletUncheckedUpdateManyInput>
+    /**
+     * Filter which Wallets to update
+     */
+    where?: WalletWhereInput
+    /**
+     * Limit how many Wallets to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Wallet upsert
+   */
+  export type WalletUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Wallet to update in case it exists.
+     */
+    where: WalletWhereUniqueInput
+    /**
+     * In case the Wallet found by the `where` argument doesn't exist, create a new Wallet with this data.
+     */
+    create: XOR<WalletCreateInput, WalletUncheckedCreateInput>
+    /**
+     * In case the Wallet was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WalletUpdateInput, WalletUncheckedUpdateInput>
+  }
+
+  /**
+   * Wallet delete
+   */
+  export type WalletDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * Filter which Wallet to delete.
+     */
+    where: WalletWhereUniqueInput
+  }
+
+  /**
+   * Wallet deleteMany
+   */
+  export type WalletDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Wallets to delete
+     */
+    where?: WalletWhereInput
+    /**
+     * Limit how many Wallets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Wallet without action
+   */
+  export type WalletDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -43904,20 +42413,6 @@ export namespace Prisma {
   export type DeviceScalarFieldEnum = (typeof DeviceScalarFieldEnum)[keyof typeof DeviceScalarFieldEnum]
 
 
-  export const LanguageScalarFieldEnum: {
-    id: 'id',
-    name: 'name',
-    createdById: 'createdById',
-    updatedById: 'updatedById',
-    deletedById: 'deletedById',
-    deletedAt: 'deletedAt',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type LanguageScalarFieldEnum = (typeof LanguageScalarFieldEnum)[keyof typeof LanguageScalarFieldEnum]
-
-
   export const NotificationScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -43954,7 +42449,8 @@ export namespace Prisma {
     referenceNumber: 'referenceNumber',
     transactionContent: 'transactionContent',
     body: 'body',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    serviceRequestId: 'serviceRequestId'
   };
 
   export type PaymentTransactionScalarFieldEnum = (typeof PaymentTransactionScalarFieldEnum)[keyof typeof PaymentTransactionScalarFieldEnum]
@@ -44098,20 +42594,6 @@ export namespace Prisma {
   };
 
   export type ServiceProviderTranslationScalarFieldEnum = (typeof ServiceProviderTranslationScalarFieldEnum)[keyof typeof ServiceProviderTranslationScalarFieldEnum]
-
-
-  export const ServiceTranslationScalarFieldEnum: {
-    id: 'id',
-    serviceId: 'serviceId',
-    languageId: 'languageId',
-    name: 'name',
-    description: 'description',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    deletedAt: 'deletedAt'
-  };
-
-  export type ServiceTranslationScalarFieldEnum = (typeof ServiceTranslationScalarFieldEnum)[keyof typeof ServiceTranslationScalarFieldEnum]
 
 
   export const StaffScalarFieldEnum: {
@@ -44260,7 +42742,8 @@ export namespace Prisma {
     id: 'id',
     bookingId: 'bookingId',
     notes: 'notes',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    status: 'status'
   };
 
   export type ProposalScalarFieldEnum = (typeof ProposalScalarFieldEnum)[keyof typeof ProposalScalarFieldEnum]
@@ -44271,11 +42754,21 @@ export namespace Prisma {
     proposalId: 'proposalId',
     serviceId: 'serviceId',
     quantity: 'quantity',
-    price: 'price',
     createdAt: 'createdAt'
   };
 
   export type ProposalItemScalarFieldEnum = (typeof ProposalItemScalarFieldEnum)[keyof typeof ProposalItemScalarFieldEnum]
+
+
+  export const WalletScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    balance: 'balance',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type WalletScalarFieldEnum = (typeof WalletScalarFieldEnum)[keyof typeof WalletScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -44536,6 +43029,20 @@ export namespace Prisma {
    */
   export type ListEnumRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RequestStatus[]'>
     
+
+
+  /**
+   * Reference to a field of type 'ProposalStatus'
+   */
+  export type EnumProposalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProposalStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ProposalStatus[]'
+   */
+  export type ListEnumProposalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProposalStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -44758,7 +43265,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CategoryTranslation"> | Date | string
     deletedAt?: DateTimeNullableFilter<"CategoryTranslation"> | Date | string | null
     Category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
-    Language?: XOR<LanguageScalarRelationFilter, LanguageWhereInput>
   }
 
   export type CategoryTranslationOrderByWithRelationInput = {
@@ -44771,7 +43277,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     Category?: CategoryOrderByWithRelationInput
-    Language?: LanguageOrderByWithRelationInput
   }
 
   export type CategoryTranslationWhereUniqueInput = Prisma.AtLeast<{
@@ -44787,7 +43292,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CategoryTranslation"> | Date | string
     deletedAt?: DateTimeNullableFilter<"CategoryTranslation"> | Date | string | null
     Category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
-    Language?: XOR<LanguageScalarRelationFilter, LanguageWhereInput>
   }, "id">
 
   export type CategoryTranslationOrderByWithAggregationInput = {
@@ -45040,93 +43544,6 @@ export namespace Prisma {
     isActive?: BoolWithAggregatesFilter<"Device"> | boolean
   }
 
-  export type LanguageWhereInput = {
-    AND?: LanguageWhereInput | LanguageWhereInput[]
-    OR?: LanguageWhereInput[]
-    NOT?: LanguageWhereInput | LanguageWhereInput[]
-    id?: StringFilter<"Language"> | string
-    name?: StringFilter<"Language"> | string
-    createdById?: IntNullableFilter<"Language"> | number | null
-    updatedById?: IntNullableFilter<"Language"> | number | null
-    deletedById?: IntNullableFilter<"Language"> | number | null
-    deletedAt?: DateTimeNullableFilter<"Language"> | Date | string | null
-    createdAt?: DateTimeFilter<"Language"> | Date | string
-    updatedAt?: DateTimeFilter<"Language"> | Date | string
-    CategoryTranslation?: CategoryTranslationListRelationFilter
-    User_Language_createdByIdToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    User_Language_deletedByIdToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    User_Language_updatedByIdToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    ServiceProviderTranslation?: ServiceProviderTranslationListRelationFilter
-    ServiceTranslation?: ServiceTranslationListRelationFilter
-  }
-
-  export type LanguageOrderByWithRelationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    createdById?: SortOrderInput | SortOrder
-    updatedById?: SortOrderInput | SortOrder
-    deletedById?: SortOrderInput | SortOrder
-    deletedAt?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    CategoryTranslation?: CategoryTranslationOrderByRelationAggregateInput
-    User_Language_createdByIdToUser?: UserOrderByWithRelationInput
-    User_Language_deletedByIdToUser?: UserOrderByWithRelationInput
-    User_Language_updatedByIdToUser?: UserOrderByWithRelationInput
-    ServiceProviderTranslation?: ServiceProviderTranslationOrderByRelationAggregateInput
-    ServiceTranslation?: ServiceTranslationOrderByRelationAggregateInput
-  }
-
-  export type LanguageWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: LanguageWhereInput | LanguageWhereInput[]
-    OR?: LanguageWhereInput[]
-    NOT?: LanguageWhereInput | LanguageWhereInput[]
-    name?: StringFilter<"Language"> | string
-    createdById?: IntNullableFilter<"Language"> | number | null
-    updatedById?: IntNullableFilter<"Language"> | number | null
-    deletedById?: IntNullableFilter<"Language"> | number | null
-    deletedAt?: DateTimeNullableFilter<"Language"> | Date | string | null
-    createdAt?: DateTimeFilter<"Language"> | Date | string
-    updatedAt?: DateTimeFilter<"Language"> | Date | string
-    CategoryTranslation?: CategoryTranslationListRelationFilter
-    User_Language_createdByIdToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    User_Language_deletedByIdToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    User_Language_updatedByIdToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    ServiceProviderTranslation?: ServiceProviderTranslationListRelationFilter
-    ServiceTranslation?: ServiceTranslationListRelationFilter
-  }, "id">
-
-  export type LanguageOrderByWithAggregationInput = {
-    id?: SortOrder
-    name?: SortOrder
-    createdById?: SortOrderInput | SortOrder
-    updatedById?: SortOrderInput | SortOrder
-    deletedById?: SortOrderInput | SortOrder
-    deletedAt?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: LanguageCountOrderByAggregateInput
-    _avg?: LanguageAvgOrderByAggregateInput
-    _max?: LanguageMaxOrderByAggregateInput
-    _min?: LanguageMinOrderByAggregateInput
-    _sum?: LanguageSumOrderByAggregateInput
-  }
-
-  export type LanguageScalarWhereWithAggregatesInput = {
-    AND?: LanguageScalarWhereWithAggregatesInput | LanguageScalarWhereWithAggregatesInput[]
-    OR?: LanguageScalarWhereWithAggregatesInput[]
-    NOT?: LanguageScalarWhereWithAggregatesInput | LanguageScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Language"> | string
-    name?: StringWithAggregatesFilter<"Language"> | string
-    createdById?: IntNullableWithAggregatesFilter<"Language"> | number | null
-    updatedById?: IntNullableWithAggregatesFilter<"Language"> | number | null
-    deletedById?: IntNullableWithAggregatesFilter<"Language"> | number | null
-    deletedAt?: DateTimeNullableWithAggregatesFilter<"Language"> | Date | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"Language"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Language"> | Date | string
-  }
-
   export type NotificationWhereInput = {
     AND?: NotificationWhereInput | NotificationWhereInput[]
     OR?: NotificationWhereInput[]
@@ -45267,6 +43684,8 @@ export namespace Prisma {
     transactionContent?: StringNullableFilter<"PaymentTransaction"> | string | null
     body?: StringNullableFilter<"PaymentTransaction"> | string | null
     createdAt?: DateTimeFilter<"PaymentTransaction"> | Date | string
+    serviceRequestId?: IntNullableFilter<"PaymentTransaction"> | number | null
+    ServiceRequest?: XOR<ServiceRequestNullableScalarRelationFilter, ServiceRequestWhereInput> | null
   }
 
   export type PaymentTransactionOrderByWithRelationInput = {
@@ -45282,10 +43701,13 @@ export namespace Prisma {
     transactionContent?: SortOrderInput | SortOrder
     body?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    serviceRequestId?: SortOrderInput | SortOrder
+    ServiceRequest?: ServiceRequestOrderByWithRelationInput
   }
 
   export type PaymentTransactionWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    serviceRequestId?: number
     AND?: PaymentTransactionWhereInput | PaymentTransactionWhereInput[]
     OR?: PaymentTransactionWhereInput[]
     NOT?: PaymentTransactionWhereInput | PaymentTransactionWhereInput[]
@@ -45300,7 +43722,8 @@ export namespace Prisma {
     transactionContent?: StringNullableFilter<"PaymentTransaction"> | string | null
     body?: StringNullableFilter<"PaymentTransaction"> | string | null
     createdAt?: DateTimeFilter<"PaymentTransaction"> | Date | string
-  }, "id">
+    ServiceRequest?: XOR<ServiceRequestNullableScalarRelationFilter, ServiceRequestWhereInput> | null
+  }, "id" | "serviceRequestId">
 
   export type PaymentTransactionOrderByWithAggregationInput = {
     id?: SortOrder
@@ -45315,6 +43738,7 @@ export namespace Prisma {
     transactionContent?: SortOrderInput | SortOrder
     body?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    serviceRequestId?: SortOrderInput | SortOrder
     _count?: PaymentTransactionCountOrderByAggregateInput
     _avg?: PaymentTransactionAvgOrderByAggregateInput
     _max?: PaymentTransactionMaxOrderByAggregateInput
@@ -45338,6 +43762,7 @@ export namespace Prisma {
     transactionContent?: StringNullableWithAggregatesFilter<"PaymentTransaction"> | string | null
     body?: StringNullableWithAggregatesFilter<"PaymentTransaction"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"PaymentTransaction"> | Date | string
+    serviceRequestId?: IntNullableWithAggregatesFilter<"PaymentTransaction"> | number | null
   }
 
   export type PermissionWhereInput = {
@@ -45825,7 +44250,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     ServiceProvider?: XOR<ServiceProviderScalarRelationFilter, ServiceProviderWhereInput>
     User_Service_updatedByIdToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    ServiceTranslation?: ServiceTranslationListRelationFilter
     Service_ServiceItems?: Service_ServiceItemsListRelationFilter
   }
 
@@ -45856,7 +44280,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserOrderByWithRelationInput
     ServiceProvider?: ServiceProviderOrderByWithRelationInput
     User_Service_updatedByIdToUser?: UserOrderByWithRelationInput
-    ServiceTranslation?: ServiceTranslationOrderByRelationAggregateInput
     Service_ServiceItems?: Service_ServiceItemsOrderByRelationAggregateInput
   }
 
@@ -45890,7 +44313,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     ServiceProvider?: XOR<ServiceProviderScalarRelationFilter, ServiceProviderWhereInput>
     User_Service_updatedByIdToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-    ServiceTranslation?: ServiceTranslationListRelationFilter
     Service_ServiceItems?: Service_ServiceItemsListRelationFilter
   }, "id">
 
@@ -46079,7 +44501,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ServiceProviderTranslation"> | Date | string
     updatedAt?: DateTimeFilter<"ServiceProviderTranslation"> | Date | string
     deletedAt?: DateTimeNullableFilter<"ServiceProviderTranslation"> | Date | string | null
-    Language?: XOR<LanguageScalarRelationFilter, LanguageWhereInput>
     ServiceProvider?: XOR<ServiceProviderScalarRelationFilter, ServiceProviderWhereInput>
   }
 
@@ -46092,7 +44513,6 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
-    Language?: LanguageOrderByWithRelationInput
     ServiceProvider?: ServiceProviderOrderByWithRelationInput
   }
 
@@ -46108,7 +44528,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ServiceProviderTranslation"> | Date | string
     updatedAt?: DateTimeFilter<"ServiceProviderTranslation"> | Date | string
     deletedAt?: DateTimeNullableFilter<"ServiceProviderTranslation"> | Date | string | null
-    Language?: XOR<LanguageScalarRelationFilter, LanguageWhereInput>
     ServiceProvider?: XOR<ServiceProviderScalarRelationFilter, ServiceProviderWhereInput>
   }, "id">
 
@@ -46140,81 +44559,6 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"ServiceProviderTranslation"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ServiceProviderTranslation"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"ServiceProviderTranslation"> | Date | string | null
-  }
-
-  export type ServiceTranslationWhereInput = {
-    AND?: ServiceTranslationWhereInput | ServiceTranslationWhereInput[]
-    OR?: ServiceTranslationWhereInput[]
-    NOT?: ServiceTranslationWhereInput | ServiceTranslationWhereInput[]
-    id?: IntFilter<"ServiceTranslation"> | number
-    serviceId?: IntFilter<"ServiceTranslation"> | number
-    languageId?: StringFilter<"ServiceTranslation"> | string
-    name?: StringFilter<"ServiceTranslation"> | string
-    description?: StringFilter<"ServiceTranslation"> | string
-    createdAt?: DateTimeFilter<"ServiceTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"ServiceTranslation"> | Date | string
-    deletedAt?: DateTimeNullableFilter<"ServiceTranslation"> | Date | string | null
-    Language?: XOR<LanguageScalarRelationFilter, LanguageWhereInput>
-    Service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
-  }
-
-  export type ServiceTranslationOrderByWithRelationInput = {
-    id?: SortOrder
-    serviceId?: SortOrder
-    languageId?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    deletedAt?: SortOrderInput | SortOrder
-    Language?: LanguageOrderByWithRelationInput
-    Service?: ServiceOrderByWithRelationInput
-  }
-
-  export type ServiceTranslationWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: ServiceTranslationWhereInput | ServiceTranslationWhereInput[]
-    OR?: ServiceTranslationWhereInput[]
-    NOT?: ServiceTranslationWhereInput | ServiceTranslationWhereInput[]
-    serviceId?: IntFilter<"ServiceTranslation"> | number
-    languageId?: StringFilter<"ServiceTranslation"> | string
-    name?: StringFilter<"ServiceTranslation"> | string
-    description?: StringFilter<"ServiceTranslation"> | string
-    createdAt?: DateTimeFilter<"ServiceTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"ServiceTranslation"> | Date | string
-    deletedAt?: DateTimeNullableFilter<"ServiceTranslation"> | Date | string | null
-    Language?: XOR<LanguageScalarRelationFilter, LanguageWhereInput>
-    Service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
-  }, "id">
-
-  export type ServiceTranslationOrderByWithAggregationInput = {
-    id?: SortOrder
-    serviceId?: SortOrder
-    languageId?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    deletedAt?: SortOrderInput | SortOrder
-    _count?: ServiceTranslationCountOrderByAggregateInput
-    _avg?: ServiceTranslationAvgOrderByAggregateInput
-    _max?: ServiceTranslationMaxOrderByAggregateInput
-    _min?: ServiceTranslationMinOrderByAggregateInput
-    _sum?: ServiceTranslationSumOrderByAggregateInput
-  }
-
-  export type ServiceTranslationScalarWhereWithAggregatesInput = {
-    AND?: ServiceTranslationScalarWhereWithAggregatesInput | ServiceTranslationScalarWhereWithAggregatesInput[]
-    OR?: ServiceTranslationScalarWhereWithAggregatesInput[]
-    NOT?: ServiceTranslationScalarWhereWithAggregatesInput | ServiceTranslationScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"ServiceTranslation"> | number
-    serviceId?: IntWithAggregatesFilter<"ServiceTranslation"> | number
-    languageId?: StringWithAggregatesFilter<"ServiceTranslation"> | string
-    name?: StringWithAggregatesFilter<"ServiceTranslation"> | string
-    description?: StringWithAggregatesFilter<"ServiceTranslation"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"ServiceTranslation"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"ServiceTranslation"> | Date | string
-    deletedAt?: DateTimeNullableWithAggregatesFilter<"ServiceTranslation"> | Date | string | null
   }
 
   export type StaffWhereInput = {
@@ -46458,9 +44802,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryListRelationFilter
     CustomerProfile?: XOR<CustomerProfileNullableScalarRelationFilter, CustomerProfileWhereInput> | null
     Device?: DeviceListRelationFilter
-    Language_Language_createdByIdToUser?: LanguageListRelationFilter
-    Language_Language_deletedByIdToUser?: LanguageListRelationFilter
-    Language_Language_updatedByIdToUser?: LanguageListRelationFilter
     Notification?: NotificationListRelationFilter
     Permission_Permission_createdByIdToUser?: PermissionListRelationFilter
     Permission_Permission_deletedByIdToUser?: PermissionListRelationFilter
@@ -46481,6 +44822,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserListRelationFilter
     User_User_updatedByIdToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     other_User_User_updatedByIdToUser?: UserListRelationFilter
+    Wallet?: XOR<WalletNullableScalarRelationFilter, WalletWhereInput> | null
     Role_UserRoles?: RoleListRelationFilter
   }
 
@@ -46504,9 +44846,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryOrderByRelationAggregateInput
     CustomerProfile?: CustomerProfileOrderByWithRelationInput
     Device?: DeviceOrderByRelationAggregateInput
-    Language_Language_createdByIdToUser?: LanguageOrderByRelationAggregateInput
-    Language_Language_deletedByIdToUser?: LanguageOrderByRelationAggregateInput
-    Language_Language_updatedByIdToUser?: LanguageOrderByRelationAggregateInput
     Notification?: NotificationOrderByRelationAggregateInput
     Permission_Permission_createdByIdToUser?: PermissionOrderByRelationAggregateInput
     Permission_Permission_deletedByIdToUser?: PermissionOrderByRelationAggregateInput
@@ -46527,6 +44866,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserOrderByRelationAggregateInput
     User_User_updatedByIdToUser?: UserOrderByWithRelationInput
     other_User_User_updatedByIdToUser?: UserOrderByRelationAggregateInput
+    Wallet?: WalletOrderByWithRelationInput
     Role_UserRoles?: RoleOrderByRelationAggregateInput
   }
 
@@ -46553,9 +44893,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryListRelationFilter
     CustomerProfile?: XOR<CustomerProfileNullableScalarRelationFilter, CustomerProfileWhereInput> | null
     Device?: DeviceListRelationFilter
-    Language_Language_createdByIdToUser?: LanguageListRelationFilter
-    Language_Language_deletedByIdToUser?: LanguageListRelationFilter
-    Language_Language_updatedByIdToUser?: LanguageListRelationFilter
     Notification?: NotificationListRelationFilter
     Permission_Permission_createdByIdToUser?: PermissionListRelationFilter
     Permission_Permission_deletedByIdToUser?: PermissionListRelationFilter
@@ -46576,6 +44913,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserListRelationFilter
     User_User_updatedByIdToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     other_User_User_updatedByIdToUser?: UserListRelationFilter
+    Wallet?: XOR<WalletNullableScalarRelationFilter, WalletWhereInput> | null
     Role_UserRoles?: RoleListRelationFilter
   }, "id" | "email">
 
@@ -46947,6 +45285,7 @@ export namespace Prisma {
     phoneNumber?: StringFilter<"ServiceRequest"> | string
     categoryId?: IntFilter<"ServiceRequest"> | number
     Booking?: XOR<BookingNullableScalarRelationFilter, BookingWhereInput> | null
+    PaymentTransaction?: XOR<PaymentTransactionNullableScalarRelationFilter, PaymentTransactionWhereInput> | null
     Category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
     CustomerProfile?: XOR<CustomerProfileScalarRelationFilter, CustomerProfileWhereInput>
     ServiceProvider?: XOR<ServiceProviderScalarRelationFilter, ServiceProviderWhereInput>
@@ -46965,6 +45304,7 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     categoryId?: SortOrder
     Booking?: BookingOrderByWithRelationInput
+    PaymentTransaction?: PaymentTransactionOrderByWithRelationInput
     Category?: CategoryOrderByWithRelationInput
     CustomerProfile?: CustomerProfileOrderByWithRelationInput
     ServiceProvider?: ServiceProviderOrderByWithRelationInput
@@ -46986,6 +45326,7 @@ export namespace Prisma {
     phoneNumber?: StringFilter<"ServiceRequest"> | string
     categoryId?: IntFilter<"ServiceRequest"> | number
     Booking?: XOR<BookingNullableScalarRelationFilter, BookingWhereInput> | null
+    PaymentTransaction?: XOR<PaymentTransactionNullableScalarRelationFilter, PaymentTransactionWhereInput> | null
     Category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
     CustomerProfile?: XOR<CustomerProfileScalarRelationFilter, CustomerProfileWhereInput>
     ServiceProvider?: XOR<ServiceProviderScalarRelationFilter, ServiceProviderWhereInput>
@@ -47081,6 +45422,7 @@ export namespace Prisma {
     bookingId?: IntFilter<"Proposal"> | number
     notes?: StringNullableFilter<"Proposal"> | string | null
     createdAt?: DateTimeFilter<"Proposal"> | Date | string
+    status?: EnumProposalStatusFilter<"Proposal"> | $Enums.ProposalStatus
     Booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
     ProposalItem?: ProposalItemListRelationFilter
   }
@@ -47090,6 +45432,7 @@ export namespace Prisma {
     bookingId?: SortOrder
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    status?: SortOrder
     Booking?: BookingOrderByWithRelationInput
     ProposalItem?: ProposalItemOrderByRelationAggregateInput
   }
@@ -47102,6 +45445,7 @@ export namespace Prisma {
     NOT?: ProposalWhereInput | ProposalWhereInput[]
     notes?: StringNullableFilter<"Proposal"> | string | null
     createdAt?: DateTimeFilter<"Proposal"> | Date | string
+    status?: EnumProposalStatusFilter<"Proposal"> | $Enums.ProposalStatus
     Booking?: XOR<BookingScalarRelationFilter, BookingWhereInput>
     ProposalItem?: ProposalItemListRelationFilter
   }, "id" | "bookingId">
@@ -47111,6 +45455,7 @@ export namespace Prisma {
     bookingId?: SortOrder
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    status?: SortOrder
     _count?: ProposalCountOrderByAggregateInput
     _avg?: ProposalAvgOrderByAggregateInput
     _max?: ProposalMaxOrderByAggregateInput
@@ -47126,6 +45471,7 @@ export namespace Prisma {
     bookingId?: IntWithAggregatesFilter<"Proposal"> | number
     notes?: StringNullableWithAggregatesFilter<"Proposal"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Proposal"> | Date | string
+    status?: EnumProposalStatusWithAggregatesFilter<"Proposal"> | $Enums.ProposalStatus
   }
 
   export type ProposalItemWhereInput = {
@@ -47136,7 +45482,6 @@ export namespace Prisma {
     proposalId?: IntFilter<"ProposalItem"> | number
     serviceId?: IntFilter<"ProposalItem"> | number
     quantity?: IntFilter<"ProposalItem"> | number
-    price?: FloatFilter<"ProposalItem"> | number
     createdAt?: DateTimeFilter<"ProposalItem"> | Date | string
     Proposal?: XOR<ProposalScalarRelationFilter, ProposalWhereInput>
     Service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
@@ -47147,7 +45492,6 @@ export namespace Prisma {
     proposalId?: SortOrder
     serviceId?: SortOrder
     quantity?: SortOrder
-    price?: SortOrder
     createdAt?: SortOrder
     Proposal?: ProposalOrderByWithRelationInput
     Service?: ServiceOrderByWithRelationInput
@@ -47161,7 +45505,6 @@ export namespace Prisma {
     proposalId?: IntFilter<"ProposalItem"> | number
     serviceId?: IntFilter<"ProposalItem"> | number
     quantity?: IntFilter<"ProposalItem"> | number
-    price?: FloatFilter<"ProposalItem"> | number
     createdAt?: DateTimeFilter<"ProposalItem"> | Date | string
     Proposal?: XOR<ProposalScalarRelationFilter, ProposalWhereInput>
     Service?: XOR<ServiceScalarRelationFilter, ServiceWhereInput>
@@ -47172,7 +45515,6 @@ export namespace Prisma {
     proposalId?: SortOrder
     serviceId?: SortOrder
     quantity?: SortOrder
-    price?: SortOrder
     createdAt?: SortOrder
     _count?: ProposalItemCountOrderByAggregateInput
     _avg?: ProposalItemAvgOrderByAggregateInput
@@ -47189,8 +45531,64 @@ export namespace Prisma {
     proposalId?: IntWithAggregatesFilter<"ProposalItem"> | number
     serviceId?: IntWithAggregatesFilter<"ProposalItem"> | number
     quantity?: IntWithAggregatesFilter<"ProposalItem"> | number
-    price?: FloatWithAggregatesFilter<"ProposalItem"> | number
     createdAt?: DateTimeWithAggregatesFilter<"ProposalItem"> | Date | string
+  }
+
+  export type WalletWhereInput = {
+    AND?: WalletWhereInput | WalletWhereInput[]
+    OR?: WalletWhereInput[]
+    NOT?: WalletWhereInput | WalletWhereInput[]
+    id?: IntFilter<"Wallet"> | number
+    userId?: IntFilter<"Wallet"> | number
+    balance?: FloatFilter<"Wallet"> | number
+    createdAt?: DateTimeFilter<"Wallet"> | Date | string
+    updatedAt?: DateTimeFilter<"Wallet"> | Date | string
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type WalletOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    balance?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    User?: UserOrderByWithRelationInput
+  }
+
+  export type WalletWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    userId?: number
+    AND?: WalletWhereInput | WalletWhereInput[]
+    OR?: WalletWhereInput[]
+    NOT?: WalletWhereInput | WalletWhereInput[]
+    balance?: FloatFilter<"Wallet"> | number
+    createdAt?: DateTimeFilter<"Wallet"> | Date | string
+    updatedAt?: DateTimeFilter<"Wallet"> | Date | string
+    User?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId">
+
+  export type WalletOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    balance?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: WalletCountOrderByAggregateInput
+    _avg?: WalletAvgOrderByAggregateInput
+    _max?: WalletMaxOrderByAggregateInput
+    _min?: WalletMinOrderByAggregateInput
+    _sum?: WalletSumOrderByAggregateInput
+  }
+
+  export type WalletScalarWhereWithAggregatesInput = {
+    AND?: WalletScalarWhereWithAggregatesInput | WalletScalarWhereWithAggregatesInput[]
+    OR?: WalletScalarWhereWithAggregatesInput[]
+    NOT?: WalletScalarWhereWithAggregatesInput | WalletScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Wallet"> | number
+    userId?: IntWithAggregatesFilter<"Wallet"> | number
+    balance?: FloatWithAggregatesFilter<"Wallet"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Wallet"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Wallet"> | Date | string
   }
 
   export type BookingCreateInput = {
@@ -47391,13 +45789,13 @@ export namespace Prisma {
   }
 
   export type CategoryTranslationCreateInput = {
+    languageId: string
     name: string
     description: string
     createdAt?: Date | string
     updatedAt: Date | string
     deletedAt?: Date | string | null
     Category: CategoryCreateNestedOneWithoutCategoryTranslationInput
-    Language: LanguageCreateNestedOneWithoutCategoryTranslationInput
   }
 
   export type CategoryTranslationUncheckedCreateInput = {
@@ -47412,13 +45810,13 @@ export namespace Prisma {
   }
 
   export type CategoryTranslationUpdateInput = {
+    languageId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Category?: CategoryUpdateOneRequiredWithoutCategoryTranslationNestedInput
-    Language?: LanguageUpdateOneRequiredWithoutCategoryTranslationNestedInput
   }
 
   export type CategoryTranslationUncheckedUpdateInput = {
@@ -47444,6 +45842,7 @@ export namespace Prisma {
   }
 
   export type CategoryTranslationUpdateManyMutationInput = {
+    languageId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47685,92 +46084,6 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
-  export type LanguageCreateInput = {
-    id: string
-    name: string
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CategoryTranslation?: CategoryTranslationCreateNestedManyWithoutLanguageInput
-    User_Language_createdByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_createdByIdToUserInput
-    User_Language_deletedByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_deletedByIdToUserInput
-    User_Language_updatedByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_updatedByIdToUserInput
-    ServiceProviderTranslation?: ServiceProviderTranslationCreateNestedManyWithoutLanguageInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageUncheckedCreateInput = {
-    id: string
-    name: string
-    createdById?: number | null
-    updatedById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CategoryTranslation?: CategoryTranslationUncheckedCreateNestedManyWithoutLanguageInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUncheckedCreateNestedManyWithoutLanguageInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CategoryTranslation?: CategoryTranslationUpdateManyWithoutLanguageNestedInput
-    User_Language_createdByIdToUser?: UserUpdateOneWithoutLanguage_Language_createdByIdToUserNestedInput
-    User_Language_deletedByIdToUser?: UserUpdateOneWithoutLanguage_Language_deletedByIdToUserNestedInput
-    User_Language_updatedByIdToUser?: UserUpdateOneWithoutLanguage_Language_updatedByIdToUserNestedInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUpdateManyWithoutLanguageNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutLanguageNestedInput
-  }
-
-  export type LanguageUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CategoryTranslation?: CategoryTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-  }
-
-  export type LanguageCreateManyInput = {
-    id: string
-    name: string
-    createdById?: number | null
-    updatedById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-  }
-
-  export type LanguageUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LanguageUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type NotificationCreateInput = {
     content: string
     isRead?: boolean
@@ -47901,6 +46214,7 @@ export namespace Prisma {
     transactionContent?: string | null
     body?: string | null
     createdAt?: Date | string
+    ServiceRequest?: ServiceRequestCreateNestedOneWithoutPaymentTransactionInput
   }
 
   export type PaymentTransactionUncheckedCreateInput = {
@@ -47916,6 +46230,7 @@ export namespace Prisma {
     transactionContent?: string | null
     body?: string | null
     createdAt?: Date | string
+    serviceRequestId?: number | null
   }
 
   export type PaymentTransactionUpdateInput = {
@@ -47930,6 +46245,7 @@ export namespace Prisma {
     transactionContent?: NullableStringFieldUpdateOperationsInput | string | null
     body?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ServiceRequest?: ServiceRequestUpdateOneWithoutPaymentTransactionNestedInput
   }
 
   export type PaymentTransactionUncheckedUpdateInput = {
@@ -47945,6 +46261,7 @@ export namespace Prisma {
     transactionContent?: NullableStringFieldUpdateOperationsInput | string | null
     body?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PaymentTransactionCreateManyInput = {
@@ -47960,6 +46277,7 @@ export namespace Prisma {
     transactionContent?: string | null
     body?: string | null
     createdAt?: Date | string
+    serviceRequestId?: number | null
   }
 
   export type PaymentTransactionUpdateManyMutationInput = {
@@ -47989,6 +46307,7 @@ export namespace Prisma {
     transactionContent?: NullableStringFieldUpdateOperationsInput | string | null
     body?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    serviceRequestId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type PermissionCreateInput = {
@@ -48440,7 +46759,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserCreateNestedOneWithoutService_Service_deletedByIdToUserInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceInput
     User_Service_updatedByIdToUser?: UserCreateNestedOneWithoutService_Service_updatedByIdToUserInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsCreateNestedManyWithoutServiceInput
   }
 
@@ -48466,7 +46784,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
   }
 
@@ -48491,7 +46808,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserUpdateOneWithoutService_Service_deletedByIdToUserNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceNestedInput
     User_Service_updatedByIdToUser?: UserUpdateOneWithoutService_Service_updatedByIdToUserNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUpdateManyWithoutServiceNestedInput
   }
 
@@ -48517,7 +46833,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
   }
 
@@ -48717,12 +47032,12 @@ export namespace Prisma {
   }
 
   export type ServiceProviderTranslationCreateInput = {
+    languageId: string
     name: string
     description?: string | null
     createdAt?: Date | string
     updatedAt: Date | string
     deletedAt?: Date | string | null
-    Language: LanguageCreateNestedOneWithoutServiceProviderTranslationInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceProviderTranslationInput
   }
 
@@ -48738,12 +47053,12 @@ export namespace Prisma {
   }
 
   export type ServiceProviderTranslationUpdateInput = {
+    languageId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Language?: LanguageUpdateOneRequiredWithoutServiceProviderTranslationNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceProviderTranslationNestedInput
   }
 
@@ -48770,6 +47085,7 @@ export namespace Prisma {
   }
 
   export type ServiceProviderTranslationUpdateManyMutationInput = {
+    languageId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -48783,78 +47099,6 @@ export namespace Prisma {
     languageId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type ServiceTranslationCreateInput = {
-    name: string
-    description: string
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-    Language: LanguageCreateNestedOneWithoutServiceTranslationInput
-    Service: ServiceCreateNestedOneWithoutServiceTranslationInput
-  }
-
-  export type ServiceTranslationUncheckedCreateInput = {
-    id?: number
-    serviceId: number
-    languageId: string
-    name: string
-    description: string
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type ServiceTranslationUpdateInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Language?: LanguageUpdateOneRequiredWithoutServiceTranslationNestedInput
-    Service?: ServiceUpdateOneRequiredWithoutServiceTranslationNestedInput
-  }
-
-  export type ServiceTranslationUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    serviceId?: IntFieldUpdateOperationsInput | number
-    languageId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type ServiceTranslationCreateManyInput = {
-    id?: number
-    serviceId: number
-    languageId: string
-    name: string
-    description: string
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type ServiceTranslationUpdateManyMutationInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type ServiceTranslationUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    serviceId?: IntFieldUpdateOperationsInput | number
-    languageId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -49089,9 +47333,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -49112,6 +47353,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -49135,9 +47377,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -49155,6 +47394,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -49174,9 +47414,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -49197,6 +47434,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -49220,9 +47458,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -49240,6 +47475,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -49615,6 +47851,7 @@ export namespace Prisma {
     location: string
     phoneNumber: string
     Booking?: BookingCreateNestedOneWithoutServiceRequestInput
+    PaymentTransaction?: PaymentTransactionCreateNestedOneWithoutServiceRequestInput
     Category: CategoryCreateNestedOneWithoutServiceRequestInput
     CustomerProfile: CustomerProfileCreateNestedOneWithoutServiceRequestInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceRequestInput
@@ -49633,6 +47870,7 @@ export namespace Prisma {
     phoneNumber: string
     categoryId: number
     Booking?: BookingUncheckedCreateNestedOneWithoutServiceRequestInput
+    PaymentTransaction?: PaymentTransactionUncheckedCreateNestedOneWithoutServiceRequestInput
   }
 
   export type ServiceRequestUpdateInput = {
@@ -49644,6 +47882,7 @@ export namespace Prisma {
     location?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     Booking?: BookingUpdateOneWithoutServiceRequestNestedInput
+    PaymentTransaction?: PaymentTransactionUpdateOneWithoutServiceRequestNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceRequestNestedInput
     CustomerProfile?: CustomerProfileUpdateOneRequiredWithoutServiceRequestNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceRequestNestedInput
@@ -49662,6 +47901,7 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     Booking?: BookingUncheckedUpdateOneWithoutServiceRequestNestedInput
+    PaymentTransaction?: PaymentTransactionUncheckedUpdateOneWithoutServiceRequestNestedInput
   }
 
   export type ServiceRequestCreateManyInput = {
@@ -49739,6 +47979,7 @@ export namespace Prisma {
   export type ProposalCreateInput = {
     notes?: string | null
     createdAt?: Date | string
+    status?: $Enums.ProposalStatus
     Booking: BookingCreateNestedOneWithoutProposalInput
     ProposalItem?: ProposalItemCreateNestedManyWithoutProposalInput
   }
@@ -49748,12 +47989,14 @@ export namespace Prisma {
     bookingId: number
     notes?: string | null
     createdAt?: Date | string
+    status?: $Enums.ProposalStatus
     ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutProposalInput
   }
 
   export type ProposalUpdateInput = {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
     Booking?: BookingUpdateOneRequiredWithoutProposalNestedInput
     ProposalItem?: ProposalItemUpdateManyWithoutProposalNestedInput
   }
@@ -49763,6 +48006,7 @@ export namespace Prisma {
     bookingId?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
     ProposalItem?: ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
   }
 
@@ -49771,11 +48015,13 @@ export namespace Prisma {
     bookingId: number
     notes?: string | null
     createdAt?: Date | string
+    status?: $Enums.ProposalStatus
   }
 
   export type ProposalUpdateManyMutationInput = {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   }
 
   export type ProposalUncheckedUpdateManyInput = {
@@ -49783,11 +48029,11 @@ export namespace Prisma {
     bookingId?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   }
 
   export type ProposalItemCreateInput = {
     quantity?: number
-    price: number
     createdAt?: Date | string
     Proposal: ProposalCreateNestedOneWithoutProposalItemInput
     Service: ServiceCreateNestedOneWithoutProposalItemInput
@@ -49798,13 +48044,11 @@ export namespace Prisma {
     proposalId: number
     serviceId: number
     quantity?: number
-    price: number
     createdAt?: Date | string
   }
 
   export type ProposalItemUpdateInput = {
     quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Proposal?: ProposalUpdateOneRequiredWithoutProposalItemNestedInput
     Service?: ServiceUpdateOneRequiredWithoutProposalItemNestedInput
@@ -49815,7 +48059,6 @@ export namespace Prisma {
     proposalId?: IntFieldUpdateOperationsInput | number
     serviceId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -49824,13 +48067,11 @@ export namespace Prisma {
     proposalId: number
     serviceId: number
     quantity?: number
-    price: number
     createdAt?: Date | string
   }
 
   export type ProposalItemUpdateManyMutationInput = {
     quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -49839,8 +48080,59 @@ export namespace Prisma {
     proposalId?: IntFieldUpdateOperationsInput | number
     serviceId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletCreateInput = {
+    balance?: number
+    createdAt?: Date | string
+    updatedAt: Date | string
+    User: UserCreateNestedOneWithoutWalletInput
+  }
+
+  export type WalletUncheckedCreateInput = {
+    id?: number
+    userId: number
+    balance?: number
+    createdAt?: Date | string
+    updatedAt: Date | string
+  }
+
+  export type WalletUpdateInput = {
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    User?: UserUpdateOneRequiredWithoutWalletNestedInput
+  }
+
+  export type WalletUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletCreateManyInput = {
+    id?: number
+    userId: number
+    balance?: number
+    createdAt?: Date | string
+    updatedAt: Date | string
+  }
+
+  export type WalletUpdateManyMutationInput = {
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -50252,11 +48544,6 @@ export namespace Prisma {
     isNot?: CategoryWhereInput
   }
 
-  export type LanguageScalarRelationFilter = {
-    is?: LanguageWhereInput
-    isNot?: LanguageWhereInput
-  }
-
   export type CategoryTranslationCountOrderByAggregateInput = {
     id?: SortOrder
     categoryId?: SortOrder
@@ -50522,71 +48809,6 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
-  export type ServiceProviderTranslationListRelationFilter = {
-    every?: ServiceProviderTranslationWhereInput
-    some?: ServiceProviderTranslationWhereInput
-    none?: ServiceProviderTranslationWhereInput
-  }
-
-  export type ServiceTranslationListRelationFilter = {
-    every?: ServiceTranslationWhereInput
-    some?: ServiceTranslationWhereInput
-    none?: ServiceTranslationWhereInput
-  }
-
-  export type ServiceProviderTranslationOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ServiceTranslationOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type LanguageCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    createdById?: SortOrder
-    updatedById?: SortOrder
-    deletedById?: SortOrder
-    deletedAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type LanguageAvgOrderByAggregateInput = {
-    createdById?: SortOrder
-    updatedById?: SortOrder
-    deletedById?: SortOrder
-  }
-
-  export type LanguageMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    createdById?: SortOrder
-    updatedById?: SortOrder
-    deletedById?: SortOrder
-    deletedAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type LanguageMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    createdById?: SortOrder
-    updatedById?: SortOrder
-    deletedById?: SortOrder
-    deletedAt?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type LanguageSumOrderByAggregateInput = {
-    createdById?: SortOrder
-    updatedById?: SortOrder
-    deletedById?: SortOrder
-  }
-
   export type NotificationCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -50676,6 +48898,7 @@ export namespace Prisma {
     transactionContent?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
+    serviceRequestId?: SortOrder
   }
 
   export type PaymentTransactionAvgOrderByAggregateInput = {
@@ -50683,6 +48906,7 @@ export namespace Prisma {
     amountIn?: SortOrder
     amountOut?: SortOrder
     accumulated?: SortOrder
+    serviceRequestId?: SortOrder
   }
 
   export type PaymentTransactionMaxOrderByAggregateInput = {
@@ -50698,6 +48922,7 @@ export namespace Prisma {
     transactionContent?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
+    serviceRequestId?: SortOrder
   }
 
   export type PaymentTransactionMinOrderByAggregateInput = {
@@ -50713,6 +48938,7 @@ export namespace Prisma {
     transactionContent?: SortOrder
     body?: SortOrder
     createdAt?: SortOrder
+    serviceRequestId?: SortOrder
   }
 
   export type PaymentTransactionSumOrderByAggregateInput = {
@@ -50720,6 +48946,7 @@ export namespace Prisma {
     amountIn?: SortOrder
     amountOut?: SortOrder
     accumulated?: SortOrder
+    serviceRequestId?: SortOrder
   }
 
   export type EnumHTTPMethodFilter<$PrismaModel = never> = {
@@ -51250,6 +49477,12 @@ export namespace Prisma {
     none?: ServiceItemWhereInput
   }
 
+  export type ServiceProviderTranslationListRelationFilter = {
+    every?: ServiceProviderTranslationWhereInput
+    some?: ServiceProviderTranslationWhereInput
+    none?: ServiceProviderTranslationWhereInput
+  }
+
   export type StaffListRelationFilter = {
     every?: StaffWhereInput
     some?: StaffWhereInput
@@ -51257,6 +49490,10 @@ export namespace Prisma {
   }
 
   export type ServiceItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ServiceProviderTranslationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -51388,49 +49625,6 @@ export namespace Prisma {
   export type ServiceProviderTranslationSumOrderByAggregateInput = {
     id?: SortOrder
     providerId?: SortOrder
-  }
-
-  export type ServiceTranslationCountOrderByAggregateInput = {
-    id?: SortOrder
-    serviceId?: SortOrder
-    languageId?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    deletedAt?: SortOrder
-  }
-
-  export type ServiceTranslationAvgOrderByAggregateInput = {
-    id?: SortOrder
-    serviceId?: SortOrder
-  }
-
-  export type ServiceTranslationMaxOrderByAggregateInput = {
-    id?: SortOrder
-    serviceId?: SortOrder
-    languageId?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    deletedAt?: SortOrder
-  }
-
-  export type ServiceTranslationMinOrderByAggregateInput = {
-    id?: SortOrder
-    serviceId?: SortOrder
-    languageId?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    deletedAt?: SortOrder
-  }
-
-  export type ServiceTranslationSumOrderByAggregateInput = {
-    id?: SortOrder
-    serviceId?: SortOrder
   }
 
   export type InspectionReportListRelationFilter = {
@@ -51632,12 +49826,6 @@ export namespace Prisma {
     none?: DeviceWhereInput
   }
 
-  export type LanguageListRelationFilter = {
-    every?: LanguageWhereInput
-    some?: LanguageWhereInput
-    none?: LanguageWhereInput
-  }
-
   export type NotificationListRelationFilter = {
     every?: NotificationWhereInput
     some?: NotificationWhereInput
@@ -51655,11 +49843,12 @@ export namespace Prisma {
     none?: ServiceProviderWhereInput
   }
 
-  export type DeviceOrderByRelationAggregateInput = {
-    _count?: SortOrder
+  export type WalletNullableScalarRelationFilter = {
+    is?: WalletWhereInput | null
+    isNot?: WalletWhereInput | null
   }
 
-  export type LanguageOrderByRelationAggregateInput = {
+  export type DeviceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -51970,6 +50159,11 @@ export namespace Prisma {
     isNot?: BookingWhereInput | null
   }
 
+  export type PaymentTransactionNullableScalarRelationFilter = {
+    is?: PaymentTransactionWhereInput | null
+    isNot?: PaymentTransactionWhereInput | null
+  }
+
   export type ServiceRequestCountOrderByAggregateInput = {
     id?: SortOrder
     customerId?: SortOrder
@@ -52071,11 +50265,19 @@ export namespace Prisma {
     serviceItemId?: SortOrder
   }
 
+  export type EnumProposalStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProposalStatus | EnumProposalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProposalStatus[] | ListEnumProposalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProposalStatus[] | ListEnumProposalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProposalStatusFilter<$PrismaModel> | $Enums.ProposalStatus
+  }
+
   export type ProposalCountOrderByAggregateInput = {
     id?: SortOrder
     bookingId?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
+    status?: SortOrder
   }
 
   export type ProposalAvgOrderByAggregateInput = {
@@ -52088,6 +50290,7 @@ export namespace Prisma {
     bookingId?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
+    status?: SortOrder
   }
 
   export type ProposalMinOrderByAggregateInput = {
@@ -52095,11 +50298,22 @@ export namespace Prisma {
     bookingId?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
+    status?: SortOrder
   }
 
   export type ProposalSumOrderByAggregateInput = {
     id?: SortOrder
     bookingId?: SortOrder
+  }
+
+  export type EnumProposalStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProposalStatus | EnumProposalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProposalStatus[] | ListEnumProposalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProposalStatus[] | ListEnumProposalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProposalStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProposalStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProposalStatusFilter<$PrismaModel>
+    _max?: NestedEnumProposalStatusFilter<$PrismaModel>
   }
 
   export type ProposalScalarRelationFilter = {
@@ -52112,7 +50326,6 @@ export namespace Prisma {
     proposalId?: SortOrder
     serviceId?: SortOrder
     quantity?: SortOrder
-    price?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -52121,7 +50334,6 @@ export namespace Prisma {
     proposalId?: SortOrder
     serviceId?: SortOrder
     quantity?: SortOrder
-    price?: SortOrder
   }
 
   export type ProposalItemMaxOrderByAggregateInput = {
@@ -52129,7 +50341,6 @@ export namespace Prisma {
     proposalId?: SortOrder
     serviceId?: SortOrder
     quantity?: SortOrder
-    price?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -52138,7 +50349,6 @@ export namespace Prisma {
     proposalId?: SortOrder
     serviceId?: SortOrder
     quantity?: SortOrder
-    price?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -52147,7 +50357,42 @@ export namespace Prisma {
     proposalId?: SortOrder
     serviceId?: SortOrder
     quantity?: SortOrder
-    price?: SortOrder
+  }
+
+  export type WalletCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    balance?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WalletAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    balance?: SortOrder
+  }
+
+  export type WalletMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    balance?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WalletMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    balance?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WalletSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    balance?: SortOrder
   }
 
   export type CustomerProfileCreateNestedOneWithoutBookingInput = {
@@ -52664,26 +50909,12 @@ export namespace Prisma {
     connect?: CategoryWhereUniqueInput
   }
 
-  export type LanguageCreateNestedOneWithoutCategoryTranslationInput = {
-    create?: XOR<LanguageCreateWithoutCategoryTranslationInput, LanguageUncheckedCreateWithoutCategoryTranslationInput>
-    connectOrCreate?: LanguageCreateOrConnectWithoutCategoryTranslationInput
-    connect?: LanguageWhereUniqueInput
-  }
-
   export type CategoryUpdateOneRequiredWithoutCategoryTranslationNestedInput = {
     create?: XOR<CategoryCreateWithoutCategoryTranslationInput, CategoryUncheckedCreateWithoutCategoryTranslationInput>
     connectOrCreate?: CategoryCreateOrConnectWithoutCategoryTranslationInput
     upsert?: CategoryUpsertWithoutCategoryTranslationInput
     connect?: CategoryWhereUniqueInput
     update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutCategoryTranslationInput, CategoryUpdateWithoutCategoryTranslationInput>, CategoryUncheckedUpdateWithoutCategoryTranslationInput>
-  }
-
-  export type LanguageUpdateOneRequiredWithoutCategoryTranslationNestedInput = {
-    create?: XOR<LanguageCreateWithoutCategoryTranslationInput, LanguageUncheckedCreateWithoutCategoryTranslationInput>
-    connectOrCreate?: LanguageCreateOrConnectWithoutCategoryTranslationInput
-    upsert?: LanguageUpsertWithoutCategoryTranslationInput
-    connect?: LanguageWhereUniqueInput
-    update?: XOR<XOR<LanguageUpdateToOneWithWhereWithoutCategoryTranslationInput, LanguageUpdateWithoutCategoryTranslationInput>, LanguageUncheckedUpdateWithoutCategoryTranslationInput>
   }
 
   export type CustomerProfileCreateNestedOneWithoutChatMessageInput = {
@@ -53072,180 +51303,6 @@ export namespace Prisma {
     deleteMany?: RefreshTokenScalarWhereInput | RefreshTokenScalarWhereInput[]
   }
 
-  export type CategoryTranslationCreateNestedManyWithoutLanguageInput = {
-    create?: XOR<CategoryTranslationCreateWithoutLanguageInput, CategoryTranslationUncheckedCreateWithoutLanguageInput> | CategoryTranslationCreateWithoutLanguageInput[] | CategoryTranslationUncheckedCreateWithoutLanguageInput[]
-    connectOrCreate?: CategoryTranslationCreateOrConnectWithoutLanguageInput | CategoryTranslationCreateOrConnectWithoutLanguageInput[]
-    createMany?: CategoryTranslationCreateManyLanguageInputEnvelope
-    connect?: CategoryTranslationWhereUniqueInput | CategoryTranslationWhereUniqueInput[]
-  }
-
-  export type UserCreateNestedOneWithoutLanguage_Language_createdByIdToUserInput = {
-    create?: XOR<UserCreateWithoutLanguage_Language_createdByIdToUserInput, UserUncheckedCreateWithoutLanguage_Language_createdByIdToUserInput>
-    connectOrCreate?: UserCreateOrConnectWithoutLanguage_Language_createdByIdToUserInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutLanguage_Language_deletedByIdToUserInput = {
-    create?: XOR<UserCreateWithoutLanguage_Language_deletedByIdToUserInput, UserUncheckedCreateWithoutLanguage_Language_deletedByIdToUserInput>
-    connectOrCreate?: UserCreateOrConnectWithoutLanguage_Language_deletedByIdToUserInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutLanguage_Language_updatedByIdToUserInput = {
-    create?: XOR<UserCreateWithoutLanguage_Language_updatedByIdToUserInput, UserUncheckedCreateWithoutLanguage_Language_updatedByIdToUserInput>
-    connectOrCreate?: UserCreateOrConnectWithoutLanguage_Language_updatedByIdToUserInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type ServiceProviderTranslationCreateNestedManyWithoutLanguageInput = {
-    create?: XOR<ServiceProviderTranslationCreateWithoutLanguageInput, ServiceProviderTranslationUncheckedCreateWithoutLanguageInput> | ServiceProviderTranslationCreateWithoutLanguageInput[] | ServiceProviderTranslationUncheckedCreateWithoutLanguageInput[]
-    connectOrCreate?: ServiceProviderTranslationCreateOrConnectWithoutLanguageInput | ServiceProviderTranslationCreateOrConnectWithoutLanguageInput[]
-    createMany?: ServiceProviderTranslationCreateManyLanguageInputEnvelope
-    connect?: ServiceProviderTranslationWhereUniqueInput | ServiceProviderTranslationWhereUniqueInput[]
-  }
-
-  export type ServiceTranslationCreateNestedManyWithoutLanguageInput = {
-    create?: XOR<ServiceTranslationCreateWithoutLanguageInput, ServiceTranslationUncheckedCreateWithoutLanguageInput> | ServiceTranslationCreateWithoutLanguageInput[] | ServiceTranslationUncheckedCreateWithoutLanguageInput[]
-    connectOrCreate?: ServiceTranslationCreateOrConnectWithoutLanguageInput | ServiceTranslationCreateOrConnectWithoutLanguageInput[]
-    createMany?: ServiceTranslationCreateManyLanguageInputEnvelope
-    connect?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-  }
-
-  export type CategoryTranslationUncheckedCreateNestedManyWithoutLanguageInput = {
-    create?: XOR<CategoryTranslationCreateWithoutLanguageInput, CategoryTranslationUncheckedCreateWithoutLanguageInput> | CategoryTranslationCreateWithoutLanguageInput[] | CategoryTranslationUncheckedCreateWithoutLanguageInput[]
-    connectOrCreate?: CategoryTranslationCreateOrConnectWithoutLanguageInput | CategoryTranslationCreateOrConnectWithoutLanguageInput[]
-    createMany?: CategoryTranslationCreateManyLanguageInputEnvelope
-    connect?: CategoryTranslationWhereUniqueInput | CategoryTranslationWhereUniqueInput[]
-  }
-
-  export type ServiceProviderTranslationUncheckedCreateNestedManyWithoutLanguageInput = {
-    create?: XOR<ServiceProviderTranslationCreateWithoutLanguageInput, ServiceProviderTranslationUncheckedCreateWithoutLanguageInput> | ServiceProviderTranslationCreateWithoutLanguageInput[] | ServiceProviderTranslationUncheckedCreateWithoutLanguageInput[]
-    connectOrCreate?: ServiceProviderTranslationCreateOrConnectWithoutLanguageInput | ServiceProviderTranslationCreateOrConnectWithoutLanguageInput[]
-    createMany?: ServiceProviderTranslationCreateManyLanguageInputEnvelope
-    connect?: ServiceProviderTranslationWhereUniqueInput | ServiceProviderTranslationWhereUniqueInput[]
-  }
-
-  export type ServiceTranslationUncheckedCreateNestedManyWithoutLanguageInput = {
-    create?: XOR<ServiceTranslationCreateWithoutLanguageInput, ServiceTranslationUncheckedCreateWithoutLanguageInput> | ServiceTranslationCreateWithoutLanguageInput[] | ServiceTranslationUncheckedCreateWithoutLanguageInput[]
-    connectOrCreate?: ServiceTranslationCreateOrConnectWithoutLanguageInput | ServiceTranslationCreateOrConnectWithoutLanguageInput[]
-    createMany?: ServiceTranslationCreateManyLanguageInputEnvelope
-    connect?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-  }
-
-  export type CategoryTranslationUpdateManyWithoutLanguageNestedInput = {
-    create?: XOR<CategoryTranslationCreateWithoutLanguageInput, CategoryTranslationUncheckedCreateWithoutLanguageInput> | CategoryTranslationCreateWithoutLanguageInput[] | CategoryTranslationUncheckedCreateWithoutLanguageInput[]
-    connectOrCreate?: CategoryTranslationCreateOrConnectWithoutLanguageInput | CategoryTranslationCreateOrConnectWithoutLanguageInput[]
-    upsert?: CategoryTranslationUpsertWithWhereUniqueWithoutLanguageInput | CategoryTranslationUpsertWithWhereUniqueWithoutLanguageInput[]
-    createMany?: CategoryTranslationCreateManyLanguageInputEnvelope
-    set?: CategoryTranslationWhereUniqueInput | CategoryTranslationWhereUniqueInput[]
-    disconnect?: CategoryTranslationWhereUniqueInput | CategoryTranslationWhereUniqueInput[]
-    delete?: CategoryTranslationWhereUniqueInput | CategoryTranslationWhereUniqueInput[]
-    connect?: CategoryTranslationWhereUniqueInput | CategoryTranslationWhereUniqueInput[]
-    update?: CategoryTranslationUpdateWithWhereUniqueWithoutLanguageInput | CategoryTranslationUpdateWithWhereUniqueWithoutLanguageInput[]
-    updateMany?: CategoryTranslationUpdateManyWithWhereWithoutLanguageInput | CategoryTranslationUpdateManyWithWhereWithoutLanguageInput[]
-    deleteMany?: CategoryTranslationScalarWhereInput | CategoryTranslationScalarWhereInput[]
-  }
-
-  export type UserUpdateOneWithoutLanguage_Language_createdByIdToUserNestedInput = {
-    create?: XOR<UserCreateWithoutLanguage_Language_createdByIdToUserInput, UserUncheckedCreateWithoutLanguage_Language_createdByIdToUserInput>
-    connectOrCreate?: UserCreateOrConnectWithoutLanguage_Language_createdByIdToUserInput
-    upsert?: UserUpsertWithoutLanguage_Language_createdByIdToUserInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLanguage_Language_createdByIdToUserInput, UserUpdateWithoutLanguage_Language_createdByIdToUserInput>, UserUncheckedUpdateWithoutLanguage_Language_createdByIdToUserInput>
-  }
-
-  export type UserUpdateOneWithoutLanguage_Language_deletedByIdToUserNestedInput = {
-    create?: XOR<UserCreateWithoutLanguage_Language_deletedByIdToUserInput, UserUncheckedCreateWithoutLanguage_Language_deletedByIdToUserInput>
-    connectOrCreate?: UserCreateOrConnectWithoutLanguage_Language_deletedByIdToUserInput
-    upsert?: UserUpsertWithoutLanguage_Language_deletedByIdToUserInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLanguage_Language_deletedByIdToUserInput, UserUpdateWithoutLanguage_Language_deletedByIdToUserInput>, UserUncheckedUpdateWithoutLanguage_Language_deletedByIdToUserInput>
-  }
-
-  export type UserUpdateOneWithoutLanguage_Language_updatedByIdToUserNestedInput = {
-    create?: XOR<UserCreateWithoutLanguage_Language_updatedByIdToUserInput, UserUncheckedCreateWithoutLanguage_Language_updatedByIdToUserInput>
-    connectOrCreate?: UserCreateOrConnectWithoutLanguage_Language_updatedByIdToUserInput
-    upsert?: UserUpsertWithoutLanguage_Language_updatedByIdToUserInput
-    disconnect?: UserWhereInput | boolean
-    delete?: UserWhereInput | boolean
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLanguage_Language_updatedByIdToUserInput, UserUpdateWithoutLanguage_Language_updatedByIdToUserInput>, UserUncheckedUpdateWithoutLanguage_Language_updatedByIdToUserInput>
-  }
-
-  export type ServiceProviderTranslationUpdateManyWithoutLanguageNestedInput = {
-    create?: XOR<ServiceProviderTranslationCreateWithoutLanguageInput, ServiceProviderTranslationUncheckedCreateWithoutLanguageInput> | ServiceProviderTranslationCreateWithoutLanguageInput[] | ServiceProviderTranslationUncheckedCreateWithoutLanguageInput[]
-    connectOrCreate?: ServiceProviderTranslationCreateOrConnectWithoutLanguageInput | ServiceProviderTranslationCreateOrConnectWithoutLanguageInput[]
-    upsert?: ServiceProviderTranslationUpsertWithWhereUniqueWithoutLanguageInput | ServiceProviderTranslationUpsertWithWhereUniqueWithoutLanguageInput[]
-    createMany?: ServiceProviderTranslationCreateManyLanguageInputEnvelope
-    set?: ServiceProviderTranslationWhereUniqueInput | ServiceProviderTranslationWhereUniqueInput[]
-    disconnect?: ServiceProviderTranslationWhereUniqueInput | ServiceProviderTranslationWhereUniqueInput[]
-    delete?: ServiceProviderTranslationWhereUniqueInput | ServiceProviderTranslationWhereUniqueInput[]
-    connect?: ServiceProviderTranslationWhereUniqueInput | ServiceProviderTranslationWhereUniqueInput[]
-    update?: ServiceProviderTranslationUpdateWithWhereUniqueWithoutLanguageInput | ServiceProviderTranslationUpdateWithWhereUniqueWithoutLanguageInput[]
-    updateMany?: ServiceProviderTranslationUpdateManyWithWhereWithoutLanguageInput | ServiceProviderTranslationUpdateManyWithWhereWithoutLanguageInput[]
-    deleteMany?: ServiceProviderTranslationScalarWhereInput | ServiceProviderTranslationScalarWhereInput[]
-  }
-
-  export type ServiceTranslationUpdateManyWithoutLanguageNestedInput = {
-    create?: XOR<ServiceTranslationCreateWithoutLanguageInput, ServiceTranslationUncheckedCreateWithoutLanguageInput> | ServiceTranslationCreateWithoutLanguageInput[] | ServiceTranslationUncheckedCreateWithoutLanguageInput[]
-    connectOrCreate?: ServiceTranslationCreateOrConnectWithoutLanguageInput | ServiceTranslationCreateOrConnectWithoutLanguageInput[]
-    upsert?: ServiceTranslationUpsertWithWhereUniqueWithoutLanguageInput | ServiceTranslationUpsertWithWhereUniqueWithoutLanguageInput[]
-    createMany?: ServiceTranslationCreateManyLanguageInputEnvelope
-    set?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    disconnect?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    delete?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    connect?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    update?: ServiceTranslationUpdateWithWhereUniqueWithoutLanguageInput | ServiceTranslationUpdateWithWhereUniqueWithoutLanguageInput[]
-    updateMany?: ServiceTranslationUpdateManyWithWhereWithoutLanguageInput | ServiceTranslationUpdateManyWithWhereWithoutLanguageInput[]
-    deleteMany?: ServiceTranslationScalarWhereInput | ServiceTranslationScalarWhereInput[]
-  }
-
-  export type CategoryTranslationUncheckedUpdateManyWithoutLanguageNestedInput = {
-    create?: XOR<CategoryTranslationCreateWithoutLanguageInput, CategoryTranslationUncheckedCreateWithoutLanguageInput> | CategoryTranslationCreateWithoutLanguageInput[] | CategoryTranslationUncheckedCreateWithoutLanguageInput[]
-    connectOrCreate?: CategoryTranslationCreateOrConnectWithoutLanguageInput | CategoryTranslationCreateOrConnectWithoutLanguageInput[]
-    upsert?: CategoryTranslationUpsertWithWhereUniqueWithoutLanguageInput | CategoryTranslationUpsertWithWhereUniqueWithoutLanguageInput[]
-    createMany?: CategoryTranslationCreateManyLanguageInputEnvelope
-    set?: CategoryTranslationWhereUniqueInput | CategoryTranslationWhereUniqueInput[]
-    disconnect?: CategoryTranslationWhereUniqueInput | CategoryTranslationWhereUniqueInput[]
-    delete?: CategoryTranslationWhereUniqueInput | CategoryTranslationWhereUniqueInput[]
-    connect?: CategoryTranslationWhereUniqueInput | CategoryTranslationWhereUniqueInput[]
-    update?: CategoryTranslationUpdateWithWhereUniqueWithoutLanguageInput | CategoryTranslationUpdateWithWhereUniqueWithoutLanguageInput[]
-    updateMany?: CategoryTranslationUpdateManyWithWhereWithoutLanguageInput | CategoryTranslationUpdateManyWithWhereWithoutLanguageInput[]
-    deleteMany?: CategoryTranslationScalarWhereInput | CategoryTranslationScalarWhereInput[]
-  }
-
-  export type ServiceProviderTranslationUncheckedUpdateManyWithoutLanguageNestedInput = {
-    create?: XOR<ServiceProviderTranslationCreateWithoutLanguageInput, ServiceProviderTranslationUncheckedCreateWithoutLanguageInput> | ServiceProviderTranslationCreateWithoutLanguageInput[] | ServiceProviderTranslationUncheckedCreateWithoutLanguageInput[]
-    connectOrCreate?: ServiceProviderTranslationCreateOrConnectWithoutLanguageInput | ServiceProviderTranslationCreateOrConnectWithoutLanguageInput[]
-    upsert?: ServiceProviderTranslationUpsertWithWhereUniqueWithoutLanguageInput | ServiceProviderTranslationUpsertWithWhereUniqueWithoutLanguageInput[]
-    createMany?: ServiceProviderTranslationCreateManyLanguageInputEnvelope
-    set?: ServiceProviderTranslationWhereUniqueInput | ServiceProviderTranslationWhereUniqueInput[]
-    disconnect?: ServiceProviderTranslationWhereUniqueInput | ServiceProviderTranslationWhereUniqueInput[]
-    delete?: ServiceProviderTranslationWhereUniqueInput | ServiceProviderTranslationWhereUniqueInput[]
-    connect?: ServiceProviderTranslationWhereUniqueInput | ServiceProviderTranslationWhereUniqueInput[]
-    update?: ServiceProviderTranslationUpdateWithWhereUniqueWithoutLanguageInput | ServiceProviderTranslationUpdateWithWhereUniqueWithoutLanguageInput[]
-    updateMany?: ServiceProviderTranslationUpdateManyWithWhereWithoutLanguageInput | ServiceProviderTranslationUpdateManyWithWhereWithoutLanguageInput[]
-    deleteMany?: ServiceProviderTranslationScalarWhereInput | ServiceProviderTranslationScalarWhereInput[]
-  }
-
-  export type ServiceTranslationUncheckedUpdateManyWithoutLanguageNestedInput = {
-    create?: XOR<ServiceTranslationCreateWithoutLanguageInput, ServiceTranslationUncheckedCreateWithoutLanguageInput> | ServiceTranslationCreateWithoutLanguageInput[] | ServiceTranslationUncheckedCreateWithoutLanguageInput[]
-    connectOrCreate?: ServiceTranslationCreateOrConnectWithoutLanguageInput | ServiceTranslationCreateOrConnectWithoutLanguageInput[]
-    upsert?: ServiceTranslationUpsertWithWhereUniqueWithoutLanguageInput | ServiceTranslationUpsertWithWhereUniqueWithoutLanguageInput[]
-    createMany?: ServiceTranslationCreateManyLanguageInputEnvelope
-    set?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    disconnect?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    delete?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    connect?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    update?: ServiceTranslationUpdateWithWhereUniqueWithoutLanguageInput | ServiceTranslationUpdateWithWhereUniqueWithoutLanguageInput[]
-    updateMany?: ServiceTranslationUpdateManyWithWhereWithoutLanguageInput | ServiceTranslationUpdateManyWithWhereWithoutLanguageInput[]
-    deleteMany?: ServiceTranslationScalarWhereInput | ServiceTranslationScalarWhereInput[]
-  }
-
   export type UserCreateNestedOneWithoutNotificationInput = {
     create?: XOR<UserCreateWithoutNotificationInput, UserUncheckedCreateWithoutNotificationInput>
     connectOrCreate?: UserCreateOrConnectWithoutNotificationInput
@@ -53272,6 +51329,22 @@ export namespace Prisma {
     upsert?: CustomerProfileUpsertWithoutPackageRecommendationInput
     connect?: CustomerProfileWhereUniqueInput
     update?: XOR<XOR<CustomerProfileUpdateToOneWithWhereWithoutPackageRecommendationInput, CustomerProfileUpdateWithoutPackageRecommendationInput>, CustomerProfileUncheckedUpdateWithoutPackageRecommendationInput>
+  }
+
+  export type ServiceRequestCreateNestedOneWithoutPaymentTransactionInput = {
+    create?: XOR<ServiceRequestCreateWithoutPaymentTransactionInput, ServiceRequestUncheckedCreateWithoutPaymentTransactionInput>
+    connectOrCreate?: ServiceRequestCreateOrConnectWithoutPaymentTransactionInput
+    connect?: ServiceRequestWhereUniqueInput
+  }
+
+  export type ServiceRequestUpdateOneWithoutPaymentTransactionNestedInput = {
+    create?: XOR<ServiceRequestCreateWithoutPaymentTransactionInput, ServiceRequestUncheckedCreateWithoutPaymentTransactionInput>
+    connectOrCreate?: ServiceRequestCreateOrConnectWithoutPaymentTransactionInput
+    upsert?: ServiceRequestUpsertWithoutPaymentTransactionInput
+    disconnect?: ServiceRequestWhereInput | boolean
+    delete?: ServiceRequestWhereInput | boolean
+    connect?: ServiceRequestWhereUniqueInput
+    update?: XOR<XOR<ServiceRequestUpdateToOneWithWhereWithoutPaymentTransactionInput, ServiceRequestUpdateWithoutPaymentTransactionInput>, ServiceRequestUncheckedUpdateWithoutPaymentTransactionInput>
   }
 
   export type UserCreateNestedOneWithoutPermission_Permission_createdByIdToUserInput = {
@@ -53655,13 +51728,6 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type ServiceTranslationCreateNestedManyWithoutServiceInput = {
-    create?: XOR<ServiceTranslationCreateWithoutServiceInput, ServiceTranslationUncheckedCreateWithoutServiceInput> | ServiceTranslationCreateWithoutServiceInput[] | ServiceTranslationUncheckedCreateWithoutServiceInput[]
-    connectOrCreate?: ServiceTranslationCreateOrConnectWithoutServiceInput | ServiceTranslationCreateOrConnectWithoutServiceInput[]
-    createMany?: ServiceTranslationCreateManyServiceInputEnvelope
-    connect?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-  }
-
   export type Service_ServiceItemsCreateNestedManyWithoutServiceInput = {
     create?: XOR<Service_ServiceItemsCreateWithoutServiceInput, Service_ServiceItemsUncheckedCreateWithoutServiceInput> | Service_ServiceItemsCreateWithoutServiceInput[] | Service_ServiceItemsUncheckedCreateWithoutServiceInput[]
     connectOrCreate?: Service_ServiceItemsCreateOrConnectWithoutServiceInput | Service_ServiceItemsCreateOrConnectWithoutServiceInput[]
@@ -53688,13 +51754,6 @@ export namespace Prisma {
     connectOrCreate?: ReviewCreateOrConnectWithoutServiceInput | ReviewCreateOrConnectWithoutServiceInput[]
     createMany?: ReviewCreateManyServiceInputEnvelope
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
-  }
-
-  export type ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput = {
-    create?: XOR<ServiceTranslationCreateWithoutServiceInput, ServiceTranslationUncheckedCreateWithoutServiceInput> | ServiceTranslationCreateWithoutServiceInput[] | ServiceTranslationUncheckedCreateWithoutServiceInput[]
-    connectOrCreate?: ServiceTranslationCreateOrConnectWithoutServiceInput | ServiceTranslationCreateOrConnectWithoutServiceInput[]
-    createMany?: ServiceTranslationCreateManyServiceInputEnvelope
-    connect?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
   }
 
   export type Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput = {
@@ -53813,20 +51872,6 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutService_Service_updatedByIdToUserInput, UserUpdateWithoutService_Service_updatedByIdToUserInput>, UserUncheckedUpdateWithoutService_Service_updatedByIdToUserInput>
   }
 
-  export type ServiceTranslationUpdateManyWithoutServiceNestedInput = {
-    create?: XOR<ServiceTranslationCreateWithoutServiceInput, ServiceTranslationUncheckedCreateWithoutServiceInput> | ServiceTranslationCreateWithoutServiceInput[] | ServiceTranslationUncheckedCreateWithoutServiceInput[]
-    connectOrCreate?: ServiceTranslationCreateOrConnectWithoutServiceInput | ServiceTranslationCreateOrConnectWithoutServiceInput[]
-    upsert?: ServiceTranslationUpsertWithWhereUniqueWithoutServiceInput | ServiceTranslationUpsertWithWhereUniqueWithoutServiceInput[]
-    createMany?: ServiceTranslationCreateManyServiceInputEnvelope
-    set?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    disconnect?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    delete?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    connect?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    update?: ServiceTranslationUpdateWithWhereUniqueWithoutServiceInput | ServiceTranslationUpdateWithWhereUniqueWithoutServiceInput[]
-    updateMany?: ServiceTranslationUpdateManyWithWhereWithoutServiceInput | ServiceTranslationUpdateManyWithWhereWithoutServiceInput[]
-    deleteMany?: ServiceTranslationScalarWhereInput | ServiceTranslationScalarWhereInput[]
-  }
-
   export type Service_ServiceItemsUpdateManyWithoutServiceNestedInput = {
     create?: XOR<Service_ServiceItemsCreateWithoutServiceInput, Service_ServiceItemsUncheckedCreateWithoutServiceInput> | Service_ServiceItemsCreateWithoutServiceInput[] | Service_ServiceItemsUncheckedCreateWithoutServiceInput[]
     connectOrCreate?: Service_ServiceItemsCreateOrConnectWithoutServiceInput | Service_ServiceItemsCreateOrConnectWithoutServiceInput[]
@@ -53881,20 +51926,6 @@ export namespace Prisma {
     update?: ReviewUpdateWithWhereUniqueWithoutServiceInput | ReviewUpdateWithWhereUniqueWithoutServiceInput[]
     updateMany?: ReviewUpdateManyWithWhereWithoutServiceInput | ReviewUpdateManyWithWhereWithoutServiceInput[]
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
-  }
-
-  export type ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput = {
-    create?: XOR<ServiceTranslationCreateWithoutServiceInput, ServiceTranslationUncheckedCreateWithoutServiceInput> | ServiceTranslationCreateWithoutServiceInput[] | ServiceTranslationUncheckedCreateWithoutServiceInput[]
-    connectOrCreate?: ServiceTranslationCreateOrConnectWithoutServiceInput | ServiceTranslationCreateOrConnectWithoutServiceInput[]
-    upsert?: ServiceTranslationUpsertWithWhereUniqueWithoutServiceInput | ServiceTranslationUpsertWithWhereUniqueWithoutServiceInput[]
-    createMany?: ServiceTranslationCreateManyServiceInputEnvelope
-    set?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    disconnect?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    delete?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    connect?: ServiceTranslationWhereUniqueInput | ServiceTranslationWhereUniqueInput[]
-    update?: ServiceTranslationUpdateWithWhereUniqueWithoutServiceInput | ServiceTranslationUpdateWithWhereUniqueWithoutServiceInput[]
-    updateMany?: ServiceTranslationUpdateManyWithWhereWithoutServiceInput | ServiceTranslationUpdateManyWithWhereWithoutServiceInput[]
-    deleteMany?: ServiceTranslationScalarWhereInput | ServiceTranslationScalarWhereInput[]
   }
 
   export type Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput = {
@@ -54201,24 +52232,10 @@ export namespace Prisma {
     deleteMany?: StaffScalarWhereInput | StaffScalarWhereInput[]
   }
 
-  export type LanguageCreateNestedOneWithoutServiceProviderTranslationInput = {
-    create?: XOR<LanguageCreateWithoutServiceProviderTranslationInput, LanguageUncheckedCreateWithoutServiceProviderTranslationInput>
-    connectOrCreate?: LanguageCreateOrConnectWithoutServiceProviderTranslationInput
-    connect?: LanguageWhereUniqueInput
-  }
-
   export type ServiceProviderCreateNestedOneWithoutServiceProviderTranslationInput = {
     create?: XOR<ServiceProviderCreateWithoutServiceProviderTranslationInput, ServiceProviderUncheckedCreateWithoutServiceProviderTranslationInput>
     connectOrCreate?: ServiceProviderCreateOrConnectWithoutServiceProviderTranslationInput
     connect?: ServiceProviderWhereUniqueInput
-  }
-
-  export type LanguageUpdateOneRequiredWithoutServiceProviderTranslationNestedInput = {
-    create?: XOR<LanguageCreateWithoutServiceProviderTranslationInput, LanguageUncheckedCreateWithoutServiceProviderTranslationInput>
-    connectOrCreate?: LanguageCreateOrConnectWithoutServiceProviderTranslationInput
-    upsert?: LanguageUpsertWithoutServiceProviderTranslationInput
-    connect?: LanguageWhereUniqueInput
-    update?: XOR<XOR<LanguageUpdateToOneWithWhereWithoutServiceProviderTranslationInput, LanguageUpdateWithoutServiceProviderTranslationInput>, LanguageUncheckedUpdateWithoutServiceProviderTranslationInput>
   }
 
   export type ServiceProviderUpdateOneRequiredWithoutServiceProviderTranslationNestedInput = {
@@ -54227,34 +52244,6 @@ export namespace Prisma {
     upsert?: ServiceProviderUpsertWithoutServiceProviderTranslationInput
     connect?: ServiceProviderWhereUniqueInput
     update?: XOR<XOR<ServiceProviderUpdateToOneWithWhereWithoutServiceProviderTranslationInput, ServiceProviderUpdateWithoutServiceProviderTranslationInput>, ServiceProviderUncheckedUpdateWithoutServiceProviderTranslationInput>
-  }
-
-  export type LanguageCreateNestedOneWithoutServiceTranslationInput = {
-    create?: XOR<LanguageCreateWithoutServiceTranslationInput, LanguageUncheckedCreateWithoutServiceTranslationInput>
-    connectOrCreate?: LanguageCreateOrConnectWithoutServiceTranslationInput
-    connect?: LanguageWhereUniqueInput
-  }
-
-  export type ServiceCreateNestedOneWithoutServiceTranslationInput = {
-    create?: XOR<ServiceCreateWithoutServiceTranslationInput, ServiceUncheckedCreateWithoutServiceTranslationInput>
-    connectOrCreate?: ServiceCreateOrConnectWithoutServiceTranslationInput
-    connect?: ServiceWhereUniqueInput
-  }
-
-  export type LanguageUpdateOneRequiredWithoutServiceTranslationNestedInput = {
-    create?: XOR<LanguageCreateWithoutServiceTranslationInput, LanguageUncheckedCreateWithoutServiceTranslationInput>
-    connectOrCreate?: LanguageCreateOrConnectWithoutServiceTranslationInput
-    upsert?: LanguageUpsertWithoutServiceTranslationInput
-    connect?: LanguageWhereUniqueInput
-    update?: XOR<XOR<LanguageUpdateToOneWithWhereWithoutServiceTranslationInput, LanguageUpdateWithoutServiceTranslationInput>, LanguageUncheckedUpdateWithoutServiceTranslationInput>
-  }
-
-  export type ServiceUpdateOneRequiredWithoutServiceTranslationNestedInput = {
-    create?: XOR<ServiceCreateWithoutServiceTranslationInput, ServiceUncheckedCreateWithoutServiceTranslationInput>
-    connectOrCreate?: ServiceCreateOrConnectWithoutServiceTranslationInput
-    upsert?: ServiceUpsertWithoutServiceTranslationInput
-    connect?: ServiceWhereUniqueInput
-    update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutServiceTranslationInput, ServiceUpdateWithoutServiceTranslationInput>, ServiceUncheckedUpdateWithoutServiceTranslationInput>
   }
 
   export type BookingCreateNestedManyWithoutStaff_Booking_staffIdToStaffInput = {
@@ -54579,27 +52568,6 @@ export namespace Prisma {
     connect?: DeviceWhereUniqueInput | DeviceWhereUniqueInput[]
   }
 
-  export type LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput = {
-    create?: XOR<LanguageCreateWithoutUser_Language_createdByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_createdByIdToUserInput> | LanguageCreateWithoutUser_Language_createdByIdToUserInput[] | LanguageUncheckedCreateWithoutUser_Language_createdByIdToUserInput[]
-    connectOrCreate?: LanguageCreateOrConnectWithoutUser_Language_createdByIdToUserInput | LanguageCreateOrConnectWithoutUser_Language_createdByIdToUserInput[]
-    createMany?: LanguageCreateManyUser_Language_createdByIdToUserInputEnvelope
-    connect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-  }
-
-  export type LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput = {
-    create?: XOR<LanguageCreateWithoutUser_Language_deletedByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_deletedByIdToUserInput> | LanguageCreateWithoutUser_Language_deletedByIdToUserInput[] | LanguageUncheckedCreateWithoutUser_Language_deletedByIdToUserInput[]
-    connectOrCreate?: LanguageCreateOrConnectWithoutUser_Language_deletedByIdToUserInput | LanguageCreateOrConnectWithoutUser_Language_deletedByIdToUserInput[]
-    createMany?: LanguageCreateManyUser_Language_deletedByIdToUserInputEnvelope
-    connect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-  }
-
-  export type LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput = {
-    create?: XOR<LanguageCreateWithoutUser_Language_updatedByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_updatedByIdToUserInput> | LanguageCreateWithoutUser_Language_updatedByIdToUserInput[] | LanguageUncheckedCreateWithoutUser_Language_updatedByIdToUserInput[]
-    connectOrCreate?: LanguageCreateOrConnectWithoutUser_Language_updatedByIdToUserInput | LanguageCreateOrConnectWithoutUser_Language_updatedByIdToUserInput[]
-    createMany?: LanguageCreateManyUser_Language_updatedByIdToUserInputEnvelope
-    connect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-  }
-
   export type NotificationCreateNestedManyWithoutUserInput = {
     create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
@@ -54735,6 +52703,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
+  export type WalletCreateNestedOneWithoutUserInput = {
+    create?: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
+    connectOrCreate?: WalletCreateOrConnectWithoutUserInput
+    connect?: WalletWhereUniqueInput
+  }
+
   export type RoleCreateNestedManyWithoutUser_UserRolesInput = {
     create?: XOR<RoleCreateWithoutUser_UserRolesInput, RoleUncheckedCreateWithoutUser_UserRolesInput> | RoleCreateWithoutUser_UserRolesInput[] | RoleUncheckedCreateWithoutUser_UserRolesInput[]
     connectOrCreate?: RoleCreateOrConnectWithoutUser_UserRolesInput | RoleCreateOrConnectWithoutUser_UserRolesInput[]
@@ -54773,27 +52747,6 @@ export namespace Prisma {
     connectOrCreate?: DeviceCreateOrConnectWithoutUserInput | DeviceCreateOrConnectWithoutUserInput[]
     createMany?: DeviceCreateManyUserInputEnvelope
     connect?: DeviceWhereUniqueInput | DeviceWhereUniqueInput[]
-  }
-
-  export type LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput = {
-    create?: XOR<LanguageCreateWithoutUser_Language_createdByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_createdByIdToUserInput> | LanguageCreateWithoutUser_Language_createdByIdToUserInput[] | LanguageUncheckedCreateWithoutUser_Language_createdByIdToUserInput[]
-    connectOrCreate?: LanguageCreateOrConnectWithoutUser_Language_createdByIdToUserInput | LanguageCreateOrConnectWithoutUser_Language_createdByIdToUserInput[]
-    createMany?: LanguageCreateManyUser_Language_createdByIdToUserInputEnvelope
-    connect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-  }
-
-  export type LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput = {
-    create?: XOR<LanguageCreateWithoutUser_Language_deletedByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_deletedByIdToUserInput> | LanguageCreateWithoutUser_Language_deletedByIdToUserInput[] | LanguageUncheckedCreateWithoutUser_Language_deletedByIdToUserInput[]
-    connectOrCreate?: LanguageCreateOrConnectWithoutUser_Language_deletedByIdToUserInput | LanguageCreateOrConnectWithoutUser_Language_deletedByIdToUserInput[]
-    createMany?: LanguageCreateManyUser_Language_deletedByIdToUserInputEnvelope
-    connect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-  }
-
-  export type LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput = {
-    create?: XOR<LanguageCreateWithoutUser_Language_updatedByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_updatedByIdToUserInput> | LanguageCreateWithoutUser_Language_updatedByIdToUserInput[] | LanguageUncheckedCreateWithoutUser_Language_updatedByIdToUserInput[]
-    connectOrCreate?: LanguageCreateOrConnectWithoutUser_Language_updatedByIdToUserInput | LanguageCreateOrConnectWithoutUser_Language_updatedByIdToUserInput[]
-    createMany?: LanguageCreateManyUser_Language_updatedByIdToUserInputEnvelope
-    connect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
   }
 
   export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
@@ -54913,6 +52866,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
+  export type WalletUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
+    connectOrCreate?: WalletCreateOrConnectWithoutUserInput
+    connect?: WalletWhereUniqueInput
+  }
+
   export type RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput = {
     create?: XOR<RoleCreateWithoutUser_UserRolesInput, RoleUncheckedCreateWithoutUser_UserRolesInput> | RoleCreateWithoutUser_UserRolesInput[] | RoleUncheckedCreateWithoutUser_UserRolesInput[]
     connectOrCreate?: RoleCreateOrConnectWithoutUser_UserRolesInput | RoleCreateOrConnectWithoutUser_UserRolesInput[]
@@ -54987,48 +52946,6 @@ export namespace Prisma {
     update?: DeviceUpdateWithWhereUniqueWithoutUserInput | DeviceUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: DeviceUpdateManyWithWhereWithoutUserInput | DeviceUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: DeviceScalarWhereInput | DeviceScalarWhereInput[]
-  }
-
-  export type LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput = {
-    create?: XOR<LanguageCreateWithoutUser_Language_createdByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_createdByIdToUserInput> | LanguageCreateWithoutUser_Language_createdByIdToUserInput[] | LanguageUncheckedCreateWithoutUser_Language_createdByIdToUserInput[]
-    connectOrCreate?: LanguageCreateOrConnectWithoutUser_Language_createdByIdToUserInput | LanguageCreateOrConnectWithoutUser_Language_createdByIdToUserInput[]
-    upsert?: LanguageUpsertWithWhereUniqueWithoutUser_Language_createdByIdToUserInput | LanguageUpsertWithWhereUniqueWithoutUser_Language_createdByIdToUserInput[]
-    createMany?: LanguageCreateManyUser_Language_createdByIdToUserInputEnvelope
-    set?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    disconnect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    delete?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    connect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    update?: LanguageUpdateWithWhereUniqueWithoutUser_Language_createdByIdToUserInput | LanguageUpdateWithWhereUniqueWithoutUser_Language_createdByIdToUserInput[]
-    updateMany?: LanguageUpdateManyWithWhereWithoutUser_Language_createdByIdToUserInput | LanguageUpdateManyWithWhereWithoutUser_Language_createdByIdToUserInput[]
-    deleteMany?: LanguageScalarWhereInput | LanguageScalarWhereInput[]
-  }
-
-  export type LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput = {
-    create?: XOR<LanguageCreateWithoutUser_Language_deletedByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_deletedByIdToUserInput> | LanguageCreateWithoutUser_Language_deletedByIdToUserInput[] | LanguageUncheckedCreateWithoutUser_Language_deletedByIdToUserInput[]
-    connectOrCreate?: LanguageCreateOrConnectWithoutUser_Language_deletedByIdToUserInput | LanguageCreateOrConnectWithoutUser_Language_deletedByIdToUserInput[]
-    upsert?: LanguageUpsertWithWhereUniqueWithoutUser_Language_deletedByIdToUserInput | LanguageUpsertWithWhereUniqueWithoutUser_Language_deletedByIdToUserInput[]
-    createMany?: LanguageCreateManyUser_Language_deletedByIdToUserInputEnvelope
-    set?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    disconnect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    delete?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    connect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    update?: LanguageUpdateWithWhereUniqueWithoutUser_Language_deletedByIdToUserInput | LanguageUpdateWithWhereUniqueWithoutUser_Language_deletedByIdToUserInput[]
-    updateMany?: LanguageUpdateManyWithWhereWithoutUser_Language_deletedByIdToUserInput | LanguageUpdateManyWithWhereWithoutUser_Language_deletedByIdToUserInput[]
-    deleteMany?: LanguageScalarWhereInput | LanguageScalarWhereInput[]
-  }
-
-  export type LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput = {
-    create?: XOR<LanguageCreateWithoutUser_Language_updatedByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_updatedByIdToUserInput> | LanguageCreateWithoutUser_Language_updatedByIdToUserInput[] | LanguageUncheckedCreateWithoutUser_Language_updatedByIdToUserInput[]
-    connectOrCreate?: LanguageCreateOrConnectWithoutUser_Language_updatedByIdToUserInput | LanguageCreateOrConnectWithoutUser_Language_updatedByIdToUserInput[]
-    upsert?: LanguageUpsertWithWhereUniqueWithoutUser_Language_updatedByIdToUserInput | LanguageUpsertWithWhereUniqueWithoutUser_Language_updatedByIdToUserInput[]
-    createMany?: LanguageCreateManyUser_Language_updatedByIdToUserInputEnvelope
-    set?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    disconnect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    delete?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    connect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    update?: LanguageUpdateWithWhereUniqueWithoutUser_Language_updatedByIdToUserInput | LanguageUpdateWithWhereUniqueWithoutUser_Language_updatedByIdToUserInput[]
-    updateMany?: LanguageUpdateManyWithWhereWithoutUser_Language_updatedByIdToUserInput | LanguageUpdateManyWithWhereWithoutUser_Language_updatedByIdToUserInput[]
-    deleteMany?: LanguageScalarWhereInput | LanguageScalarWhereInput[]
   }
 
   export type NotificationUpdateManyWithoutUserNestedInput = {
@@ -55291,6 +53208,16 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type WalletUpdateOneWithoutUserNestedInput = {
+    create?: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
+    connectOrCreate?: WalletCreateOrConnectWithoutUserInput
+    upsert?: WalletUpsertWithoutUserInput
+    disconnect?: WalletWhereInput | boolean
+    delete?: WalletWhereInput | boolean
+    connect?: WalletWhereUniqueInput
+    update?: XOR<XOR<WalletUpdateToOneWithWhereWithoutUserInput, WalletUpdateWithoutUserInput>, WalletUncheckedUpdateWithoutUserInput>
+  }
+
   export type RoleUpdateManyWithoutUser_UserRolesNestedInput = {
     create?: XOR<RoleCreateWithoutUser_UserRolesInput, RoleUncheckedCreateWithoutUser_UserRolesInput> | RoleCreateWithoutUser_UserRolesInput[] | RoleUncheckedCreateWithoutUser_UserRolesInput[]
     connectOrCreate?: RoleCreateOrConnectWithoutUser_UserRolesInput | RoleCreateOrConnectWithoutUser_UserRolesInput[]
@@ -55368,48 +53295,6 @@ export namespace Prisma {
     update?: DeviceUpdateWithWhereUniqueWithoutUserInput | DeviceUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: DeviceUpdateManyWithWhereWithoutUserInput | DeviceUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: DeviceScalarWhereInput | DeviceScalarWhereInput[]
-  }
-
-  export type LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput = {
-    create?: XOR<LanguageCreateWithoutUser_Language_createdByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_createdByIdToUserInput> | LanguageCreateWithoutUser_Language_createdByIdToUserInput[] | LanguageUncheckedCreateWithoutUser_Language_createdByIdToUserInput[]
-    connectOrCreate?: LanguageCreateOrConnectWithoutUser_Language_createdByIdToUserInput | LanguageCreateOrConnectWithoutUser_Language_createdByIdToUserInput[]
-    upsert?: LanguageUpsertWithWhereUniqueWithoutUser_Language_createdByIdToUserInput | LanguageUpsertWithWhereUniqueWithoutUser_Language_createdByIdToUserInput[]
-    createMany?: LanguageCreateManyUser_Language_createdByIdToUserInputEnvelope
-    set?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    disconnect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    delete?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    connect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    update?: LanguageUpdateWithWhereUniqueWithoutUser_Language_createdByIdToUserInput | LanguageUpdateWithWhereUniqueWithoutUser_Language_createdByIdToUserInput[]
-    updateMany?: LanguageUpdateManyWithWhereWithoutUser_Language_createdByIdToUserInput | LanguageUpdateManyWithWhereWithoutUser_Language_createdByIdToUserInput[]
-    deleteMany?: LanguageScalarWhereInput | LanguageScalarWhereInput[]
-  }
-
-  export type LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput = {
-    create?: XOR<LanguageCreateWithoutUser_Language_deletedByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_deletedByIdToUserInput> | LanguageCreateWithoutUser_Language_deletedByIdToUserInput[] | LanguageUncheckedCreateWithoutUser_Language_deletedByIdToUserInput[]
-    connectOrCreate?: LanguageCreateOrConnectWithoutUser_Language_deletedByIdToUserInput | LanguageCreateOrConnectWithoutUser_Language_deletedByIdToUserInput[]
-    upsert?: LanguageUpsertWithWhereUniqueWithoutUser_Language_deletedByIdToUserInput | LanguageUpsertWithWhereUniqueWithoutUser_Language_deletedByIdToUserInput[]
-    createMany?: LanguageCreateManyUser_Language_deletedByIdToUserInputEnvelope
-    set?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    disconnect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    delete?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    connect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    update?: LanguageUpdateWithWhereUniqueWithoutUser_Language_deletedByIdToUserInput | LanguageUpdateWithWhereUniqueWithoutUser_Language_deletedByIdToUserInput[]
-    updateMany?: LanguageUpdateManyWithWhereWithoutUser_Language_deletedByIdToUserInput | LanguageUpdateManyWithWhereWithoutUser_Language_deletedByIdToUserInput[]
-    deleteMany?: LanguageScalarWhereInput | LanguageScalarWhereInput[]
-  }
-
-  export type LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput = {
-    create?: XOR<LanguageCreateWithoutUser_Language_updatedByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_updatedByIdToUserInput> | LanguageCreateWithoutUser_Language_updatedByIdToUserInput[] | LanguageUncheckedCreateWithoutUser_Language_updatedByIdToUserInput[]
-    connectOrCreate?: LanguageCreateOrConnectWithoutUser_Language_updatedByIdToUserInput | LanguageCreateOrConnectWithoutUser_Language_updatedByIdToUserInput[]
-    upsert?: LanguageUpsertWithWhereUniqueWithoutUser_Language_updatedByIdToUserInput | LanguageUpsertWithWhereUniqueWithoutUser_Language_updatedByIdToUserInput[]
-    createMany?: LanguageCreateManyUser_Language_updatedByIdToUserInputEnvelope
-    set?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    disconnect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    delete?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    connect?: LanguageWhereUniqueInput | LanguageWhereUniqueInput[]
-    update?: LanguageUpdateWithWhereUniqueWithoutUser_Language_updatedByIdToUserInput | LanguageUpdateWithWhereUniqueWithoutUser_Language_updatedByIdToUserInput[]
-    updateMany?: LanguageUpdateManyWithWhereWithoutUser_Language_updatedByIdToUserInput | LanguageUpdateManyWithWhereWithoutUser_Language_updatedByIdToUserInput[]
-    deleteMany?: LanguageScalarWhereInput | LanguageScalarWhereInput[]
   }
 
   export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
@@ -55642,6 +53527,16 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type WalletUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
+    connectOrCreate?: WalletCreateOrConnectWithoutUserInput
+    upsert?: WalletUpsertWithoutUserInput
+    disconnect?: WalletWhereInput | boolean
+    delete?: WalletWhereInput | boolean
+    connect?: WalletWhereUniqueInput
+    update?: XOR<XOR<WalletUpdateToOneWithWhereWithoutUserInput, WalletUpdateWithoutUserInput>, WalletUncheckedUpdateWithoutUserInput>
+  }
+
   export type RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput = {
     create?: XOR<RoleCreateWithoutUser_UserRolesInput, RoleUncheckedCreateWithoutUser_UserRolesInput> | RoleCreateWithoutUser_UserRolesInput[] | RoleUncheckedCreateWithoutUser_UserRolesInput[]
     connectOrCreate?: RoleCreateOrConnectWithoutUser_UserRolesInput | RoleCreateOrConnectWithoutUser_UserRolesInput[]
@@ -55786,6 +53681,12 @@ export namespace Prisma {
     connect?: BookingWhereUniqueInput
   }
 
+  export type PaymentTransactionCreateNestedOneWithoutServiceRequestInput = {
+    create?: XOR<PaymentTransactionCreateWithoutServiceRequestInput, PaymentTransactionUncheckedCreateWithoutServiceRequestInput>
+    connectOrCreate?: PaymentTransactionCreateOrConnectWithoutServiceRequestInput
+    connect?: PaymentTransactionWhereUniqueInput
+  }
+
   export type CategoryCreateNestedOneWithoutServiceRequestInput = {
     create?: XOR<CategoryCreateWithoutServiceRequestInput, CategoryUncheckedCreateWithoutServiceRequestInput>
     connectOrCreate?: CategoryCreateOrConnectWithoutServiceRequestInput
@@ -55810,6 +53711,12 @@ export namespace Prisma {
     connect?: BookingWhereUniqueInput
   }
 
+  export type PaymentTransactionUncheckedCreateNestedOneWithoutServiceRequestInput = {
+    create?: XOR<PaymentTransactionCreateWithoutServiceRequestInput, PaymentTransactionUncheckedCreateWithoutServiceRequestInput>
+    connectOrCreate?: PaymentTransactionCreateOrConnectWithoutServiceRequestInput
+    connect?: PaymentTransactionWhereUniqueInput
+  }
+
   export type EnumRequestStatusFieldUpdateOperationsInput = {
     set?: $Enums.RequestStatus
   }
@@ -55822,6 +53729,16 @@ export namespace Prisma {
     delete?: BookingWhereInput | boolean
     connect?: BookingWhereUniqueInput
     update?: XOR<XOR<BookingUpdateToOneWithWhereWithoutServiceRequestInput, BookingUpdateWithoutServiceRequestInput>, BookingUncheckedUpdateWithoutServiceRequestInput>
+  }
+
+  export type PaymentTransactionUpdateOneWithoutServiceRequestNestedInput = {
+    create?: XOR<PaymentTransactionCreateWithoutServiceRequestInput, PaymentTransactionUncheckedCreateWithoutServiceRequestInput>
+    connectOrCreate?: PaymentTransactionCreateOrConnectWithoutServiceRequestInput
+    upsert?: PaymentTransactionUpsertWithoutServiceRequestInput
+    disconnect?: PaymentTransactionWhereInput | boolean
+    delete?: PaymentTransactionWhereInput | boolean
+    connect?: PaymentTransactionWhereUniqueInput
+    update?: XOR<XOR<PaymentTransactionUpdateToOneWithWhereWithoutServiceRequestInput, PaymentTransactionUpdateWithoutServiceRequestInput>, PaymentTransactionUncheckedUpdateWithoutServiceRequestInput>
   }
 
   export type CategoryUpdateOneRequiredWithoutServiceRequestNestedInput = {
@@ -55856,6 +53773,16 @@ export namespace Prisma {
     delete?: BookingWhereInput | boolean
     connect?: BookingWhereUniqueInput
     update?: XOR<XOR<BookingUpdateToOneWithWhereWithoutServiceRequestInput, BookingUpdateWithoutServiceRequestInput>, BookingUncheckedUpdateWithoutServiceRequestInput>
+  }
+
+  export type PaymentTransactionUncheckedUpdateOneWithoutServiceRequestNestedInput = {
+    create?: XOR<PaymentTransactionCreateWithoutServiceRequestInput, PaymentTransactionUncheckedCreateWithoutServiceRequestInput>
+    connectOrCreate?: PaymentTransactionCreateOrConnectWithoutServiceRequestInput
+    upsert?: PaymentTransactionUpsertWithoutServiceRequestInput
+    disconnect?: PaymentTransactionWhereInput | boolean
+    delete?: PaymentTransactionWhereInput | boolean
+    connect?: PaymentTransactionWhereUniqueInput
+    update?: XOR<XOR<PaymentTransactionUpdateToOneWithWhereWithoutServiceRequestInput, PaymentTransactionUpdateWithoutServiceRequestInput>, PaymentTransactionUncheckedUpdateWithoutServiceRequestInput>
   }
 
   export type ServiceCreateNestedOneWithoutService_ServiceItemsInput = {
@@ -55904,6 +53831,10 @@ export namespace Prisma {
     connectOrCreate?: ProposalItemCreateOrConnectWithoutProposalInput | ProposalItemCreateOrConnectWithoutProposalInput[]
     createMany?: ProposalItemCreateManyProposalInputEnvelope
     connect?: ProposalItemWhereUniqueInput | ProposalItemWhereUniqueInput[]
+  }
+
+  export type EnumProposalStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ProposalStatus
   }
 
   export type BookingUpdateOneRequiredWithoutProposalNestedInput = {
@@ -55968,6 +53899,20 @@ export namespace Prisma {
     upsert?: ServiceUpsertWithoutProposalItemInput
     connect?: ServiceWhereUniqueInput
     update?: XOR<XOR<ServiceUpdateToOneWithWhereWithoutProposalItemInput, ServiceUpdateWithoutProposalItemInput>, ServiceUncheckedUpdateWithoutProposalItemInput>
+  }
+
+  export type UserCreateNestedOneWithoutWalletInput = {
+    create?: XOR<UserCreateWithoutWalletInput, UserUncheckedCreateWithoutWalletInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWalletInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutWalletNestedInput = {
+    create?: XOR<UserCreateWithoutWalletInput, UserUncheckedCreateWithoutWalletInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWalletInput
+    upsert?: UserUpsertWithoutWalletInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutWalletInput, UserUpdateWithoutWalletInput>, UserUncheckedUpdateWithoutWalletInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -56391,6 +54336,23 @@ export namespace Prisma {
     _max?: NestedEnumRequestStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumProposalStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProposalStatus | EnumProposalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProposalStatus[] | ListEnumProposalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProposalStatus[] | ListEnumProposalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProposalStatusFilter<$PrismaModel> | $Enums.ProposalStatus
+  }
+
+  export type NestedEnumProposalStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ProposalStatus | EnumProposalStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ProposalStatus[] | ListEnumProposalStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ProposalStatus[] | ListEnumProposalStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumProposalStatusWithAggregatesFilter<$PrismaModel> | $Enums.ProposalStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumProposalStatusFilter<$PrismaModel>
+    _max?: NestedEnumProposalStatusFilter<$PrismaModel>
+  }
+
   export type CustomerProfileCreateWithoutBookingInput = {
     address?: string | null
     dateOfBirth?: Date | string | null
@@ -56483,6 +54445,7 @@ export namespace Prisma {
     updatedAt: Date | string
     location: string
     phoneNumber: string
+    PaymentTransaction?: PaymentTransactionCreateNestedOneWithoutServiceRequestInput
     Category: CategoryCreateNestedOneWithoutServiceRequestInput
     CustomerProfile: CustomerProfileCreateNestedOneWithoutServiceRequestInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceRequestInput
@@ -56500,6 +54463,7 @@ export namespace Prisma {
     location: string
     phoneNumber: string
     categoryId: number
+    PaymentTransaction?: PaymentTransactionUncheckedCreateNestedOneWithoutServiceRequestInput
   }
 
   export type ServiceRequestCreateOrConnectWithoutBookingInput = {
@@ -56562,6 +54526,7 @@ export namespace Prisma {
   export type ProposalCreateWithoutBookingInput = {
     notes?: string | null
     createdAt?: Date | string
+    status?: $Enums.ProposalStatus
     ProposalItem?: ProposalItemCreateNestedManyWithoutProposalInput
   }
 
@@ -56569,6 +54534,7 @@ export namespace Prisma {
     id?: number
     notes?: string | null
     createdAt?: Date | string
+    status?: $Enums.ProposalStatus
     ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutProposalInput
   }
 
@@ -56753,6 +54719,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     location?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
+    PaymentTransaction?: PaymentTransactionUpdateOneWithoutServiceRequestNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceRequestNestedInput
     CustomerProfile?: CustomerProfileUpdateOneRequiredWithoutServiceRequestNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceRequestNestedInput
@@ -56770,6 +54737,7 @@ export namespace Prisma {
     location?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
+    PaymentTransaction?: PaymentTransactionUncheckedUpdateOneWithoutServiceRequestNestedInput
   }
 
   export type StaffUpsertWithoutBooking_Booking_staffIdToStaffInput = {
@@ -56850,6 +54818,7 @@ export namespace Prisma {
   export type ProposalUpdateWithoutBookingInput = {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
     ProposalItem?: ProposalItemUpdateManyWithoutProposalNestedInput
   }
 
@@ -56857,6 +54826,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
     ProposalItem?: ProposalItemUncheckedUpdateManyWithoutProposalNestedInput
   }
 
@@ -56943,9 +54913,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -56966,6 +54933,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -56988,9 +54956,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -57008,6 +54973,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -57031,9 +54997,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -57054,6 +55017,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -57076,9 +55040,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -57096,6 +55057,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -57200,9 +55162,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -57223,6 +55182,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -57245,9 +55205,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -57265,6 +55222,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -57274,12 +55232,12 @@ export namespace Prisma {
   }
 
   export type CategoryTranslationCreateWithoutCategoryInput = {
+    languageId: string
     name: string
     description: string
     createdAt?: Date | string
     updatedAt: Date | string
     deletedAt?: Date | string | null
-    Language: LanguageCreateNestedOneWithoutCategoryTranslationInput
   }
 
   export type CategoryTranslationUncheckedCreateWithoutCategoryInput = {
@@ -57322,7 +55280,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserCreateNestedOneWithoutService_Service_deletedByIdToUserInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceInput
     User_Service_updatedByIdToUser?: UserCreateNestedOneWithoutService_Service_updatedByIdToUserInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsCreateNestedManyWithoutServiceInput
   }
 
@@ -57347,7 +55304,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
   }
 
@@ -57370,6 +55326,7 @@ export namespace Prisma {
     location: string
     phoneNumber: string
     Booking?: BookingCreateNestedOneWithoutServiceRequestInput
+    PaymentTransaction?: PaymentTransactionCreateNestedOneWithoutServiceRequestInput
     CustomerProfile: CustomerProfileCreateNestedOneWithoutServiceRequestInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceRequestInput
   }
@@ -57386,6 +55343,7 @@ export namespace Prisma {
     location: string
     phoneNumber: string
     Booking?: BookingUncheckedCreateNestedOneWithoutServiceRequestInput
+    PaymentTransaction?: PaymentTransactionUncheckedCreateNestedOneWithoutServiceRequestInput
   }
 
   export type ServiceRequestCreateOrConnectWithoutCategoryInput = {
@@ -57442,9 +55400,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -57465,6 +55420,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -57487,9 +55443,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -57507,6 +55460,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -57536,9 +55490,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -57559,6 +55510,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -57581,9 +55533,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -57601,6 +55550,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -57706,9 +55656,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: CategoryUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -57729,6 +55676,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -57751,9 +55699,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -57771,6 +55716,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -57939,37 +55885,6 @@ export namespace Prisma {
     create: XOR<CategoryCreateWithoutCategoryTranslationInput, CategoryUncheckedCreateWithoutCategoryTranslationInput>
   }
 
-  export type LanguageCreateWithoutCategoryTranslationInput = {
-    id: string
-    name: string
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    User_Language_createdByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_createdByIdToUserInput
-    User_Language_deletedByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_deletedByIdToUserInput
-    User_Language_updatedByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_updatedByIdToUserInput
-    ServiceProviderTranslation?: ServiceProviderTranslationCreateNestedManyWithoutLanguageInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageUncheckedCreateWithoutCategoryTranslationInput = {
-    id: string
-    name: string
-    createdById?: number | null
-    updatedById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    ServiceProviderTranslation?: ServiceProviderTranslationUncheckedCreateNestedManyWithoutLanguageInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageCreateOrConnectWithoutCategoryTranslationInput = {
-    where: LanguageWhereUniqueInput
-    create: XOR<LanguageCreateWithoutCategoryTranslationInput, LanguageUncheckedCreateWithoutCategoryTranslationInput>
-  }
-
   export type CategoryUpsertWithoutCategoryTranslationInput = {
     update: XOR<CategoryUpdateWithoutCategoryTranslationInput, CategoryUncheckedUpdateWithoutCategoryTranslationInput>
     create: XOR<CategoryCreateWithoutCategoryTranslationInput, CategoryUncheckedCreateWithoutCategoryTranslationInput>
@@ -58012,43 +55927,6 @@ export namespace Prisma {
     Service?: ServiceUncheckedUpdateManyWithoutCategoryNestedInput
     ServiceRequest?: ServiceRequestUncheckedUpdateManyWithoutCategoryNestedInput
     StaffCategory?: StaffCategoryUncheckedUpdateManyWithoutCategoryNestedInput
-  }
-
-  export type LanguageUpsertWithoutCategoryTranslationInput = {
-    update: XOR<LanguageUpdateWithoutCategoryTranslationInput, LanguageUncheckedUpdateWithoutCategoryTranslationInput>
-    create: XOR<LanguageCreateWithoutCategoryTranslationInput, LanguageUncheckedCreateWithoutCategoryTranslationInput>
-    where?: LanguageWhereInput
-  }
-
-  export type LanguageUpdateToOneWithWhereWithoutCategoryTranslationInput = {
-    where?: LanguageWhereInput
-    data: XOR<LanguageUpdateWithoutCategoryTranslationInput, LanguageUncheckedUpdateWithoutCategoryTranslationInput>
-  }
-
-  export type LanguageUpdateWithoutCategoryTranslationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    User_Language_createdByIdToUser?: UserUpdateOneWithoutLanguage_Language_createdByIdToUserNestedInput
-    User_Language_deletedByIdToUser?: UserUpdateOneWithoutLanguage_Language_deletedByIdToUserNestedInput
-    User_Language_updatedByIdToUser?: UserUpdateOneWithoutLanguage_Language_updatedByIdToUserNestedInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUpdateManyWithoutLanguageNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutLanguageNestedInput
-  }
-
-  export type LanguageUncheckedUpdateWithoutCategoryTranslationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    ServiceProviderTranslation?: ServiceProviderTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutLanguageNestedInput
   }
 
   export type CustomerProfileCreateWithoutChatMessageInput = {
@@ -58208,9 +56086,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -58231,6 +56106,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -58253,9 +56129,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -58273,6 +56146,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -58396,6 +56270,7 @@ export namespace Prisma {
     location: string
     phoneNumber: string
     Booking?: BookingCreateNestedOneWithoutServiceRequestInput
+    PaymentTransaction?: PaymentTransactionCreateNestedOneWithoutServiceRequestInput
     Category: CategoryCreateNestedOneWithoutServiceRequestInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceRequestInput
   }
@@ -58412,6 +56287,7 @@ export namespace Prisma {
     phoneNumber: string
     categoryId: number
     Booking?: BookingUncheckedCreateNestedOneWithoutServiceRequestInput
+    PaymentTransaction?: PaymentTransactionUncheckedCreateNestedOneWithoutServiceRequestInput
   }
 
   export type ServiceRequestCreateOrConnectWithoutCustomerProfileInput = {
@@ -58509,9 +56385,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: CategoryUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -58532,6 +56405,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -58554,9 +56428,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -58574,6 +56445,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -58723,9 +56595,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -58746,6 +56615,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -58768,9 +56638,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -58788,6 +56655,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -58847,9 +56715,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: CategoryUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -58870,6 +56735,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -58892,9 +56758,6 @@ export namespace Prisma {
     Category_Category_deletedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -58912,6 +56775,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -58943,715 +56807,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"RefreshToken"> | Date | string
   }
 
-  export type CategoryTranslationCreateWithoutLanguageInput = {
-    name: string
-    description: string
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-    Category: CategoryCreateNestedOneWithoutCategoryTranslationInput
-  }
-
-  export type CategoryTranslationUncheckedCreateWithoutLanguageInput = {
-    id?: number
-    categoryId: number
-    name: string
-    description: string
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type CategoryTranslationCreateOrConnectWithoutLanguageInput = {
-    where: CategoryTranslationWhereUniqueInput
-    create: XOR<CategoryTranslationCreateWithoutLanguageInput, CategoryTranslationUncheckedCreateWithoutLanguageInput>
-  }
-
-  export type CategoryTranslationCreateManyLanguageInputEnvelope = {
-    data: CategoryTranslationCreateManyLanguageInput | CategoryTranslationCreateManyLanguageInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type UserCreateWithoutLanguage_Language_createdByIdToUserInput = {
-    email: string
-    password: string
-    name: string
-    phone: string
-    avatar?: string | null
-    totpSecret?: string | null
-    status?: $Enums.UserStatus
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    Category_Category_createdByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_createdByIdToUserInput
-    Category_Category_deletedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
-    Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
-    CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
-    Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
-    Notification?: NotificationCreateNestedManyWithoutUserInput
-    Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
-    Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
-    Permission_Permission_updatedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
-    RefreshToken?: RefreshTokenCreateNestedManyWithoutUserInput
-    Role_Role_createdByIdToUser?: RoleCreateNestedManyWithoutUser_Role_createdByIdToUserInput
-    Role_Role_deletedByIdToUser?: RoleCreateNestedManyWithoutUser_Role_deletedByIdToUserInput
-    Role_Role_updatedByIdToUser?: RoleCreateNestedManyWithoutUser_Role_updatedByIdToUserInput
-    Service_Service_createdByIdToUser?: ServiceCreateNestedManyWithoutUser_Service_createdByIdToUserInput
-    Service_Service_deletedByIdToUser?: ServiceCreateNestedManyWithoutUser_Service_deletedByIdToUserInput
-    Service_Service_updatedByIdToUser?: ServiceCreateNestedManyWithoutUser_Service_updatedByIdToUserInput
-    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderCreateNestedOneWithoutUser_ServiceProvider_userIdToUserInput
-    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderCreateNestedManyWithoutUser_ServiceProvider_verifiedByIdToUserInput
-    Staff?: StaffCreateNestedOneWithoutUserInput
-    User_User_createdByIdToUser?: UserCreateNestedOneWithoutOther_User_User_createdByIdToUserInput
-    other_User_User_createdByIdToUser?: UserCreateNestedManyWithoutUser_User_createdByIdToUserInput
-    User_User_deletedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_deletedByIdToUserInput
-    other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
-    User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
-    other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
-    Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
-  }
-
-  export type UserUncheckedCreateWithoutLanguage_Language_createdByIdToUserInput = {
-    id?: number
-    email: string
-    password: string
-    name: string
-    phone: string
-    avatar?: string | null
-    totpSecret?: string | null
-    status?: $Enums.UserStatus
-    createdById?: number | null
-    updatedById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    Category_Category_createdByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_createdByIdToUserInput
-    Category_Category_deletedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
-    Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
-    CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
-    Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
-    Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
-    Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
-    Permission_Permission_updatedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
-    RefreshToken?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    Role_Role_createdByIdToUser?: RoleUncheckedCreateNestedManyWithoutUser_Role_createdByIdToUserInput
-    Role_Role_deletedByIdToUser?: RoleUncheckedCreateNestedManyWithoutUser_Role_deletedByIdToUserInput
-    Role_Role_updatedByIdToUser?: RoleUncheckedCreateNestedManyWithoutUser_Role_updatedByIdToUserInput
-    Service_Service_createdByIdToUser?: ServiceUncheckedCreateNestedManyWithoutUser_Service_createdByIdToUserInput
-    Service_Service_deletedByIdToUser?: ServiceUncheckedCreateNestedManyWithoutUser_Service_deletedByIdToUserInput
-    Service_Service_updatedByIdToUser?: ServiceUncheckedCreateNestedManyWithoutUser_Service_updatedByIdToUserInput
-    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderUncheckedCreateNestedOneWithoutUser_ServiceProvider_userIdToUserInput
-    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderUncheckedCreateNestedManyWithoutUser_ServiceProvider_verifiedByIdToUserInput
-    Staff?: StaffUncheckedCreateNestedOneWithoutUserInput
-    other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
-    other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
-    other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
-    Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
-  }
-
-  export type UserCreateOrConnectWithoutLanguage_Language_createdByIdToUserInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutLanguage_Language_createdByIdToUserInput, UserUncheckedCreateWithoutLanguage_Language_createdByIdToUserInput>
-  }
-
-  export type UserCreateWithoutLanguage_Language_deletedByIdToUserInput = {
-    email: string
-    password: string
-    name: string
-    phone: string
-    avatar?: string | null
-    totpSecret?: string | null
-    status?: $Enums.UserStatus
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    Category_Category_createdByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_createdByIdToUserInput
-    Category_Category_deletedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
-    Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
-    CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
-    Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
-    Notification?: NotificationCreateNestedManyWithoutUserInput
-    Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
-    Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
-    Permission_Permission_updatedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
-    RefreshToken?: RefreshTokenCreateNestedManyWithoutUserInput
-    Role_Role_createdByIdToUser?: RoleCreateNestedManyWithoutUser_Role_createdByIdToUserInput
-    Role_Role_deletedByIdToUser?: RoleCreateNestedManyWithoutUser_Role_deletedByIdToUserInput
-    Role_Role_updatedByIdToUser?: RoleCreateNestedManyWithoutUser_Role_updatedByIdToUserInput
-    Service_Service_createdByIdToUser?: ServiceCreateNestedManyWithoutUser_Service_createdByIdToUserInput
-    Service_Service_deletedByIdToUser?: ServiceCreateNestedManyWithoutUser_Service_deletedByIdToUserInput
-    Service_Service_updatedByIdToUser?: ServiceCreateNestedManyWithoutUser_Service_updatedByIdToUserInput
-    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderCreateNestedOneWithoutUser_ServiceProvider_userIdToUserInput
-    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderCreateNestedManyWithoutUser_ServiceProvider_verifiedByIdToUserInput
-    Staff?: StaffCreateNestedOneWithoutUserInput
-    User_User_createdByIdToUser?: UserCreateNestedOneWithoutOther_User_User_createdByIdToUserInput
-    other_User_User_createdByIdToUser?: UserCreateNestedManyWithoutUser_User_createdByIdToUserInput
-    User_User_deletedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_deletedByIdToUserInput
-    other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
-    User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
-    other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
-    Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
-  }
-
-  export type UserUncheckedCreateWithoutLanguage_Language_deletedByIdToUserInput = {
-    id?: number
-    email: string
-    password: string
-    name: string
-    phone: string
-    avatar?: string | null
-    totpSecret?: string | null
-    status?: $Enums.UserStatus
-    createdById?: number | null
-    updatedById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    Category_Category_createdByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_createdByIdToUserInput
-    Category_Category_deletedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
-    Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
-    CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
-    Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
-    Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
-    Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
-    Permission_Permission_updatedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
-    RefreshToken?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    Role_Role_createdByIdToUser?: RoleUncheckedCreateNestedManyWithoutUser_Role_createdByIdToUserInput
-    Role_Role_deletedByIdToUser?: RoleUncheckedCreateNestedManyWithoutUser_Role_deletedByIdToUserInput
-    Role_Role_updatedByIdToUser?: RoleUncheckedCreateNestedManyWithoutUser_Role_updatedByIdToUserInput
-    Service_Service_createdByIdToUser?: ServiceUncheckedCreateNestedManyWithoutUser_Service_createdByIdToUserInput
-    Service_Service_deletedByIdToUser?: ServiceUncheckedCreateNestedManyWithoutUser_Service_deletedByIdToUserInput
-    Service_Service_updatedByIdToUser?: ServiceUncheckedCreateNestedManyWithoutUser_Service_updatedByIdToUserInput
-    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderUncheckedCreateNestedOneWithoutUser_ServiceProvider_userIdToUserInput
-    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderUncheckedCreateNestedManyWithoutUser_ServiceProvider_verifiedByIdToUserInput
-    Staff?: StaffUncheckedCreateNestedOneWithoutUserInput
-    other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
-    other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
-    other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
-    Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
-  }
-
-  export type UserCreateOrConnectWithoutLanguage_Language_deletedByIdToUserInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutLanguage_Language_deletedByIdToUserInput, UserUncheckedCreateWithoutLanguage_Language_deletedByIdToUserInput>
-  }
-
-  export type UserCreateWithoutLanguage_Language_updatedByIdToUserInput = {
-    email: string
-    password: string
-    name: string
-    phone: string
-    avatar?: string | null
-    totpSecret?: string | null
-    status?: $Enums.UserStatus
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    Category_Category_createdByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_createdByIdToUserInput
-    Category_Category_deletedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
-    Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
-    CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
-    Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Notification?: NotificationCreateNestedManyWithoutUserInput
-    Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
-    Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
-    Permission_Permission_updatedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
-    RefreshToken?: RefreshTokenCreateNestedManyWithoutUserInput
-    Role_Role_createdByIdToUser?: RoleCreateNestedManyWithoutUser_Role_createdByIdToUserInput
-    Role_Role_deletedByIdToUser?: RoleCreateNestedManyWithoutUser_Role_deletedByIdToUserInput
-    Role_Role_updatedByIdToUser?: RoleCreateNestedManyWithoutUser_Role_updatedByIdToUserInput
-    Service_Service_createdByIdToUser?: ServiceCreateNestedManyWithoutUser_Service_createdByIdToUserInput
-    Service_Service_deletedByIdToUser?: ServiceCreateNestedManyWithoutUser_Service_deletedByIdToUserInput
-    Service_Service_updatedByIdToUser?: ServiceCreateNestedManyWithoutUser_Service_updatedByIdToUserInput
-    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderCreateNestedOneWithoutUser_ServiceProvider_userIdToUserInput
-    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderCreateNestedManyWithoutUser_ServiceProvider_verifiedByIdToUserInput
-    Staff?: StaffCreateNestedOneWithoutUserInput
-    User_User_createdByIdToUser?: UserCreateNestedOneWithoutOther_User_User_createdByIdToUserInput
-    other_User_User_createdByIdToUser?: UserCreateNestedManyWithoutUser_User_createdByIdToUserInput
-    User_User_deletedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_deletedByIdToUserInput
-    other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
-    User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
-    other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
-    Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
-  }
-
-  export type UserUncheckedCreateWithoutLanguage_Language_updatedByIdToUserInput = {
-    id?: number
-    email: string
-    password: string
-    name: string
-    phone: string
-    avatar?: string | null
-    totpSecret?: string | null
-    status?: $Enums.UserStatus
-    createdById?: number | null
-    updatedById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    Category_Category_createdByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_createdByIdToUserInput
-    Category_Category_deletedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
-    Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
-    CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
-    Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
-    Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
-    Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
-    Permission_Permission_updatedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
-    RefreshToken?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    Role_Role_createdByIdToUser?: RoleUncheckedCreateNestedManyWithoutUser_Role_createdByIdToUserInput
-    Role_Role_deletedByIdToUser?: RoleUncheckedCreateNestedManyWithoutUser_Role_deletedByIdToUserInput
-    Role_Role_updatedByIdToUser?: RoleUncheckedCreateNestedManyWithoutUser_Role_updatedByIdToUserInput
-    Service_Service_createdByIdToUser?: ServiceUncheckedCreateNestedManyWithoutUser_Service_createdByIdToUserInput
-    Service_Service_deletedByIdToUser?: ServiceUncheckedCreateNestedManyWithoutUser_Service_deletedByIdToUserInput
-    Service_Service_updatedByIdToUser?: ServiceUncheckedCreateNestedManyWithoutUser_Service_updatedByIdToUserInput
-    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderUncheckedCreateNestedOneWithoutUser_ServiceProvider_userIdToUserInput
-    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderUncheckedCreateNestedManyWithoutUser_ServiceProvider_verifiedByIdToUserInput
-    Staff?: StaffUncheckedCreateNestedOneWithoutUserInput
-    other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
-    other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
-    other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
-    Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
-  }
-
-  export type UserCreateOrConnectWithoutLanguage_Language_updatedByIdToUserInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutLanguage_Language_updatedByIdToUserInput, UserUncheckedCreateWithoutLanguage_Language_updatedByIdToUserInput>
-  }
-
-  export type ServiceProviderTranslationCreateWithoutLanguageInput = {
-    name: string
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-    ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceProviderTranslationInput
-  }
-
-  export type ServiceProviderTranslationUncheckedCreateWithoutLanguageInput = {
-    id?: number
-    providerId: number
-    name: string
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type ServiceProviderTranslationCreateOrConnectWithoutLanguageInput = {
-    where: ServiceProviderTranslationWhereUniqueInput
-    create: XOR<ServiceProviderTranslationCreateWithoutLanguageInput, ServiceProviderTranslationUncheckedCreateWithoutLanguageInput>
-  }
-
-  export type ServiceProviderTranslationCreateManyLanguageInputEnvelope = {
-    data: ServiceProviderTranslationCreateManyLanguageInput | ServiceProviderTranslationCreateManyLanguageInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ServiceTranslationCreateWithoutLanguageInput = {
-    name: string
-    description: string
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-    Service: ServiceCreateNestedOneWithoutServiceTranslationInput
-  }
-
-  export type ServiceTranslationUncheckedCreateWithoutLanguageInput = {
-    id?: number
-    serviceId: number
-    name: string
-    description: string
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type ServiceTranslationCreateOrConnectWithoutLanguageInput = {
-    where: ServiceTranslationWhereUniqueInput
-    create: XOR<ServiceTranslationCreateWithoutLanguageInput, ServiceTranslationUncheckedCreateWithoutLanguageInput>
-  }
-
-  export type ServiceTranslationCreateManyLanguageInputEnvelope = {
-    data: ServiceTranslationCreateManyLanguageInput | ServiceTranslationCreateManyLanguageInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type CategoryTranslationUpsertWithWhereUniqueWithoutLanguageInput = {
-    where: CategoryTranslationWhereUniqueInput
-    update: XOR<CategoryTranslationUpdateWithoutLanguageInput, CategoryTranslationUncheckedUpdateWithoutLanguageInput>
-    create: XOR<CategoryTranslationCreateWithoutLanguageInput, CategoryTranslationUncheckedCreateWithoutLanguageInput>
-  }
-
-  export type CategoryTranslationUpdateWithWhereUniqueWithoutLanguageInput = {
-    where: CategoryTranslationWhereUniqueInput
-    data: XOR<CategoryTranslationUpdateWithoutLanguageInput, CategoryTranslationUncheckedUpdateWithoutLanguageInput>
-  }
-
-  export type CategoryTranslationUpdateManyWithWhereWithoutLanguageInput = {
-    where: CategoryTranslationScalarWhereInput
-    data: XOR<CategoryTranslationUpdateManyMutationInput, CategoryTranslationUncheckedUpdateManyWithoutLanguageInput>
-  }
-
-  export type UserUpsertWithoutLanguage_Language_createdByIdToUserInput = {
-    update: XOR<UserUpdateWithoutLanguage_Language_createdByIdToUserInput, UserUncheckedUpdateWithoutLanguage_Language_createdByIdToUserInput>
-    create: XOR<UserCreateWithoutLanguage_Language_createdByIdToUserInput, UserUncheckedCreateWithoutLanguage_Language_createdByIdToUserInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutLanguage_Language_createdByIdToUserInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutLanguage_Language_createdByIdToUserInput, UserUncheckedUpdateWithoutLanguage_Language_createdByIdToUserInput>
-  }
-
-  export type UserUpdateWithoutLanguage_Language_createdByIdToUserInput = {
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Category_Category_createdByIdToUser?: CategoryUpdateManyWithoutUser_Category_createdByIdToUserNestedInput
-    Category_Category_deletedByIdToUser?: CategoryUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
-    Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
-    CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
-    Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
-    Notification?: NotificationUpdateManyWithoutUserNestedInput
-    Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
-    Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
-    Permission_Permission_updatedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
-    RefreshToken?: RefreshTokenUpdateManyWithoutUserNestedInput
-    Role_Role_createdByIdToUser?: RoleUpdateManyWithoutUser_Role_createdByIdToUserNestedInput
-    Role_Role_deletedByIdToUser?: RoleUpdateManyWithoutUser_Role_deletedByIdToUserNestedInput
-    Role_Role_updatedByIdToUser?: RoleUpdateManyWithoutUser_Role_updatedByIdToUserNestedInput
-    Service_Service_createdByIdToUser?: ServiceUpdateManyWithoutUser_Service_createdByIdToUserNestedInput
-    Service_Service_deletedByIdToUser?: ServiceUpdateManyWithoutUser_Service_deletedByIdToUserNestedInput
-    Service_Service_updatedByIdToUser?: ServiceUpdateManyWithoutUser_Service_updatedByIdToUserNestedInput
-    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderUpdateOneWithoutUser_ServiceProvider_userIdToUserNestedInput
-    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderUpdateManyWithoutUser_ServiceProvider_verifiedByIdToUserNestedInput
-    Staff?: StaffUpdateOneWithoutUserNestedInput
-    User_User_createdByIdToUser?: UserUpdateOneWithoutOther_User_User_createdByIdToUserNestedInput
-    other_User_User_createdByIdToUser?: UserUpdateManyWithoutUser_User_createdByIdToUserNestedInput
-    User_User_deletedByIdToUser?: UserUpdateOneWithoutOther_User_User_deletedByIdToUserNestedInput
-    other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
-    User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
-    other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
-    Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutLanguage_Language_createdByIdToUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Category_Category_createdByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_createdByIdToUserNestedInput
-    Category_Category_deletedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
-    Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
-    CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
-    Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
-    Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
-    Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
-    Permission_Permission_updatedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
-    RefreshToken?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    Role_Role_createdByIdToUser?: RoleUncheckedUpdateManyWithoutUser_Role_createdByIdToUserNestedInput
-    Role_Role_deletedByIdToUser?: RoleUncheckedUpdateManyWithoutUser_Role_deletedByIdToUserNestedInput
-    Role_Role_updatedByIdToUser?: RoleUncheckedUpdateManyWithoutUser_Role_updatedByIdToUserNestedInput
-    Service_Service_createdByIdToUser?: ServiceUncheckedUpdateManyWithoutUser_Service_createdByIdToUserNestedInput
-    Service_Service_deletedByIdToUser?: ServiceUncheckedUpdateManyWithoutUser_Service_deletedByIdToUserNestedInput
-    Service_Service_updatedByIdToUser?: ServiceUncheckedUpdateManyWithoutUser_Service_updatedByIdToUserNestedInput
-    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderUncheckedUpdateOneWithoutUser_ServiceProvider_userIdToUserNestedInput
-    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderUncheckedUpdateManyWithoutUser_ServiceProvider_verifiedByIdToUserNestedInput
-    Staff?: StaffUncheckedUpdateOneWithoutUserNestedInput
-    other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
-    other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
-    other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
-    Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
-  }
-
-  export type UserUpsertWithoutLanguage_Language_deletedByIdToUserInput = {
-    update: XOR<UserUpdateWithoutLanguage_Language_deletedByIdToUserInput, UserUncheckedUpdateWithoutLanguage_Language_deletedByIdToUserInput>
-    create: XOR<UserCreateWithoutLanguage_Language_deletedByIdToUserInput, UserUncheckedCreateWithoutLanguage_Language_deletedByIdToUserInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutLanguage_Language_deletedByIdToUserInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutLanguage_Language_deletedByIdToUserInput, UserUncheckedUpdateWithoutLanguage_Language_deletedByIdToUserInput>
-  }
-
-  export type UserUpdateWithoutLanguage_Language_deletedByIdToUserInput = {
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Category_Category_createdByIdToUser?: CategoryUpdateManyWithoutUser_Category_createdByIdToUserNestedInput
-    Category_Category_deletedByIdToUser?: CategoryUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
-    Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
-    CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
-    Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
-    Notification?: NotificationUpdateManyWithoutUserNestedInput
-    Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
-    Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
-    Permission_Permission_updatedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
-    RefreshToken?: RefreshTokenUpdateManyWithoutUserNestedInput
-    Role_Role_createdByIdToUser?: RoleUpdateManyWithoutUser_Role_createdByIdToUserNestedInput
-    Role_Role_deletedByIdToUser?: RoleUpdateManyWithoutUser_Role_deletedByIdToUserNestedInput
-    Role_Role_updatedByIdToUser?: RoleUpdateManyWithoutUser_Role_updatedByIdToUserNestedInput
-    Service_Service_createdByIdToUser?: ServiceUpdateManyWithoutUser_Service_createdByIdToUserNestedInput
-    Service_Service_deletedByIdToUser?: ServiceUpdateManyWithoutUser_Service_deletedByIdToUserNestedInput
-    Service_Service_updatedByIdToUser?: ServiceUpdateManyWithoutUser_Service_updatedByIdToUserNestedInput
-    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderUpdateOneWithoutUser_ServiceProvider_userIdToUserNestedInput
-    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderUpdateManyWithoutUser_ServiceProvider_verifiedByIdToUserNestedInput
-    Staff?: StaffUpdateOneWithoutUserNestedInput
-    User_User_createdByIdToUser?: UserUpdateOneWithoutOther_User_User_createdByIdToUserNestedInput
-    other_User_User_createdByIdToUser?: UserUpdateManyWithoutUser_User_createdByIdToUserNestedInput
-    User_User_deletedByIdToUser?: UserUpdateOneWithoutOther_User_User_deletedByIdToUserNestedInput
-    other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
-    User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
-    other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
-    Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutLanguage_Language_deletedByIdToUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Category_Category_createdByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_createdByIdToUserNestedInput
-    Category_Category_deletedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
-    Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
-    CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
-    Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
-    Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
-    Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
-    Permission_Permission_updatedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
-    RefreshToken?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    Role_Role_createdByIdToUser?: RoleUncheckedUpdateManyWithoutUser_Role_createdByIdToUserNestedInput
-    Role_Role_deletedByIdToUser?: RoleUncheckedUpdateManyWithoutUser_Role_deletedByIdToUserNestedInput
-    Role_Role_updatedByIdToUser?: RoleUncheckedUpdateManyWithoutUser_Role_updatedByIdToUserNestedInput
-    Service_Service_createdByIdToUser?: ServiceUncheckedUpdateManyWithoutUser_Service_createdByIdToUserNestedInput
-    Service_Service_deletedByIdToUser?: ServiceUncheckedUpdateManyWithoutUser_Service_deletedByIdToUserNestedInput
-    Service_Service_updatedByIdToUser?: ServiceUncheckedUpdateManyWithoutUser_Service_updatedByIdToUserNestedInput
-    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderUncheckedUpdateOneWithoutUser_ServiceProvider_userIdToUserNestedInput
-    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderUncheckedUpdateManyWithoutUser_ServiceProvider_verifiedByIdToUserNestedInput
-    Staff?: StaffUncheckedUpdateOneWithoutUserNestedInput
-    other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
-    other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
-    other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
-    Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
-  }
-
-  export type UserUpsertWithoutLanguage_Language_updatedByIdToUserInput = {
-    update: XOR<UserUpdateWithoutLanguage_Language_updatedByIdToUserInput, UserUncheckedUpdateWithoutLanguage_Language_updatedByIdToUserInput>
-    create: XOR<UserCreateWithoutLanguage_Language_updatedByIdToUserInput, UserUncheckedCreateWithoutLanguage_Language_updatedByIdToUserInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutLanguage_Language_updatedByIdToUserInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutLanguage_Language_updatedByIdToUserInput, UserUncheckedUpdateWithoutLanguage_Language_updatedByIdToUserInput>
-  }
-
-  export type UserUpdateWithoutLanguage_Language_updatedByIdToUserInput = {
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Category_Category_createdByIdToUser?: CategoryUpdateManyWithoutUser_Category_createdByIdToUserNestedInput
-    Category_Category_deletedByIdToUser?: CategoryUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
-    Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
-    CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
-    Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Notification?: NotificationUpdateManyWithoutUserNestedInput
-    Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
-    Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
-    Permission_Permission_updatedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
-    RefreshToken?: RefreshTokenUpdateManyWithoutUserNestedInput
-    Role_Role_createdByIdToUser?: RoleUpdateManyWithoutUser_Role_createdByIdToUserNestedInput
-    Role_Role_deletedByIdToUser?: RoleUpdateManyWithoutUser_Role_deletedByIdToUserNestedInput
-    Role_Role_updatedByIdToUser?: RoleUpdateManyWithoutUser_Role_updatedByIdToUserNestedInput
-    Service_Service_createdByIdToUser?: ServiceUpdateManyWithoutUser_Service_createdByIdToUserNestedInput
-    Service_Service_deletedByIdToUser?: ServiceUpdateManyWithoutUser_Service_deletedByIdToUserNestedInput
-    Service_Service_updatedByIdToUser?: ServiceUpdateManyWithoutUser_Service_updatedByIdToUserNestedInput
-    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderUpdateOneWithoutUser_ServiceProvider_userIdToUserNestedInput
-    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderUpdateManyWithoutUser_ServiceProvider_verifiedByIdToUserNestedInput
-    Staff?: StaffUpdateOneWithoutUserNestedInput
-    User_User_createdByIdToUser?: UserUpdateOneWithoutOther_User_User_createdByIdToUserNestedInput
-    other_User_User_createdByIdToUser?: UserUpdateManyWithoutUser_User_createdByIdToUserNestedInput
-    User_User_deletedByIdToUser?: UserUpdateOneWithoutOther_User_User_deletedByIdToUserNestedInput
-    other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
-    User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
-    other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
-    Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutLanguage_Language_updatedByIdToUserInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phone?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    Category_Category_createdByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_createdByIdToUserNestedInput
-    Category_Category_deletedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
-    Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
-    CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
-    Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
-    Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
-    Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
-    Permission_Permission_updatedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
-    RefreshToken?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    Role_Role_createdByIdToUser?: RoleUncheckedUpdateManyWithoutUser_Role_createdByIdToUserNestedInput
-    Role_Role_deletedByIdToUser?: RoleUncheckedUpdateManyWithoutUser_Role_deletedByIdToUserNestedInput
-    Role_Role_updatedByIdToUser?: RoleUncheckedUpdateManyWithoutUser_Role_updatedByIdToUserNestedInput
-    Service_Service_createdByIdToUser?: ServiceUncheckedUpdateManyWithoutUser_Service_createdByIdToUserNestedInput
-    Service_Service_deletedByIdToUser?: ServiceUncheckedUpdateManyWithoutUser_Service_deletedByIdToUserNestedInput
-    Service_Service_updatedByIdToUser?: ServiceUncheckedUpdateManyWithoutUser_Service_updatedByIdToUserNestedInput
-    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderUncheckedUpdateOneWithoutUser_ServiceProvider_userIdToUserNestedInput
-    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderUncheckedUpdateManyWithoutUser_ServiceProvider_verifiedByIdToUserNestedInput
-    Staff?: StaffUncheckedUpdateOneWithoutUserNestedInput
-    other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
-    other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
-    other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
-    Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
-  }
-
-  export type ServiceProviderTranslationUpsertWithWhereUniqueWithoutLanguageInput = {
-    where: ServiceProviderTranslationWhereUniqueInput
-    update: XOR<ServiceProviderTranslationUpdateWithoutLanguageInput, ServiceProviderTranslationUncheckedUpdateWithoutLanguageInput>
-    create: XOR<ServiceProviderTranslationCreateWithoutLanguageInput, ServiceProviderTranslationUncheckedCreateWithoutLanguageInput>
-  }
-
-  export type ServiceProviderTranslationUpdateWithWhereUniqueWithoutLanguageInput = {
-    where: ServiceProviderTranslationWhereUniqueInput
-    data: XOR<ServiceProviderTranslationUpdateWithoutLanguageInput, ServiceProviderTranslationUncheckedUpdateWithoutLanguageInput>
-  }
-
-  export type ServiceProviderTranslationUpdateManyWithWhereWithoutLanguageInput = {
-    where: ServiceProviderTranslationScalarWhereInput
-    data: XOR<ServiceProviderTranslationUpdateManyMutationInput, ServiceProviderTranslationUncheckedUpdateManyWithoutLanguageInput>
-  }
-
-  export type ServiceProviderTranslationScalarWhereInput = {
-    AND?: ServiceProviderTranslationScalarWhereInput | ServiceProviderTranslationScalarWhereInput[]
-    OR?: ServiceProviderTranslationScalarWhereInput[]
-    NOT?: ServiceProviderTranslationScalarWhereInput | ServiceProviderTranslationScalarWhereInput[]
-    id?: IntFilter<"ServiceProviderTranslation"> | number
-    providerId?: IntFilter<"ServiceProviderTranslation"> | number
-    languageId?: StringFilter<"ServiceProviderTranslation"> | string
-    name?: StringFilter<"ServiceProviderTranslation"> | string
-    description?: StringNullableFilter<"ServiceProviderTranslation"> | string | null
-    createdAt?: DateTimeFilter<"ServiceProviderTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"ServiceProviderTranslation"> | Date | string
-    deletedAt?: DateTimeNullableFilter<"ServiceProviderTranslation"> | Date | string | null
-  }
-
-  export type ServiceTranslationUpsertWithWhereUniqueWithoutLanguageInput = {
-    where: ServiceTranslationWhereUniqueInput
-    update: XOR<ServiceTranslationUpdateWithoutLanguageInput, ServiceTranslationUncheckedUpdateWithoutLanguageInput>
-    create: XOR<ServiceTranslationCreateWithoutLanguageInput, ServiceTranslationUncheckedCreateWithoutLanguageInput>
-  }
-
-  export type ServiceTranslationUpdateWithWhereUniqueWithoutLanguageInput = {
-    where: ServiceTranslationWhereUniqueInput
-    data: XOR<ServiceTranslationUpdateWithoutLanguageInput, ServiceTranslationUncheckedUpdateWithoutLanguageInput>
-  }
-
-  export type ServiceTranslationUpdateManyWithWhereWithoutLanguageInput = {
-    where: ServiceTranslationScalarWhereInput
-    data: XOR<ServiceTranslationUpdateManyMutationInput, ServiceTranslationUncheckedUpdateManyWithoutLanguageInput>
-  }
-
-  export type ServiceTranslationScalarWhereInput = {
-    AND?: ServiceTranslationScalarWhereInput | ServiceTranslationScalarWhereInput[]
-    OR?: ServiceTranslationScalarWhereInput[]
-    NOT?: ServiceTranslationScalarWhereInput | ServiceTranslationScalarWhereInput[]
-    id?: IntFilter<"ServiceTranslation"> | number
-    serviceId?: IntFilter<"ServiceTranslation"> | number
-    languageId?: StringFilter<"ServiceTranslation"> | string
-    name?: StringFilter<"ServiceTranslation"> | string
-    description?: StringFilter<"ServiceTranslation"> | string
-    createdAt?: DateTimeFilter<"ServiceTranslation"> | Date | string
-    updatedAt?: DateTimeFilter<"ServiceTranslation"> | Date | string
-    deletedAt?: DateTimeNullableFilter<"ServiceTranslation"> | Date | string | null
-  }
-
   export type UserCreateWithoutNotificationInput = {
     email: string
     password: string
@@ -59668,9 +56823,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
     Permission_Permission_updatedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
@@ -59690,6 +56842,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -59713,9 +56866,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
     Permission_Permission_updatedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
@@ -59732,6 +56882,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -59767,9 +56918,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
     Permission_Permission_updatedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
@@ -59789,6 +56937,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -59812,9 +56961,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
     Permission_Permission_updatedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
@@ -59831,6 +56977,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -59912,6 +57059,80 @@ export namespace Prisma {
     ServiceRequest?: ServiceRequestUncheckedUpdateManyWithoutCustomerProfileNestedInput
   }
 
+  export type ServiceRequestCreateWithoutPaymentTransactionInput = {
+    note?: string | null
+    preferredDate: Date | string
+    status?: $Enums.RequestStatus
+    createdAt?: Date | string
+    updatedAt: Date | string
+    location: string
+    phoneNumber: string
+    Booking?: BookingCreateNestedOneWithoutServiceRequestInput
+    Category: CategoryCreateNestedOneWithoutServiceRequestInput
+    CustomerProfile: CustomerProfileCreateNestedOneWithoutServiceRequestInput
+    ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceRequestInput
+  }
+
+  export type ServiceRequestUncheckedCreateWithoutPaymentTransactionInput = {
+    id?: number
+    customerId: number
+    providerId: number
+    note?: string | null
+    preferredDate: Date | string
+    status?: $Enums.RequestStatus
+    createdAt?: Date | string
+    updatedAt: Date | string
+    location: string
+    phoneNumber: string
+    categoryId: number
+    Booking?: BookingUncheckedCreateNestedOneWithoutServiceRequestInput
+  }
+
+  export type ServiceRequestCreateOrConnectWithoutPaymentTransactionInput = {
+    where: ServiceRequestWhereUniqueInput
+    create: XOR<ServiceRequestCreateWithoutPaymentTransactionInput, ServiceRequestUncheckedCreateWithoutPaymentTransactionInput>
+  }
+
+  export type ServiceRequestUpsertWithoutPaymentTransactionInput = {
+    update: XOR<ServiceRequestUpdateWithoutPaymentTransactionInput, ServiceRequestUncheckedUpdateWithoutPaymentTransactionInput>
+    create: XOR<ServiceRequestCreateWithoutPaymentTransactionInput, ServiceRequestUncheckedCreateWithoutPaymentTransactionInput>
+    where?: ServiceRequestWhereInput
+  }
+
+  export type ServiceRequestUpdateToOneWithWhereWithoutPaymentTransactionInput = {
+    where?: ServiceRequestWhereInput
+    data: XOR<ServiceRequestUpdateWithoutPaymentTransactionInput, ServiceRequestUncheckedUpdateWithoutPaymentTransactionInput>
+  }
+
+  export type ServiceRequestUpdateWithoutPaymentTransactionInput = {
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    Booking?: BookingUpdateOneWithoutServiceRequestNestedInput
+    Category?: CategoryUpdateOneRequiredWithoutServiceRequestNestedInput
+    CustomerProfile?: CustomerProfileUpdateOneRequiredWithoutServiceRequestNestedInput
+    ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceRequestNestedInput
+  }
+
+  export type ServiceRequestUncheckedUpdateWithoutPaymentTransactionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    customerId?: IntFieldUpdateOperationsInput | number
+    providerId?: IntFieldUpdateOperationsInput | number
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRequestStatusFieldUpdateOperationsInput | $Enums.RequestStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: StringFieldUpdateOperationsInput | string
+    phoneNumber?: StringFieldUpdateOperationsInput | string
+    categoryId?: IntFieldUpdateOperationsInput | number
+    Booking?: BookingUncheckedUpdateOneWithoutServiceRequestNestedInput
+  }
+
   export type UserCreateWithoutPermission_Permission_createdByIdToUserInput = {
     email: string
     password: string
@@ -59928,9 +57149,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
     Permission_Permission_updatedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
@@ -59950,6 +57168,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -59973,9 +57192,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
     Permission_Permission_updatedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
@@ -59992,6 +57208,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -60016,9 +57233,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_updatedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
@@ -60038,6 +57252,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -60061,9 +57276,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_updatedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
@@ -60080,6 +57292,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -60104,9 +57317,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -60126,6 +57336,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -60149,9 +57360,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -60168,6 +57376,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -60231,9 +57440,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
     Permission_Permission_updatedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
@@ -60253,6 +57459,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -60276,9 +57483,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
     Permission_Permission_updatedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
@@ -60295,6 +57499,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -60325,9 +57530,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_updatedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
@@ -60347,6 +57549,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -60370,9 +57573,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_updatedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
@@ -60389,6 +57589,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -60419,9 +57620,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -60441,6 +57639,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -60464,9 +57663,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -60483,6 +57679,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -60572,7 +57769,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserCreateNestedOneWithoutService_Service_deletedByIdToUserInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceInput
     User_Service_updatedByIdToUser?: UserCreateNestedOneWithoutService_Service_updatedByIdToUserInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsCreateNestedManyWithoutServiceInput
   }
 
@@ -60597,7 +57793,6 @@ export namespace Prisma {
     status?: $Enums.ServiceStatus
     ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
   }
 
@@ -60679,7 +57874,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserUpdateOneWithoutService_Service_deletedByIdToUserNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceNestedInput
     User_Service_updatedByIdToUser?: UserUpdateOneWithoutService_Service_updatedByIdToUserNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUpdateManyWithoutServiceNestedInput
   }
 
@@ -60704,7 +57898,6 @@ export namespace Prisma {
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
   }
 
@@ -60748,9 +57941,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -60770,6 +57960,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -60793,9 +57984,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -60812,6 +58000,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -60877,9 +58066,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -60899,6 +58085,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -60922,9 +58109,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -60941,6 +58125,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -61000,7 +58185,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserCreateNestedOneWithoutService_Service_deletedByIdToUserInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceInput
     User_Service_updatedByIdToUser?: UserCreateNestedOneWithoutService_Service_updatedByIdToUserInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsCreateNestedManyWithoutServiceInput
   }
 
@@ -61025,7 +58209,6 @@ export namespace Prisma {
     status?: $Enums.ServiceStatus
     ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
   }
 
@@ -61137,7 +58320,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserUpdateOneWithoutService_Service_deletedByIdToUserNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceNestedInput
     User_Service_updatedByIdToUser?: UserUpdateOneWithoutService_Service_updatedByIdToUserNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUpdateManyWithoutServiceNestedInput
   }
 
@@ -61162,7 +58344,6 @@ export namespace Prisma {
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
   }
 
@@ -61296,9 +58477,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -61318,6 +58496,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -61341,9 +58520,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -61360,6 +58536,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -61384,9 +58561,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -61406,6 +58580,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -61429,9 +58604,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -61448,6 +58620,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -61472,9 +58645,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -61494,6 +58664,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -61517,9 +58688,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -61536,6 +58704,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -61594,9 +58763,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -61617,6 +58783,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRole_UserRolesInput = {
@@ -61639,9 +58806,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -61659,6 +58823,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRole_UserRolesInput = {
@@ -61693,9 +58858,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -61715,6 +58877,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -61738,9 +58901,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -61757,6 +58917,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -61787,9 +58948,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -61809,6 +58967,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -61832,9 +58991,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -61851,6 +59007,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -61881,9 +59038,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -61903,6 +59057,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -61926,9 +59081,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -61945,6 +59097,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -62020,7 +59173,6 @@ export namespace Prisma {
 
   export type ProposalItemCreateWithoutServiceInput = {
     quantity?: number
-    price: number
     createdAt?: Date | string
     Proposal: ProposalCreateNestedOneWithoutProposalItemInput
   }
@@ -62029,7 +59181,6 @@ export namespace Prisma {
     id?: number
     proposalId: number
     quantity?: number
-    price: number
     createdAt?: Date | string
   }
 
@@ -62153,9 +59304,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -62175,6 +59323,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -62198,9 +59347,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -62217,6 +59363,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -62241,9 +59388,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -62263,6 +59407,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -62286,9 +59431,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -62305,6 +59447,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -62377,9 +59520,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -62399,6 +59539,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -62422,9 +59563,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -62441,41 +59579,13 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
   export type UserCreateOrConnectWithoutService_Service_updatedByIdToUserInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutService_Service_updatedByIdToUserInput, UserUncheckedCreateWithoutService_Service_updatedByIdToUserInput>
-  }
-
-  export type ServiceTranslationCreateWithoutServiceInput = {
-    name: string
-    description: string
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-    Language: LanguageCreateNestedOneWithoutServiceTranslationInput
-  }
-
-  export type ServiceTranslationUncheckedCreateWithoutServiceInput = {
-    id?: number
-    languageId: string
-    name: string
-    description: string
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type ServiceTranslationCreateOrConnectWithoutServiceInput = {
-    where: ServiceTranslationWhereUniqueInput
-    create: XOR<ServiceTranslationCreateWithoutServiceInput, ServiceTranslationUncheckedCreateWithoutServiceInput>
-  }
-
-  export type ServiceTranslationCreateManyServiceInputEnvelope = {
-    data: ServiceTranslationCreateManyServiceInput | ServiceTranslationCreateManyServiceInput[]
-    skipDuplicates?: boolean
   }
 
   export type Service_ServiceItemsCreateWithoutServiceInput = {
@@ -62520,7 +59630,6 @@ export namespace Prisma {
     proposalId?: IntFilter<"ProposalItem"> | number
     serviceId?: IntFilter<"ProposalItem"> | number
     quantity?: IntFilter<"ProposalItem"> | number
-    price?: FloatFilter<"ProposalItem"> | number
     createdAt?: DateTimeFilter<"ProposalItem"> | Date | string
   }
 
@@ -62627,9 +59736,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -62649,6 +59755,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -62672,9 +59779,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -62691,6 +59795,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -62721,9 +59826,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -62743,6 +59845,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -62766,9 +59869,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -62785,6 +59885,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -62869,9 +59970,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -62891,6 +59989,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -62914,9 +60013,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -62933,23 +60029,8 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
-  }
-
-  export type ServiceTranslationUpsertWithWhereUniqueWithoutServiceInput = {
-    where: ServiceTranslationWhereUniqueInput
-    update: XOR<ServiceTranslationUpdateWithoutServiceInput, ServiceTranslationUncheckedUpdateWithoutServiceInput>
-    create: XOR<ServiceTranslationCreateWithoutServiceInput, ServiceTranslationUncheckedCreateWithoutServiceInput>
-  }
-
-  export type ServiceTranslationUpdateWithWhereUniqueWithoutServiceInput = {
-    where: ServiceTranslationWhereUniqueInput
-    data: XOR<ServiceTranslationUpdateWithoutServiceInput, ServiceTranslationUncheckedUpdateWithoutServiceInput>
-  }
-
-  export type ServiceTranslationUpdateManyWithWhereWithoutServiceInput = {
-    where: ServiceTranslationScalarWhereInput
-    data: XOR<ServiceTranslationUpdateManyMutationInput, ServiceTranslationUncheckedUpdateManyWithoutServiceInput>
   }
 
   export type Service_ServiceItemsUpsertWithWhereUniqueWithoutServiceInput = {
@@ -63035,7 +60116,6 @@ export namespace Prisma {
     User_Service_createdByIdToUser?: UserCreateNestedOneWithoutService_Service_createdByIdToUserInput
     User_Service_deletedByIdToUser?: UserCreateNestedOneWithoutService_Service_deletedByIdToUserInput
     User_Service_updatedByIdToUser?: UserCreateNestedOneWithoutService_Service_updatedByIdToUserInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsCreateNestedManyWithoutServiceInput
   }
 
@@ -63060,7 +60140,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
   }
 
@@ -63133,9 +60212,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -63155,6 +60231,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -63178,9 +60255,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -63197,6 +60271,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -63221,9 +60296,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -63243,6 +60315,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -63266,9 +60339,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -63285,6 +60355,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -63294,12 +60365,12 @@ export namespace Prisma {
   }
 
   export type ServiceProviderTranslationCreateWithoutServiceProviderInput = {
+    languageId: string
     name: string
     description?: string | null
     createdAt?: Date | string
     updatedAt: Date | string
     deletedAt?: Date | string | null
-    Language: LanguageCreateNestedOneWithoutServiceProviderTranslationInput
   }
 
   export type ServiceProviderTranslationUncheckedCreateWithoutServiceProviderInput = {
@@ -63331,6 +60402,7 @@ export namespace Prisma {
     location: string
     phoneNumber: string
     Booking?: BookingCreateNestedOneWithoutServiceRequestInput
+    PaymentTransaction?: PaymentTransactionCreateNestedOneWithoutServiceRequestInput
     Category: CategoryCreateNestedOneWithoutServiceRequestInput
     CustomerProfile: CustomerProfileCreateNestedOneWithoutServiceRequestInput
   }
@@ -63347,6 +60419,7 @@ export namespace Prisma {
     phoneNumber: string
     categoryId: number
     Booking?: BookingUncheckedCreateNestedOneWithoutServiceRequestInput
+    PaymentTransaction?: PaymentTransactionUncheckedCreateNestedOneWithoutServiceRequestInput
   }
 
   export type ServiceRequestCreateOrConnectWithoutServiceProviderInput = {
@@ -63489,9 +60562,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -63511,6 +60581,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -63534,9 +60605,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -63553,6 +60621,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -63583,9 +60652,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -63605,6 +60671,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -63628,9 +60695,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -63647,6 +60711,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -63664,6 +60729,20 @@ export namespace Prisma {
   export type ServiceProviderTranslationUpdateManyWithWhereWithoutServiceProviderInput = {
     where: ServiceProviderTranslationScalarWhereInput
     data: XOR<ServiceProviderTranslationUpdateManyMutationInput, ServiceProviderTranslationUncheckedUpdateManyWithoutServiceProviderInput>
+  }
+
+  export type ServiceProviderTranslationScalarWhereInput = {
+    AND?: ServiceProviderTranslationScalarWhereInput | ServiceProviderTranslationScalarWhereInput[]
+    OR?: ServiceProviderTranslationScalarWhereInput[]
+    NOT?: ServiceProviderTranslationScalarWhereInput | ServiceProviderTranslationScalarWhereInput[]
+    id?: IntFilter<"ServiceProviderTranslation"> | number
+    providerId?: IntFilter<"ServiceProviderTranslation"> | number
+    languageId?: StringFilter<"ServiceProviderTranslation"> | string
+    name?: StringFilter<"ServiceProviderTranslation"> | string
+    description?: StringNullableFilter<"ServiceProviderTranslation"> | string | null
+    createdAt?: DateTimeFilter<"ServiceProviderTranslation"> | Date | string
+    updatedAt?: DateTimeFilter<"ServiceProviderTranslation"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"ServiceProviderTranslation"> | Date | string | null
   }
 
   export type ServiceRequestUpsertWithWhereUniqueWithoutServiceProviderInput = {
@@ -63708,37 +60787,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Staff"> | Date | string
     updatedAt?: DateTimeFilter<"Staff"> | Date | string
     isActive?: BoolFilter<"Staff"> | boolean
-  }
-
-  export type LanguageCreateWithoutServiceProviderTranslationInput = {
-    id: string
-    name: string
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CategoryTranslation?: CategoryTranslationCreateNestedManyWithoutLanguageInput
-    User_Language_createdByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_createdByIdToUserInput
-    User_Language_deletedByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_deletedByIdToUserInput
-    User_Language_updatedByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_updatedByIdToUserInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageUncheckedCreateWithoutServiceProviderTranslationInput = {
-    id: string
-    name: string
-    createdById?: number | null
-    updatedById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CategoryTranslation?: CategoryTranslationUncheckedCreateNestedManyWithoutLanguageInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageCreateOrConnectWithoutServiceProviderTranslationInput = {
-    where: LanguageWhereUniqueInput
-    create: XOR<LanguageCreateWithoutServiceProviderTranslationInput, LanguageUncheckedCreateWithoutServiceProviderTranslationInput>
   }
 
   export type ServiceProviderCreateWithoutServiceProviderTranslationInput = {
@@ -63787,43 +60835,6 @@ export namespace Prisma {
   export type ServiceProviderCreateOrConnectWithoutServiceProviderTranslationInput = {
     where: ServiceProviderWhereUniqueInput
     create: XOR<ServiceProviderCreateWithoutServiceProviderTranslationInput, ServiceProviderUncheckedCreateWithoutServiceProviderTranslationInput>
-  }
-
-  export type LanguageUpsertWithoutServiceProviderTranslationInput = {
-    update: XOR<LanguageUpdateWithoutServiceProviderTranslationInput, LanguageUncheckedUpdateWithoutServiceProviderTranslationInput>
-    create: XOR<LanguageCreateWithoutServiceProviderTranslationInput, LanguageUncheckedCreateWithoutServiceProviderTranslationInput>
-    where?: LanguageWhereInput
-  }
-
-  export type LanguageUpdateToOneWithWhereWithoutServiceProviderTranslationInput = {
-    where?: LanguageWhereInput
-    data: XOR<LanguageUpdateWithoutServiceProviderTranslationInput, LanguageUncheckedUpdateWithoutServiceProviderTranslationInput>
-  }
-
-  export type LanguageUpdateWithoutServiceProviderTranslationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CategoryTranslation?: CategoryTranslationUpdateManyWithoutLanguageNestedInput
-    User_Language_createdByIdToUser?: UserUpdateOneWithoutLanguage_Language_createdByIdToUserNestedInput
-    User_Language_deletedByIdToUser?: UserUpdateOneWithoutLanguage_Language_deletedByIdToUserNestedInput
-    User_Language_updatedByIdToUser?: UserUpdateOneWithoutLanguage_Language_updatedByIdToUserNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutLanguageNestedInput
-  }
-
-  export type LanguageUncheckedUpdateWithoutServiceProviderTranslationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CategoryTranslation?: CategoryTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutLanguageNestedInput
   }
 
   export type ServiceProviderUpsertWithoutServiceProviderTranslationInput = {
@@ -63878,188 +60889,6 @@ export namespace Prisma {
     ServiceItem?: ServiceItemUncheckedUpdateManyWithoutServiceProviderNestedInput
     ServiceRequest?: ServiceRequestUncheckedUpdateManyWithoutServiceProviderNestedInput
     Staff?: StaffUncheckedUpdateManyWithoutServiceProviderNestedInput
-  }
-
-  export type LanguageCreateWithoutServiceTranslationInput = {
-    id: string
-    name: string
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CategoryTranslation?: CategoryTranslationCreateNestedManyWithoutLanguageInput
-    User_Language_createdByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_createdByIdToUserInput
-    User_Language_deletedByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_deletedByIdToUserInput
-    User_Language_updatedByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_updatedByIdToUserInput
-    ServiceProviderTranslation?: ServiceProviderTranslationCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageUncheckedCreateWithoutServiceTranslationInput = {
-    id: string
-    name: string
-    createdById?: number | null
-    updatedById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CategoryTranslation?: CategoryTranslationUncheckedCreateNestedManyWithoutLanguageInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUncheckedCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageCreateOrConnectWithoutServiceTranslationInput = {
-    where: LanguageWhereUniqueInput
-    create: XOR<LanguageCreateWithoutServiceTranslationInput, LanguageUncheckedCreateWithoutServiceTranslationInput>
-  }
-
-  export type ServiceCreateWithoutServiceTranslationInput = {
-    basePrice: number
-    virtualPrice: number
-    images?: ServiceCreateimagesInput | string[]
-    durationMinutes: number
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    name?: string
-    publishedAt?: Date | string | null
-    description?: string
-    unit?: $Enums.Unit
-    status?: $Enums.ServiceStatus
-    ProposalItem?: ProposalItemCreateNestedManyWithoutServiceInput
-    RecurringBooking?: RecurringBookingCreateNestedManyWithoutServiceInput
-    Review?: ReviewCreateNestedManyWithoutServiceInput
-    Category: CategoryCreateNestedOneWithoutServiceInput
-    User_Service_createdByIdToUser?: UserCreateNestedOneWithoutService_Service_createdByIdToUserInput
-    User_Service_deletedByIdToUser?: UserCreateNestedOneWithoutService_Service_deletedByIdToUserInput
-    ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceInput
-    User_Service_updatedByIdToUser?: UserCreateNestedOneWithoutService_Service_updatedByIdToUserInput
-    Service_ServiceItems?: Service_ServiceItemsCreateNestedManyWithoutServiceInput
-  }
-
-  export type ServiceUncheckedCreateWithoutServiceTranslationInput = {
-    id?: number
-    basePrice: number
-    virtualPrice: number
-    images?: ServiceCreateimagesInput | string[]
-    durationMinutes: number
-    providerId: number
-    createdById?: number | null
-    updatedById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    name?: string
-    publishedAt?: Date | string | null
-    description?: string
-    categoryId: number
-    unit?: $Enums.Unit
-    status?: $Enums.ServiceStatus
-    ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
-    RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
-    Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
-    Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
-  }
-
-  export type ServiceCreateOrConnectWithoutServiceTranslationInput = {
-    where: ServiceWhereUniqueInput
-    create: XOR<ServiceCreateWithoutServiceTranslationInput, ServiceUncheckedCreateWithoutServiceTranslationInput>
-  }
-
-  export type LanguageUpsertWithoutServiceTranslationInput = {
-    update: XOR<LanguageUpdateWithoutServiceTranslationInput, LanguageUncheckedUpdateWithoutServiceTranslationInput>
-    create: XOR<LanguageCreateWithoutServiceTranslationInput, LanguageUncheckedCreateWithoutServiceTranslationInput>
-    where?: LanguageWhereInput
-  }
-
-  export type LanguageUpdateToOneWithWhereWithoutServiceTranslationInput = {
-    where?: LanguageWhereInput
-    data: XOR<LanguageUpdateWithoutServiceTranslationInput, LanguageUncheckedUpdateWithoutServiceTranslationInput>
-  }
-
-  export type LanguageUpdateWithoutServiceTranslationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CategoryTranslation?: CategoryTranslationUpdateManyWithoutLanguageNestedInput
-    User_Language_createdByIdToUser?: UserUpdateOneWithoutLanguage_Language_createdByIdToUserNestedInput
-    User_Language_deletedByIdToUser?: UserUpdateOneWithoutLanguage_Language_deletedByIdToUserNestedInput
-    User_Language_updatedByIdToUser?: UserUpdateOneWithoutLanguage_Language_updatedByIdToUserNestedInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUpdateManyWithoutLanguageNestedInput
-  }
-
-  export type LanguageUncheckedUpdateWithoutServiceTranslationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CategoryTranslation?: CategoryTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-  }
-
-  export type ServiceUpsertWithoutServiceTranslationInput = {
-    update: XOR<ServiceUpdateWithoutServiceTranslationInput, ServiceUncheckedUpdateWithoutServiceTranslationInput>
-    create: XOR<ServiceCreateWithoutServiceTranslationInput, ServiceUncheckedCreateWithoutServiceTranslationInput>
-    where?: ServiceWhereInput
-  }
-
-  export type ServiceUpdateToOneWithWhereWithoutServiceTranslationInput = {
-    where?: ServiceWhereInput
-    data: XOR<ServiceUpdateWithoutServiceTranslationInput, ServiceUncheckedUpdateWithoutServiceTranslationInput>
-  }
-
-  export type ServiceUpdateWithoutServiceTranslationInput = {
-    basePrice?: FloatFieldUpdateOperationsInput | number
-    virtualPrice?: FloatFieldUpdateOperationsInput | number
-    images?: ServiceUpdateimagesInput | string[]
-    durationMinutes?: IntFieldUpdateOperationsInput | number
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    description?: StringFieldUpdateOperationsInput | string
-    unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
-    ProposalItem?: ProposalItemUpdateManyWithoutServiceNestedInput
-    RecurringBooking?: RecurringBookingUpdateManyWithoutServiceNestedInput
-    Review?: ReviewUpdateManyWithoutServiceNestedInput
-    Category?: CategoryUpdateOneRequiredWithoutServiceNestedInput
-    User_Service_createdByIdToUser?: UserUpdateOneWithoutService_Service_createdByIdToUserNestedInput
-    User_Service_deletedByIdToUser?: UserUpdateOneWithoutService_Service_deletedByIdToUserNestedInput
-    ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceNestedInput
-    User_Service_updatedByIdToUser?: UserUpdateOneWithoutService_Service_updatedByIdToUserNestedInput
-    Service_ServiceItems?: Service_ServiceItemsUpdateManyWithoutServiceNestedInput
-  }
-
-  export type ServiceUncheckedUpdateWithoutServiceTranslationInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    basePrice?: FloatFieldUpdateOperationsInput | number
-    virtualPrice?: FloatFieldUpdateOperationsInput | number
-    images?: ServiceUpdateimagesInput | string[]
-    durationMinutes?: IntFieldUpdateOperationsInput | number
-    providerId?: IntFieldUpdateOperationsInput | number
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    description?: StringFieldUpdateOperationsInput | string
-    categoryId?: IntFieldUpdateOperationsInput | number
-    unit?: EnumUnitFieldUpdateOperationsInput | $Enums.Unit
-    status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
-    ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
-    RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
-    Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
-    Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type BookingCreateWithoutStaff_Booking_staffIdToStaffInput = {
@@ -64219,9 +61048,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -64241,6 +61067,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -64264,9 +61091,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -64283,6 +61107,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -64480,9 +61305,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -64502,6 +61324,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -64525,9 +61348,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -64544,6 +61364,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -64995,114 +61816,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type LanguageCreateWithoutUser_Language_createdByIdToUserInput = {
-    id: string
-    name: string
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CategoryTranslation?: CategoryTranslationCreateNestedManyWithoutLanguageInput
-    User_Language_deletedByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_deletedByIdToUserInput
-    User_Language_updatedByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_updatedByIdToUserInput
-    ServiceProviderTranslation?: ServiceProviderTranslationCreateNestedManyWithoutLanguageInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageUncheckedCreateWithoutUser_Language_createdByIdToUserInput = {
-    id: string
-    name: string
-    updatedById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CategoryTranslation?: CategoryTranslationUncheckedCreateNestedManyWithoutLanguageInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUncheckedCreateNestedManyWithoutLanguageInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageCreateOrConnectWithoutUser_Language_createdByIdToUserInput = {
-    where: LanguageWhereUniqueInput
-    create: XOR<LanguageCreateWithoutUser_Language_createdByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_createdByIdToUserInput>
-  }
-
-  export type LanguageCreateManyUser_Language_createdByIdToUserInputEnvelope = {
-    data: LanguageCreateManyUser_Language_createdByIdToUserInput | LanguageCreateManyUser_Language_createdByIdToUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type LanguageCreateWithoutUser_Language_deletedByIdToUserInput = {
-    id: string
-    name: string
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CategoryTranslation?: CategoryTranslationCreateNestedManyWithoutLanguageInput
-    User_Language_createdByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_createdByIdToUserInput
-    User_Language_updatedByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_updatedByIdToUserInput
-    ServiceProviderTranslation?: ServiceProviderTranslationCreateNestedManyWithoutLanguageInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageUncheckedCreateWithoutUser_Language_deletedByIdToUserInput = {
-    id: string
-    name: string
-    createdById?: number | null
-    updatedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CategoryTranslation?: CategoryTranslationUncheckedCreateNestedManyWithoutLanguageInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUncheckedCreateNestedManyWithoutLanguageInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageCreateOrConnectWithoutUser_Language_deletedByIdToUserInput = {
-    where: LanguageWhereUniqueInput
-    create: XOR<LanguageCreateWithoutUser_Language_deletedByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_deletedByIdToUserInput>
-  }
-
-  export type LanguageCreateManyUser_Language_deletedByIdToUserInputEnvelope = {
-    data: LanguageCreateManyUser_Language_deletedByIdToUserInput | LanguageCreateManyUser_Language_deletedByIdToUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type LanguageCreateWithoutUser_Language_updatedByIdToUserInput = {
-    id: string
-    name: string
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CategoryTranslation?: CategoryTranslationCreateNestedManyWithoutLanguageInput
-    User_Language_createdByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_createdByIdToUserInput
-    User_Language_deletedByIdToUser?: UserCreateNestedOneWithoutLanguage_Language_deletedByIdToUserInput
-    ServiceProviderTranslation?: ServiceProviderTranslationCreateNestedManyWithoutLanguageInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageUncheckedCreateWithoutUser_Language_updatedByIdToUserInput = {
-    id: string
-    name: string
-    createdById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    CategoryTranslation?: CategoryTranslationUncheckedCreateNestedManyWithoutLanguageInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUncheckedCreateNestedManyWithoutLanguageInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutLanguageInput
-  }
-
-  export type LanguageCreateOrConnectWithoutUser_Language_updatedByIdToUserInput = {
-    where: LanguageWhereUniqueInput
-    create: XOR<LanguageCreateWithoutUser_Language_updatedByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_updatedByIdToUserInput>
-  }
-
-  export type LanguageCreateManyUser_Language_updatedByIdToUserInputEnvelope = {
-    data: LanguageCreateManyUser_Language_updatedByIdToUserInput | LanguageCreateManyUser_Language_updatedByIdToUserInput[]
-    skipDuplicates?: boolean
-  }
-
   export type NotificationCreateWithoutUserInput = {
     content: string
     isRead?: boolean
@@ -65387,7 +62100,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserCreateNestedOneWithoutService_Service_deletedByIdToUserInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceInput
     User_Service_updatedByIdToUser?: UserCreateNestedOneWithoutService_Service_updatedByIdToUserInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsCreateNestedManyWithoutServiceInput
   }
 
@@ -65412,7 +62124,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
   }
 
@@ -65446,7 +62157,6 @@ export namespace Prisma {
     User_Service_createdByIdToUser?: UserCreateNestedOneWithoutService_Service_createdByIdToUserInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceInput
     User_Service_updatedByIdToUser?: UserCreateNestedOneWithoutService_Service_updatedByIdToUserInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsCreateNestedManyWithoutServiceInput
   }
 
@@ -65471,7 +62181,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
   }
 
@@ -65505,7 +62214,6 @@ export namespace Prisma {
     User_Service_createdByIdToUser?: UserCreateNestedOneWithoutService_Service_createdByIdToUserInput
     User_Service_deletedByIdToUser?: UserCreateNestedOneWithoutService_Service_deletedByIdToUserInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsCreateNestedManyWithoutServiceInput
   }
 
@@ -65530,7 +62238,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
   }
 
@@ -65691,9 +62398,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -65713,6 +62417,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -65736,9 +62441,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -65755,6 +62457,7 @@ export namespace Prisma {
     Staff?: StaffUncheckedCreateNestedOneWithoutUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -65779,9 +62482,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -65801,6 +62501,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -65823,9 +62524,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -65843,6 +62541,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -65872,9 +62571,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -65894,6 +62590,7 @@ export namespace Prisma {
     User_User_deletedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -65917,9 +62614,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -65936,6 +62630,7 @@ export namespace Prisma {
     Staff?: StaffUncheckedCreateNestedOneWithoutUserInput
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -65960,9 +62655,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -65982,6 +62674,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -66004,9 +62697,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -66024,6 +62714,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -66053,9 +62744,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -66075,6 +62763,7 @@ export namespace Prisma {
     User_User_deletedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_deletedByIdToUserInput
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -66098,9 +62787,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -66117,6 +62803,7 @@ export namespace Prisma {
     Staff?: StaffUncheckedCreateNestedOneWithoutUserInput
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -66141,9 +62828,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
     Device?: DeviceCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -66163,6 +62847,7 @@ export namespace Prisma {
     User_User_deletedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_deletedByIdToUserInput
     other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -66185,9 +62870,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
     CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
     Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_createdByIdToUserInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_deletedByIdToUserInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedCreateNestedManyWithoutUser_Language_updatedByIdToUserInput
     Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
@@ -66205,6 +62887,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
     other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
     other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
     Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
   }
 
@@ -66216,6 +62899,24 @@ export namespace Prisma {
   export type UserCreateManyUser_User_updatedByIdToUserInputEnvelope = {
     data: UserCreateManyUser_User_updatedByIdToUserInput | UserCreateManyUser_User_updatedByIdToUserInput[]
     skipDuplicates?: boolean
+  }
+
+  export type WalletCreateWithoutUserInput = {
+    balance?: number
+    createdAt?: Date | string
+    updatedAt: Date | string
+  }
+
+  export type WalletUncheckedCreateWithoutUserInput = {
+    id?: number
+    balance?: number
+    createdAt?: Date | string
+    updatedAt: Date | string
+  }
+
+  export type WalletCreateOrConnectWithoutUserInput = {
+    where: WalletWhereUniqueInput
+    create: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
   }
 
   export type RoleCreateWithoutUser_UserRolesInput = {
@@ -66363,68 +63064,6 @@ export namespace Prisma {
     lastActive?: DateTimeFilter<"Device"> | Date | string
     createdAt?: DateTimeFilter<"Device"> | Date | string
     isActive?: BoolFilter<"Device"> | boolean
-  }
-
-  export type LanguageUpsertWithWhereUniqueWithoutUser_Language_createdByIdToUserInput = {
-    where: LanguageWhereUniqueInput
-    update: XOR<LanguageUpdateWithoutUser_Language_createdByIdToUserInput, LanguageUncheckedUpdateWithoutUser_Language_createdByIdToUserInput>
-    create: XOR<LanguageCreateWithoutUser_Language_createdByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_createdByIdToUserInput>
-  }
-
-  export type LanguageUpdateWithWhereUniqueWithoutUser_Language_createdByIdToUserInput = {
-    where: LanguageWhereUniqueInput
-    data: XOR<LanguageUpdateWithoutUser_Language_createdByIdToUserInput, LanguageUncheckedUpdateWithoutUser_Language_createdByIdToUserInput>
-  }
-
-  export type LanguageUpdateManyWithWhereWithoutUser_Language_createdByIdToUserInput = {
-    where: LanguageScalarWhereInput
-    data: XOR<LanguageUpdateManyMutationInput, LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserInput>
-  }
-
-  export type LanguageScalarWhereInput = {
-    AND?: LanguageScalarWhereInput | LanguageScalarWhereInput[]
-    OR?: LanguageScalarWhereInput[]
-    NOT?: LanguageScalarWhereInput | LanguageScalarWhereInput[]
-    id?: StringFilter<"Language"> | string
-    name?: StringFilter<"Language"> | string
-    createdById?: IntNullableFilter<"Language"> | number | null
-    updatedById?: IntNullableFilter<"Language"> | number | null
-    deletedById?: IntNullableFilter<"Language"> | number | null
-    deletedAt?: DateTimeNullableFilter<"Language"> | Date | string | null
-    createdAt?: DateTimeFilter<"Language"> | Date | string
-    updatedAt?: DateTimeFilter<"Language"> | Date | string
-  }
-
-  export type LanguageUpsertWithWhereUniqueWithoutUser_Language_deletedByIdToUserInput = {
-    where: LanguageWhereUniqueInput
-    update: XOR<LanguageUpdateWithoutUser_Language_deletedByIdToUserInput, LanguageUncheckedUpdateWithoutUser_Language_deletedByIdToUserInput>
-    create: XOR<LanguageCreateWithoutUser_Language_deletedByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_deletedByIdToUserInput>
-  }
-
-  export type LanguageUpdateWithWhereUniqueWithoutUser_Language_deletedByIdToUserInput = {
-    where: LanguageWhereUniqueInput
-    data: XOR<LanguageUpdateWithoutUser_Language_deletedByIdToUserInput, LanguageUncheckedUpdateWithoutUser_Language_deletedByIdToUserInput>
-  }
-
-  export type LanguageUpdateManyWithWhereWithoutUser_Language_deletedByIdToUserInput = {
-    where: LanguageScalarWhereInput
-    data: XOR<LanguageUpdateManyMutationInput, LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserInput>
-  }
-
-  export type LanguageUpsertWithWhereUniqueWithoutUser_Language_updatedByIdToUserInput = {
-    where: LanguageWhereUniqueInput
-    update: XOR<LanguageUpdateWithoutUser_Language_updatedByIdToUserInput, LanguageUncheckedUpdateWithoutUser_Language_updatedByIdToUserInput>
-    create: XOR<LanguageCreateWithoutUser_Language_updatedByIdToUserInput, LanguageUncheckedCreateWithoutUser_Language_updatedByIdToUserInput>
-  }
-
-  export type LanguageUpdateWithWhereUniqueWithoutUser_Language_updatedByIdToUserInput = {
-    where: LanguageWhereUniqueInput
-    data: XOR<LanguageUpdateWithoutUser_Language_updatedByIdToUserInput, LanguageUncheckedUpdateWithoutUser_Language_updatedByIdToUserInput>
-  }
-
-  export type LanguageUpdateManyWithWhereWithoutUser_Language_updatedByIdToUserInput = {
-    where: LanguageScalarWhereInput
-    data: XOR<LanguageUpdateManyMutationInput, LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserInput>
   }
 
   export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
@@ -66767,9 +63406,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -66789,6 +63425,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -66812,9 +63449,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -66831,6 +63465,7 @@ export namespace Prisma {
     Staff?: StaffUncheckedUpdateOneWithoutUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -66877,9 +63512,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -66899,6 +63531,7 @@ export namespace Prisma {
     User_User_deletedByIdToUser?: UserUpdateOneWithoutOther_User_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -66922,9 +63555,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -66941,6 +63571,7 @@ export namespace Prisma {
     Staff?: StaffUncheckedUpdateOneWithoutUserNestedInput
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -66987,9 +63618,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -67009,6 +63637,7 @@ export namespace Prisma {
     User_User_deletedByIdToUser?: UserUpdateOneWithoutOther_User_User_deletedByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -67032,9 +63661,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -67051,6 +63677,7 @@ export namespace Prisma {
     Staff?: StaffUncheckedUpdateOneWithoutUserNestedInput
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -67068,6 +63695,30 @@ export namespace Prisma {
   export type UserUpdateManyWithWhereWithoutUser_User_updatedByIdToUserInput = {
     where: UserScalarWhereInput
     data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserInput>
+  }
+
+  export type WalletUpsertWithoutUserInput = {
+    update: XOR<WalletUpdateWithoutUserInput, WalletUncheckedUpdateWithoutUserInput>
+    create: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
+    where?: WalletWhereInput
+  }
+
+  export type WalletUpdateToOneWithWhereWithoutUserInput = {
+    where?: WalletWhereInput
+    data: XOR<WalletUpdateWithoutUserInput, WalletUncheckedUpdateWithoutUserInput>
+  }
+
+  export type WalletUpdateWithoutUserInput = {
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoleUpsertWithWhereUniqueWithoutUser_UserRolesInput = {
@@ -67536,6 +64187,40 @@ export namespace Prisma {
     create: XOR<BookingCreateWithoutServiceRequestInput, BookingUncheckedCreateWithoutServiceRequestInput>
   }
 
+  export type PaymentTransactionCreateWithoutServiceRequestInput = {
+    gateway: string
+    transactionDate?: Date | string
+    accountNumber?: string | null
+    subAccount?: string | null
+    amountIn?: number
+    amountOut?: number
+    accumulated?: number
+    referenceNumber?: string | null
+    transactionContent?: string | null
+    body?: string | null
+    createdAt?: Date | string
+  }
+
+  export type PaymentTransactionUncheckedCreateWithoutServiceRequestInput = {
+    id?: number
+    gateway: string
+    transactionDate?: Date | string
+    accountNumber?: string | null
+    subAccount?: string | null
+    amountIn?: number
+    amountOut?: number
+    accumulated?: number
+    referenceNumber?: string | null
+    transactionContent?: string | null
+    body?: string | null
+    createdAt?: Date | string
+  }
+
+  export type PaymentTransactionCreateOrConnectWithoutServiceRequestInput = {
+    where: PaymentTransactionWhereUniqueInput
+    create: XOR<PaymentTransactionCreateWithoutServiceRequestInput, PaymentTransactionUncheckedCreateWithoutServiceRequestInput>
+  }
+
   export type CategoryCreateWithoutServiceRequestInput = {
     name: string
     logo?: string | null
@@ -67696,6 +64381,46 @@ export namespace Prisma {
     Proposal?: ProposalUncheckedUpdateOneWithoutBookingNestedInput
     Transaction?: TransactionUncheckedUpdateOneWithoutBookingNestedInput
     WorkLog?: WorkLogUncheckedUpdateManyWithoutBookingNestedInput
+  }
+
+  export type PaymentTransactionUpsertWithoutServiceRequestInput = {
+    update: XOR<PaymentTransactionUpdateWithoutServiceRequestInput, PaymentTransactionUncheckedUpdateWithoutServiceRequestInput>
+    create: XOR<PaymentTransactionCreateWithoutServiceRequestInput, PaymentTransactionUncheckedCreateWithoutServiceRequestInput>
+    where?: PaymentTransactionWhereInput
+  }
+
+  export type PaymentTransactionUpdateToOneWithWhereWithoutServiceRequestInput = {
+    where?: PaymentTransactionWhereInput
+    data: XOR<PaymentTransactionUpdateWithoutServiceRequestInput, PaymentTransactionUncheckedUpdateWithoutServiceRequestInput>
+  }
+
+  export type PaymentTransactionUpdateWithoutServiceRequestInput = {
+    gateway?: StringFieldUpdateOperationsInput | string
+    transactionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountIn?: IntFieldUpdateOperationsInput | number
+    amountOut?: IntFieldUpdateOperationsInput | number
+    accumulated?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionContent?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentTransactionUncheckedUpdateWithoutServiceRequestInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    gateway?: StringFieldUpdateOperationsInput | string
+    transactionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    accountNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    subAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    amountIn?: IntFieldUpdateOperationsInput | number
+    amountOut?: IntFieldUpdateOperationsInput | number
+    accumulated?: IntFieldUpdateOperationsInput | number
+    referenceNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionContent?: NullableStringFieldUpdateOperationsInput | string | null
+    body?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CategoryUpsertWithoutServiceRequestInput = {
@@ -67859,7 +64584,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserCreateNestedOneWithoutService_Service_deletedByIdToUserInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceInput
     User_Service_updatedByIdToUser?: UserCreateNestedOneWithoutService_Service_updatedByIdToUserInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceUncheckedCreateWithoutService_ServiceItemsInput = {
@@ -67884,7 +64608,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedCreateNestedManyWithoutServiceInput
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
   }
 
   export type ServiceCreateOrConnectWithoutService_ServiceItemsInput = {
@@ -67962,7 +64685,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserUpdateOneWithoutService_Service_deletedByIdToUserNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceNestedInput
     User_Service_updatedByIdToUser?: UserUpdateOneWithoutService_Service_updatedByIdToUserNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceUncheckedUpdateWithoutService_ServiceItemsInput = {
@@ -67987,7 +64709,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
   }
 
   export type ServiceItemUpsertWithoutService_ServiceItemsInput = {
@@ -68070,7 +64791,6 @@ export namespace Prisma {
 
   export type ProposalItemCreateWithoutProposalInput = {
     quantity?: number
-    price: number
     createdAt?: Date | string
     Service: ServiceCreateNestedOneWithoutProposalItemInput
   }
@@ -68079,7 +64799,6 @@ export namespace Prisma {
     id?: number
     serviceId: number
     quantity?: number
-    price: number
     createdAt?: Date | string
   }
 
@@ -68152,6 +64871,7 @@ export namespace Prisma {
   export type ProposalCreateWithoutProposalItemInput = {
     notes?: string | null
     createdAt?: Date | string
+    status?: $Enums.ProposalStatus
     Booking: BookingCreateNestedOneWithoutProposalInput
   }
 
@@ -68160,6 +64880,7 @@ export namespace Prisma {
     bookingId: number
     notes?: string | null
     createdAt?: Date | string
+    status?: $Enums.ProposalStatus
   }
 
   export type ProposalCreateOrConnectWithoutProposalItemInput = {
@@ -68187,7 +64908,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserCreateNestedOneWithoutService_Service_deletedByIdToUserInput
     ServiceProvider: ServiceProviderCreateNestedOneWithoutServiceInput
     User_Service_updatedByIdToUser?: UserCreateNestedOneWithoutService_Service_updatedByIdToUserInput
-    ServiceTranslation?: ServiceTranslationCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsCreateNestedManyWithoutServiceInput
   }
 
@@ -68212,7 +64932,6 @@ export namespace Prisma {
     status?: $Enums.ServiceStatus
     RecurringBooking?: RecurringBookingUncheckedCreateNestedManyWithoutServiceInput
     Review?: ReviewUncheckedCreateNestedManyWithoutServiceInput
-    ServiceTranslation?: ServiceTranslationUncheckedCreateNestedManyWithoutServiceInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedCreateNestedManyWithoutServiceInput
   }
 
@@ -68235,6 +64954,7 @@ export namespace Prisma {
   export type ProposalUpdateWithoutProposalItemInput = {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
     Booking?: BookingUpdateOneRequiredWithoutProposalNestedInput
   }
 
@@ -68243,6 +64963,7 @@ export namespace Prisma {
     bookingId?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumProposalStatusFieldUpdateOperationsInput | $Enums.ProposalStatus
   }
 
   export type ServiceUpsertWithoutProposalItemInput = {
@@ -68276,7 +64997,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserUpdateOneWithoutService_Service_deletedByIdToUserNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceNestedInput
     User_Service_updatedByIdToUser?: UserUpdateOneWithoutService_Service_updatedByIdToUserNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUpdateManyWithoutServiceNestedInput
   }
 
@@ -68301,8 +65021,181 @@ export namespace Prisma {
     status?: EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
+  }
+
+  export type UserCreateWithoutWalletInput = {
+    email: string
+    password: string
+    name: string
+    phone: string
+    avatar?: string | null
+    totpSecret?: string | null
+    status?: $Enums.UserStatus
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt: Date | string
+    Category_Category_createdByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_createdByIdToUserInput
+    Category_Category_deletedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
+    Category_Category_updatedByIdToUser?: CategoryCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
+    CustomerProfile?: CustomerProfileCreateNestedOneWithoutUserInput
+    Device?: DeviceCreateNestedManyWithoutUserInput
+    Notification?: NotificationCreateNestedManyWithoutUserInput
+    Permission_Permission_createdByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
+    Permission_Permission_deletedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
+    Permission_Permission_updatedByIdToUser?: PermissionCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
+    RefreshToken?: RefreshTokenCreateNestedManyWithoutUserInput
+    Role_Role_createdByIdToUser?: RoleCreateNestedManyWithoutUser_Role_createdByIdToUserInput
+    Role_Role_deletedByIdToUser?: RoleCreateNestedManyWithoutUser_Role_deletedByIdToUserInput
+    Role_Role_updatedByIdToUser?: RoleCreateNestedManyWithoutUser_Role_updatedByIdToUserInput
+    Service_Service_createdByIdToUser?: ServiceCreateNestedManyWithoutUser_Service_createdByIdToUserInput
+    Service_Service_deletedByIdToUser?: ServiceCreateNestedManyWithoutUser_Service_deletedByIdToUserInput
+    Service_Service_updatedByIdToUser?: ServiceCreateNestedManyWithoutUser_Service_updatedByIdToUserInput
+    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderCreateNestedOneWithoutUser_ServiceProvider_userIdToUserInput
+    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderCreateNestedManyWithoutUser_ServiceProvider_verifiedByIdToUserInput
+    Staff?: StaffCreateNestedOneWithoutUserInput
+    User_User_createdByIdToUser?: UserCreateNestedOneWithoutOther_User_User_createdByIdToUserInput
+    other_User_User_createdByIdToUser?: UserCreateNestedManyWithoutUser_User_createdByIdToUserInput
+    User_User_deletedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_deletedByIdToUserInput
+    other_User_User_deletedByIdToUser?: UserCreateNestedManyWithoutUser_User_deletedByIdToUserInput
+    User_User_updatedByIdToUser?: UserCreateNestedOneWithoutOther_User_User_updatedByIdToUserInput
+    other_User_User_updatedByIdToUser?: UserCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Role_UserRoles?: RoleCreateNestedManyWithoutUser_UserRolesInput
+  }
+
+  export type UserUncheckedCreateWithoutWalletInput = {
+    id?: number
+    email: string
+    password: string
+    name: string
+    phone: string
+    avatar?: string | null
+    totpSecret?: string | null
+    status?: $Enums.UserStatus
+    createdById?: number | null
+    updatedById?: number | null
+    deletedById?: number | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt: Date | string
+    Category_Category_createdByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_createdByIdToUserInput
+    Category_Category_deletedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_deletedByIdToUserInput
+    Category_Category_updatedByIdToUser?: CategoryUncheckedCreateNestedManyWithoutUser_Category_updatedByIdToUserInput
+    CustomerProfile?: CustomerProfileUncheckedCreateNestedOneWithoutUserInput
+    Device?: DeviceUncheckedCreateNestedManyWithoutUserInput
+    Notification?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    Permission_Permission_createdByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_createdByIdToUserInput
+    Permission_Permission_deletedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_deletedByIdToUserInput
+    Permission_Permission_updatedByIdToUser?: PermissionUncheckedCreateNestedManyWithoutUser_Permission_updatedByIdToUserInput
+    RefreshToken?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    Role_Role_createdByIdToUser?: RoleUncheckedCreateNestedManyWithoutUser_Role_createdByIdToUserInput
+    Role_Role_deletedByIdToUser?: RoleUncheckedCreateNestedManyWithoutUser_Role_deletedByIdToUserInput
+    Role_Role_updatedByIdToUser?: RoleUncheckedCreateNestedManyWithoutUser_Role_updatedByIdToUserInput
+    Service_Service_createdByIdToUser?: ServiceUncheckedCreateNestedManyWithoutUser_Service_createdByIdToUserInput
+    Service_Service_deletedByIdToUser?: ServiceUncheckedCreateNestedManyWithoutUser_Service_deletedByIdToUserInput
+    Service_Service_updatedByIdToUser?: ServiceUncheckedCreateNestedManyWithoutUser_Service_updatedByIdToUserInput
+    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderUncheckedCreateNestedOneWithoutUser_ServiceProvider_userIdToUserInput
+    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderUncheckedCreateNestedManyWithoutUser_ServiceProvider_verifiedByIdToUserInput
+    Staff?: StaffUncheckedCreateNestedOneWithoutUserInput
+    other_User_User_createdByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_createdByIdToUserInput
+    other_User_User_deletedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_deletedByIdToUserInput
+    other_User_User_updatedByIdToUser?: UserUncheckedCreateNestedManyWithoutUser_User_updatedByIdToUserInput
+    Role_UserRoles?: RoleUncheckedCreateNestedManyWithoutUser_UserRolesInput
+  }
+
+  export type UserCreateOrConnectWithoutWalletInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutWalletInput, UserUncheckedCreateWithoutWalletInput>
+  }
+
+  export type UserUpsertWithoutWalletInput = {
+    update: XOR<UserUpdateWithoutWalletInput, UserUncheckedUpdateWithoutWalletInput>
+    create: XOR<UserCreateWithoutWalletInput, UserUncheckedCreateWithoutWalletInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutWalletInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutWalletInput, UserUncheckedUpdateWithoutWalletInput>
+  }
+
+  export type UserUpdateWithoutWalletInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Category_Category_createdByIdToUser?: CategoryUpdateManyWithoutUser_Category_createdByIdToUserNestedInput
+    Category_Category_deletedByIdToUser?: CategoryUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
+    Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
+    CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
+    Device?: DeviceUpdateManyWithoutUserNestedInput
+    Notification?: NotificationUpdateManyWithoutUserNestedInput
+    Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
+    Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
+    Permission_Permission_updatedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
+    RefreshToken?: RefreshTokenUpdateManyWithoutUserNestedInput
+    Role_Role_createdByIdToUser?: RoleUpdateManyWithoutUser_Role_createdByIdToUserNestedInput
+    Role_Role_deletedByIdToUser?: RoleUpdateManyWithoutUser_Role_deletedByIdToUserNestedInput
+    Role_Role_updatedByIdToUser?: RoleUpdateManyWithoutUser_Role_updatedByIdToUserNestedInput
+    Service_Service_createdByIdToUser?: ServiceUpdateManyWithoutUser_Service_createdByIdToUserNestedInput
+    Service_Service_deletedByIdToUser?: ServiceUpdateManyWithoutUser_Service_deletedByIdToUserNestedInput
+    Service_Service_updatedByIdToUser?: ServiceUpdateManyWithoutUser_Service_updatedByIdToUserNestedInput
+    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderUpdateOneWithoutUser_ServiceProvider_userIdToUserNestedInput
+    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderUpdateManyWithoutUser_ServiceProvider_verifiedByIdToUserNestedInput
+    Staff?: StaffUpdateOneWithoutUserNestedInput
+    User_User_createdByIdToUser?: UserUpdateOneWithoutOther_User_User_createdByIdToUserNestedInput
+    other_User_User_createdByIdToUser?: UserUpdateManyWithoutUser_User_createdByIdToUserNestedInput
+    User_User_deletedByIdToUser?: UserUpdateOneWithoutOther_User_User_deletedByIdToUserNestedInput
+    other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
+    User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
+    other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutWalletInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdById?: NullableIntFieldUpdateOperationsInput | number | null
+    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
+    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Category_Category_createdByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_createdByIdToUserNestedInput
+    Category_Category_deletedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_deletedByIdToUserNestedInput
+    Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
+    CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
+    Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
+    Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
+    Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
+    Permission_Permission_updatedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_updatedByIdToUserNestedInput
+    RefreshToken?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    Role_Role_createdByIdToUser?: RoleUncheckedUpdateManyWithoutUser_Role_createdByIdToUserNestedInput
+    Role_Role_deletedByIdToUser?: RoleUncheckedUpdateManyWithoutUser_Role_deletedByIdToUserNestedInput
+    Role_Role_updatedByIdToUser?: RoleUncheckedUpdateManyWithoutUser_Role_updatedByIdToUserNestedInput
+    Service_Service_createdByIdToUser?: ServiceUncheckedUpdateManyWithoutUser_Service_createdByIdToUserNestedInput
+    Service_Service_deletedByIdToUser?: ServiceUncheckedUpdateManyWithoutUser_Service_deletedByIdToUserNestedInput
+    Service_Service_updatedByIdToUser?: ServiceUncheckedUpdateManyWithoutUser_Service_updatedByIdToUserNestedInput
+    ServiceProvider_ServiceProvider_userIdToUser?: ServiceProviderUncheckedUpdateOneWithoutUser_ServiceProvider_userIdToUserNestedInput
+    ServiceProvider_ServiceProvider_verifiedByIdToUser?: ServiceProviderUncheckedUpdateManyWithoutUser_ServiceProvider_verifiedByIdToUserNestedInput
+    Staff?: StaffUncheckedUpdateOneWithoutUserNestedInput
+    other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
+    other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
+    other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
   export type WorkLogCreateManyBookingInput = {
@@ -68449,12 +65342,12 @@ export namespace Prisma {
   }
 
   export type CategoryTranslationUpdateWithoutCategoryInput = {
+    languageId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Language?: LanguageUpdateOneRequiredWithoutCategoryTranslationNestedInput
   }
 
   export type CategoryTranslationUncheckedUpdateWithoutCategoryInput = {
@@ -68497,7 +65390,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserUpdateOneWithoutService_Service_deletedByIdToUserNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceNestedInput
     User_Service_updatedByIdToUser?: UserUpdateOneWithoutService_Service_updatedByIdToUserNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUpdateManyWithoutServiceNestedInput
   }
 
@@ -68522,7 +65414,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
   }
 
@@ -68555,6 +65446,7 @@ export namespace Prisma {
     location?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     Booking?: BookingUpdateOneWithoutServiceRequestNestedInput
+    PaymentTransaction?: PaymentTransactionUpdateOneWithoutServiceRequestNestedInput
     CustomerProfile?: CustomerProfileUpdateOneRequiredWithoutServiceRequestNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceRequestNestedInput
   }
@@ -68571,6 +65463,7 @@ export namespace Prisma {
     location?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     Booking?: BookingUncheckedUpdateOneWithoutServiceRequestNestedInput
+    PaymentTransaction?: PaymentTransactionUncheckedUpdateOneWithoutServiceRequestNestedInput
   }
 
   export type ServiceRequestUncheckedUpdateManyWithoutCategoryInput = {
@@ -68838,6 +65731,7 @@ export namespace Prisma {
     location?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     Booking?: BookingUpdateOneWithoutServiceRequestNestedInput
+    PaymentTransaction?: PaymentTransactionUpdateOneWithoutServiceRequestNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceRequestNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceRequestNestedInput
   }
@@ -68854,6 +65748,7 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     Booking?: BookingUncheckedUpdateOneWithoutServiceRequestNestedInput
+    PaymentTransaction?: PaymentTransactionUncheckedUpdateOneWithoutServiceRequestNestedInput
   }
 
   export type ServiceRequestUncheckedUpdateManyWithoutCustomerProfileInput = {
@@ -68898,123 +65793,6 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type CategoryTranslationCreateManyLanguageInput = {
-    id?: number
-    categoryId: number
-    name: string
-    description: string
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type ServiceProviderTranslationCreateManyLanguageInput = {
-    id?: number
-    providerId: number
-    name: string
-    description?: string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type ServiceTranslationCreateManyLanguageInput = {
-    id?: number
-    serviceId: number
-    name: string
-    description: string
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-  }
-
-  export type CategoryTranslationUpdateWithoutLanguageInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Category?: CategoryUpdateOneRequiredWithoutCategoryTranslationNestedInput
-  }
-
-  export type CategoryTranslationUncheckedUpdateWithoutLanguageInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    categoryId?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type CategoryTranslationUncheckedUpdateManyWithoutLanguageInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    categoryId?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type ServiceProviderTranslationUpdateWithoutLanguageInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceProviderTranslationNestedInput
-  }
-
-  export type ServiceProviderTranslationUncheckedUpdateWithoutLanguageInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    providerId?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type ServiceProviderTranslationUncheckedUpdateManyWithoutLanguageInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    providerId?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type ServiceTranslationUpdateWithoutLanguageInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Service?: ServiceUpdateOneRequiredWithoutServiceTranslationNestedInput
-  }
-
-  export type ServiceTranslationUncheckedUpdateWithoutLanguageInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    serviceId?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type ServiceTranslationUncheckedUpdateManyWithoutLanguageInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    serviceId?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type RoleUpdateWithoutPermissionInput = {
@@ -69111,9 +65889,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -69134,6 +65909,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRole_UserRolesInput = {
@@ -69156,9 +65932,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -69176,6 +65949,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutRole_UserRolesInput = {
@@ -69199,7 +65973,6 @@ export namespace Prisma {
     id?: number
     proposalId: number
     quantity?: number
-    price: number
     createdAt?: Date | string
   }
 
@@ -69222,23 +65995,12 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type ServiceTranslationCreateManyServiceInput = {
-    id?: number
-    languageId: string
-    name: string
-    description: string
-    createdAt?: Date | string
-    updatedAt: Date | string
-    deletedAt?: Date | string | null
-  }
-
   export type Service_ServiceItemsCreateManyServiceInput = {
     serviceItemId: number
   }
 
   export type ProposalItemUpdateWithoutServiceInput = {
     quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Proposal?: ProposalUpdateOneRequiredWithoutProposalItemNestedInput
   }
@@ -69247,7 +66009,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     proposalId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -69255,7 +66016,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     proposalId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -69312,35 +66072,6 @@ export namespace Prisma {
     rating?: IntFieldUpdateOperationsInput | number
     comment?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ServiceTranslationUpdateWithoutServiceInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Language?: LanguageUpdateOneRequiredWithoutServiceTranslationNestedInput
-  }
-
-  export type ServiceTranslationUncheckedUpdateWithoutServiceInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    languageId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type ServiceTranslationUncheckedUpdateManyWithoutServiceInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    languageId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type Service_ServiceItemsUpdateWithoutServiceInput = {
@@ -69493,7 +66224,6 @@ export namespace Prisma {
     User_Service_createdByIdToUser?: UserUpdateOneWithoutService_Service_createdByIdToUserNestedInput
     User_Service_deletedByIdToUser?: UserUpdateOneWithoutService_Service_deletedByIdToUserNestedInput
     User_Service_updatedByIdToUser?: UserUpdateOneWithoutService_Service_updatedByIdToUserNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUpdateManyWithoutServiceNestedInput
   }
 
@@ -69518,7 +66248,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
   }
 
@@ -69592,12 +66321,12 @@ export namespace Prisma {
   }
 
   export type ServiceProviderTranslationUpdateWithoutServiceProviderInput = {
+    languageId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    Language?: LanguageUpdateOneRequiredWithoutServiceProviderTranslationNestedInput
   }
 
   export type ServiceProviderTranslationUncheckedUpdateWithoutServiceProviderInput = {
@@ -69629,6 +66358,7 @@ export namespace Prisma {
     location?: StringFieldUpdateOperationsInput | string
     phoneNumber?: StringFieldUpdateOperationsInput | string
     Booking?: BookingUpdateOneWithoutServiceRequestNestedInput
+    PaymentTransaction?: PaymentTransactionUpdateOneWithoutServiceRequestNestedInput
     Category?: CategoryUpdateOneRequiredWithoutServiceRequestNestedInput
     CustomerProfile?: CustomerProfileUpdateOneRequiredWithoutServiceRequestNestedInput
   }
@@ -69645,6 +66375,7 @@ export namespace Prisma {
     phoneNumber?: StringFieldUpdateOperationsInput | string
     categoryId?: IntFieldUpdateOperationsInput | number
     Booking?: BookingUncheckedUpdateOneWithoutServiceRequestNestedInput
+    PaymentTransaction?: PaymentTransactionUncheckedUpdateOneWithoutServiceRequestNestedInput
   }
 
   export type ServiceRequestUncheckedUpdateManyWithoutServiceProviderInput = {
@@ -69912,36 +66643,6 @@ export namespace Prisma {
     lastActive: Date | string
     createdAt?: Date | string
     isActive?: boolean
-  }
-
-  export type LanguageCreateManyUser_Language_createdByIdToUserInput = {
-    id: string
-    name: string
-    updatedById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-  }
-
-  export type LanguageCreateManyUser_Language_deletedByIdToUserInput = {
-    id: string
-    name: string
-    createdById?: number | null
-    updatedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
-  }
-
-  export type LanguageCreateManyUser_Language_updatedByIdToUserInput = {
-    id: string
-    name: string
-    createdById?: number | null
-    deletedById?: number | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt: Date | string
   }
 
   export type NotificationCreateManyUserInput = {
@@ -70318,114 +67019,6 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
-  export type LanguageUpdateWithoutUser_Language_createdByIdToUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CategoryTranslation?: CategoryTranslationUpdateManyWithoutLanguageNestedInput
-    User_Language_deletedByIdToUser?: UserUpdateOneWithoutLanguage_Language_deletedByIdToUserNestedInput
-    User_Language_updatedByIdToUser?: UserUpdateOneWithoutLanguage_Language_updatedByIdToUserNestedInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUpdateManyWithoutLanguageNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutLanguageNestedInput
-  }
-
-  export type LanguageUncheckedUpdateWithoutUser_Language_createdByIdToUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CategoryTranslation?: CategoryTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-  }
-
-  export type LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LanguageUpdateWithoutUser_Language_deletedByIdToUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CategoryTranslation?: CategoryTranslationUpdateManyWithoutLanguageNestedInput
-    User_Language_createdByIdToUser?: UserUpdateOneWithoutLanguage_Language_createdByIdToUserNestedInput
-    User_Language_updatedByIdToUser?: UserUpdateOneWithoutLanguage_Language_updatedByIdToUserNestedInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUpdateManyWithoutLanguageNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutLanguageNestedInput
-  }
-
-  export type LanguageUncheckedUpdateWithoutUser_Language_deletedByIdToUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CategoryTranslation?: CategoryTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-  }
-
-  export type LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    updatedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LanguageUpdateWithoutUser_Language_updatedByIdToUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CategoryTranslation?: CategoryTranslationUpdateManyWithoutLanguageNestedInput
-    User_Language_createdByIdToUser?: UserUpdateOneWithoutLanguage_Language_createdByIdToUserNestedInput
-    User_Language_deletedByIdToUser?: UserUpdateOneWithoutLanguage_Language_deletedByIdToUserNestedInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUpdateManyWithoutLanguageNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutLanguageNestedInput
-  }
-
-  export type LanguageUncheckedUpdateWithoutUser_Language_updatedByIdToUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    CategoryTranslation?: CategoryTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-    ServiceProviderTranslation?: ServiceProviderTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutLanguageNestedInput
-  }
-
-  export type LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    createdById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedById?: NullableIntFieldUpdateOperationsInput | number | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type NotificationUpdateWithoutUserInput = {
     content?: StringFieldUpdateOperationsInput | string
     isRead?: BoolFieldUpdateOperationsInput | boolean
@@ -70717,7 +67310,6 @@ export namespace Prisma {
     User_Service_deletedByIdToUser?: UserUpdateOneWithoutService_Service_deletedByIdToUserNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceNestedInput
     User_Service_updatedByIdToUser?: UserUpdateOneWithoutService_Service_updatedByIdToUserNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUpdateManyWithoutServiceNestedInput
   }
 
@@ -70742,7 +67334,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
   }
 
@@ -70786,7 +67377,6 @@ export namespace Prisma {
     User_Service_createdByIdToUser?: UserUpdateOneWithoutService_Service_createdByIdToUserNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceNestedInput
     User_Service_updatedByIdToUser?: UserUpdateOneWithoutService_Service_updatedByIdToUserNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUpdateManyWithoutServiceNestedInput
   }
 
@@ -70811,7 +67401,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
   }
 
@@ -70855,7 +67444,6 @@ export namespace Prisma {
     User_Service_createdByIdToUser?: UserUpdateOneWithoutService_Service_createdByIdToUserNestedInput
     User_Service_deletedByIdToUser?: UserUpdateOneWithoutService_Service_deletedByIdToUserNestedInput
     ServiceProvider?: ServiceProviderUpdateOneRequiredWithoutServiceNestedInput
-    ServiceTranslation?: ServiceTranslationUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUpdateManyWithoutServiceNestedInput
   }
 
@@ -70880,7 +67468,6 @@ export namespace Prisma {
     ProposalItem?: ProposalItemUncheckedUpdateManyWithoutServiceNestedInput
     RecurringBooking?: RecurringBookingUncheckedUpdateManyWithoutServiceNestedInput
     Review?: ReviewUncheckedUpdateManyWithoutServiceNestedInput
-    ServiceTranslation?: ServiceTranslationUncheckedUpdateManyWithoutServiceNestedInput
     Service_ServiceItems?: Service_ServiceItemsUncheckedUpdateManyWithoutServiceNestedInput
   }
 
@@ -70979,9 +67566,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -71001,6 +67585,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -71023,9 +67608,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -71043,6 +67625,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -71078,9 +67661,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -71100,6 +67680,7 @@ export namespace Prisma {
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     User_User_updatedByIdToUser?: UserUpdateOneWithoutOther_User_User_updatedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -71122,9 +67703,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -71142,6 +67720,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -71177,9 +67756,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUpdateOneWithoutUserNestedInput
     Device?: DeviceUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -71199,6 +67775,7 @@ export namespace Prisma {
     User_User_deletedByIdToUser?: UserUpdateOneWithoutOther_User_User_deletedByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -71221,9 +67798,6 @@ export namespace Prisma {
     Category_Category_updatedByIdToUser?: CategoryUncheckedUpdateManyWithoutUser_Category_updatedByIdToUserNestedInput
     CustomerProfile?: CustomerProfileUncheckedUpdateOneWithoutUserNestedInput
     Device?: DeviceUncheckedUpdateManyWithoutUserNestedInput
-    Language_Language_createdByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_createdByIdToUserNestedInput
-    Language_Language_deletedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_deletedByIdToUserNestedInput
-    Language_Language_updatedByIdToUser?: LanguageUncheckedUpdateManyWithoutUser_Language_updatedByIdToUserNestedInput
     Notification?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     Permission_Permission_createdByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_createdByIdToUserNestedInput
     Permission_Permission_deletedByIdToUser?: PermissionUncheckedUpdateManyWithoutUser_Permission_deletedByIdToUserNestedInput
@@ -71241,6 +67815,7 @@ export namespace Prisma {
     other_User_User_createdByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_createdByIdToUserNestedInput
     other_User_User_deletedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_deletedByIdToUserNestedInput
     other_User_User_updatedByIdToUser?: UserUncheckedUpdateManyWithoutUser_User_updatedByIdToUserNestedInput
+    Wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
     Role_UserRoles?: RoleUncheckedUpdateManyWithoutUser_UserRolesNestedInput
   }
 
@@ -71314,13 +67889,11 @@ export namespace Prisma {
     id?: number
     serviceId: number
     quantity?: number
-    price: number
     createdAt?: Date | string
   }
 
   export type ProposalItemUpdateWithoutProposalInput = {
     quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     Service?: ServiceUpdateOneRequiredWithoutProposalItemNestedInput
   }
@@ -71329,7 +67902,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     serviceId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -71337,7 +67909,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     serviceId?: IntFieldUpdateOperationsInput | number
     quantity?: IntFieldUpdateOperationsInput | number
-    price?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

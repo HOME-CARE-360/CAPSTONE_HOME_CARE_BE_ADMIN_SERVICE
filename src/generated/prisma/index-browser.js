@@ -185,17 +185,6 @@ exports.Prisma.DeviceScalarFieldEnum = {
   isActive: 'isActive'
 };
 
-exports.Prisma.LanguageScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  createdById: 'createdById',
-  updatedById: 'updatedById',
-  deletedById: 'deletedById',
-  deletedAt: 'deletedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.NotificationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -226,7 +215,8 @@ exports.Prisma.PaymentTransactionScalarFieldEnum = {
   referenceNumber: 'referenceNumber',
   transactionContent: 'transactionContent',
   body: 'body',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  serviceRequestId: 'serviceRequestId'
 };
 
 exports.Prisma.PermissionScalarFieldEnum = {
@@ -334,17 +324,6 @@ exports.Prisma.ServiceProviderScalarFieldEnum = {
 exports.Prisma.ServiceProviderTranslationScalarFieldEnum = {
   id: 'id',
   providerId: 'providerId',
-  languageId: 'languageId',
-  name: 'name',
-  description: 'description',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
-};
-
-exports.Prisma.ServiceTranslationScalarFieldEnum = {
-  id: 'id',
-  serviceId: 'serviceId',
   languageId: 'languageId',
   name: 'name',
   description: 'description',
@@ -469,7 +448,8 @@ exports.Prisma.ProposalScalarFieldEnum = {
   id: 'id',
   bookingId: 'bookingId',
   notes: 'notes',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  status: 'status'
 };
 
 exports.Prisma.ProposalItemScalarFieldEnum = {
@@ -477,8 +457,15 @@ exports.Prisma.ProposalItemScalarFieldEnum = {
   proposalId: 'proposalId',
   serviceId: 'serviceId',
   quantity: 'quantity',
-  price: 'price',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.WalletScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  balance: 'balance',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -579,6 +566,12 @@ exports.RequestStatus = exports.$Enums.RequestStatus = {
   CANCELLED: 'CANCELLED'
 };
 
+exports.ProposalStatus = exports.$Enums.ProposalStatus = {
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  PENDING: 'PENDING'
+};
+
 exports.Prisma.ModelName = {
   Booking: 'Booking',
   Category: 'Category',
@@ -586,7 +579,6 @@ exports.Prisma.ModelName = {
   ChatMessage: 'ChatMessage',
   CustomerProfile: 'CustomerProfile',
   Device: 'Device',
-  Language: 'Language',
   Notification: 'Notification',
   PackageRecommendation: 'PackageRecommendation',
   PaymentTransaction: 'PaymentTransaction',
@@ -599,7 +591,6 @@ exports.Prisma.ModelName = {
   Service: 'Service',
   ServiceProvider: 'ServiceProvider',
   ServiceProviderTranslation: 'ServiceProviderTranslation',
-  ServiceTranslation: 'ServiceTranslation',
   Staff: 'Staff',
   StaffCategory: 'StaffCategory',
   Transaction: 'Transaction',
@@ -611,7 +602,8 @@ exports.Prisma.ModelName = {
   ServiceRequest: 'ServiceRequest',
   Service_ServiceItems: 'Service_ServiceItems',
   Proposal: 'Proposal',
-  ProposalItem: 'ProposalItem'
+  ProposalItem: 'ProposalItem',
+  Wallet: 'Wallet'
 };
 
 /**
