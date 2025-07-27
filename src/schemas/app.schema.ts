@@ -1,9 +1,10 @@
-import { z } from 'zod';
-import { UserStatus } from '../generated/prisma';
+import { z } from "zod";
+import { UserStatus } from "../generated/prisma";
 
 // Base validation patterns
 const phoneRegex = /^(\+84|0)[0-9]{9,10}$/; // Vietnamese phone format
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
 
 // Common schemas
 export const IdParamSchema = z.object({
@@ -16,58 +17,66 @@ export const AdminIdSchema = z.object({
 
 // User Management Schemas
 export const CreateUserSchema = z.object({
-  email: z.string()
-    .email('Invalid email format')
-    .min(1, 'Email is required')
-    .max(255, 'Email too long'),
-  password: z.string()
-    .min(8, 'Password must be at least 8 characters')
-    .max(128, 'Password too long')
-    .regex(passwordRegex, 'Password must contain uppercase, lowercase, number and special character'),
-  name: z.string()
-    .min(1, 'Name is required')
-    .max(100, 'Name too long')
+  email: z
+    .string()
+    .email("Invalid email format")
+    .min(1, "Email is required")
+    .max(255, "Email too long"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(128, "Password too long")
+    .regex(
+      passwordRegex,
+      "Password must contain uppercase, lowercase, number and special character",
+    ),
+  name: z.string().min(1, "Name is required").max(100, "Name too long").trim(),
+  phone: z
+    .string()
+    .regex(phoneRegex, "Invalid Vietnamese phone number format")
     .trim(),
-  phone: z.string()
-    .regex(phoneRegex, 'Invalid Vietnamese phone number format')
-    .trim(),
-  avatar: z.string()
-    .url('Invalid URL format')
-    .max(500, 'Avatar URL too long')
+  avatar: z
+    .string()
+    .url("Invalid URL format")
+    .max(500, "Avatar URL too long")
     .optional(),
   status: z.nativeEnum(UserStatus).default(UserStatus.ACTIVE),
-  role: z.literal('MANAGER'), // Chỉ được tạo MANAGER
+  role: z.literal("MANAGER"), // Chỉ được tạo MANAGER
 });
 
 export const UpdateUserSchema = z.object({
-  email: z.string()
-    .email('Invalid email format')
-    .max(255, 'Email too long')
+  email: z
+    .string()
+    .email("Invalid email format")
+    .max(255, "Email too long")
     .optional(),
-  name: z.string()
-    .min(1, 'Name cannot be empty')
-    .max(100, 'Name too long')
+  name: z
+    .string()
+    .min(1, "Name cannot be empty")
+    .max(100, "Name too long")
     .trim()
     .optional(),
-  phone: z.string()
-    .regex(phoneRegex, 'Invalid Vietnamese phone number format')
+  phone: z
+    .string()
+    .regex(phoneRegex, "Invalid Vietnamese phone number format")
     .trim()
     .optional(),
-  avatar: z.string()
-    .url('Invalid URL format')
-    .max(500, 'Avatar URL too long')
+  avatar: z
+    .string()
+    .url("Invalid URL format")
+    .max(500, "Avatar URL too long")
     .optional(),
   roleIds: z.array(z.number().int().positive()).optional(),
 });
 
 // Query schemas
 export const allowedUserSortFields = [
-  'id',
-  'email',
-  'name',
-  'phone',
-  'createdAt',
-  'updatedAt',
+  "id",
+  "email",
+  "name",
+  "phone",
+  "createdAt",
+  "updatedAt",
 ] as const;
 
 export const GetUsersQuerySchema = z.object({
@@ -75,41 +84,44 @@ export const GetUsersQuerySchema = z.object({
   limit: z.number().int().min(1).max(100).default(10),
   search: z.string().trim().optional(),
   role: z.string().trim().optional(),
-  status: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']).optional(),
+  status: z.enum(["ACTIVE", "INACTIVE", "BLOCKED"]).optional(),
   sortBy: z.enum(allowedUserSortFields).optional(),
-  sortOrder: z.enum(['asc', 'desc']).optional(),
+  sortOrder: z.enum(["asc", "desc"]).optional(),
 });
 
 // Password management schemas
 export const ResetPasswordSchema = AdminIdSchema.extend({
   id: z.number().int().positive(),
-  newPassword: z.string()
-    .min(8, 'Password must be at least 8 characters')
-    .max(128, 'Password too long')
-    .regex(passwordRegex, 'Password must contain uppercase, lowercase, number and special character'),
+  newPassword: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(128, "Password too long")
+    .regex(
+      passwordRegex,
+      "Password must contain uppercase, lowercase, number and special character",
+    ),
   confirmPassword: z.string(),
-}).refine(
-  (data) => data.newPassword === data.confirmPassword,
-  {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  }
-);
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
 
 // Role management schemas
 export const CreateRoleSchema = AdminIdSchema.extend({
-  name: z.string()
-    .min(1, 'Role name is required')
-    .max(50, 'Role name too long')
+  name: z
+    .string()
+    .min(1, "Role name is required")
+    .max(50, "Role name too long")
     .trim(),
 });
 
 export const UpdateRoleSchema = AdminIdSchema.extend({
   id: z.number().int().positive(),
-  name: z.string()
-    .min(1, 'Role name is required')
-    .max(50, 'Role name too long')
-    .trim()
+  name: z
+    .string()
+    .min(1, "Role name is required")
+    .max(50, "Role name too long")
+    .trim(),
 });
 
 export const DeleteRoleSchema = AdminIdSchema.extend({
@@ -146,9 +158,9 @@ export const MultiMonthReportSchema = AdminIdSchema.extend({
     return startDate <= endDate;
   },
   {
-    message: 'Start date must be before or equal to end date',
-    path: ['endMonth'],
-  }
+    message: "Start date must be before or equal to end date",
+    path: ["endMonth"],
+  },
 );
 
 // User action schemas (for service methods)
@@ -241,7 +253,9 @@ export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;
 export type CreateRoleInput = z.infer<typeof CreateRoleSchema>;
 export type UpdateRoleInput = z.infer<typeof UpdateRoleSchema>;
 export type AssignRolesInput = z.infer<typeof AssignRolesSchema>;
-export type AssignPermissionsToRoleInput = z.infer<typeof AssignPermissionsToRoleSchema>;
+export type AssignPermissionsToRoleInput = z.infer<
+  typeof AssignPermissionsToRoleSchema
+>;
 export type MonthlyReportInput = z.infer<typeof MonthlyReportSchema>;
 export type MultiMonthReportInput = z.infer<typeof MultiMonthReportSchema>;
 export type UserAction = z.infer<typeof UserActionSchema>;
@@ -254,18 +268,29 @@ export type PaginatedResponse<T> = {
 };
 
 // Validation helper functions
-export const validateCreateUser = (data: unknown) => CreateUserSchema.parse(data);
-export const validateUpdateUser = (data: unknown) => UpdateUserSchema.parse(data);
-export const validateGetUsersQuery = (data: unknown) => GetUsersQuerySchema.parse(data);
-export const validateResetPassword = (data: unknown) => ResetPasswordSchema.parse(data);
-export const validateCreateRole = (data: unknown) => CreateRoleSchema.parse(data);
-export const validateUpdateRole = (data: unknown) => UpdateRoleSchema.parse(data);
-export const validateAssignRoles = (data: unknown) => AssignRolesSchema.parse(data);
-export const validateAssignPermissionsToRole = (data: unknown) => AssignPermissionsToRoleSchema.parse(data);
-export const validateMonthlyReport = (data: unknown) => MonthlyReportSchema.parse(data);
-export const validateMultiMonthReport = (data: unknown) => MultiMonthReportSchema.parse(data);
+export const validateCreateUser = (data: unknown) =>
+  CreateUserSchema.parse(data);
+export const validateUpdateUser = (data: unknown) =>
+  UpdateUserSchema.parse(data);
+export const validateGetUsersQuery = (data: unknown) =>
+  GetUsersQuerySchema.parse(data);
+export const validateResetPassword = (data: unknown) =>
+  ResetPasswordSchema.parse(data);
+export const validateCreateRole = (data: unknown) =>
+  CreateRoleSchema.parse(data);
+export const validateUpdateRole = (data: unknown) =>
+  UpdateRoleSchema.parse(data);
+export const validateAssignRoles = (data: unknown) =>
+  AssignRolesSchema.parse(data);
+export const validateAssignPermissionsToRole = (data: unknown) =>
+  AssignPermissionsToRoleSchema.parse(data);
+export const validateMonthlyReport = (data: unknown) =>
+  MonthlyReportSchema.parse(data);
+export const validateMultiMonthReport = (data: unknown) =>
+  MultiMonthReportSchema.parse(data);
 export const validateIdParam = (data: unknown) => IdParamSchema.parse(data);
-export const validateUserAction = (data: unknown) => UserActionSchema.parse(data);
+export const validateUserAction = (data: unknown) =>
+  UserActionSchema.parse(data);
 
 // Constants for validation
 export const USER_CONSTRAINTS = {

@@ -14,13 +14,13 @@ export class AppError extends Error {
     error: string,
     messageObject: ErrorMessageObject[],
     details: Record<string, any> = {},
-    statusCode = 500
+    statusCode = 500,
   ) {
     super(error);
 
-    this.name = 'AppError';
+    this.name = "AppError";
     this.error = error;
-    this.code = messageObject?.[0]?.message || 'Error.Unknown';
+    this.code = messageObject?.[0]?.message || "Error.Unknown";
     this.messageObject = {
       message: this.code,
       path: messageObject?.[0]?.path || [],

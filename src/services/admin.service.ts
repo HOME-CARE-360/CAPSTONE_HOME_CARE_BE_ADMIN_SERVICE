@@ -1,14 +1,10 @@
-import bcrypt from 'bcrypt';
-import {
-  CreateUserDTO,
-  UpdateUserDTO,
-  GetUsersQuery,
-} from '../schemas/type';
-import { AppError } from '../handlers/error';
-import { AdminRepository } from '../repositories/admin.repository';
-import { UserStatus } from '../generated/prisma';
-import { ReportRepository } from '../repositories/admin.report.repository';
-import { PaginationParams } from '../schemas/app.schema';
+import bcrypt from "bcrypt";
+import { CreateUserDTO, UpdateUserDTO, GetUsersQuery } from "../schemas/type";
+import { AppError } from "../handlers/error";
+import { AdminRepository } from "../repositories/admin.repository";
+import { UserStatus } from "../generated/prisma";
+import { ReportRepository } from "../repositories/admin.report.repository";
+import { PaginationParams } from "../schemas/app.schema";
 
 // ========= CACHE LAYER =========
 interface CacheItem<T> {
@@ -25,7 +21,7 @@ class SimpleCache {
     this.cache.set(key, {
       data,
       timestamp: Date.now(),
-      ttl: ttl || this.DEFAULT_TTL
+      ttl: ttl || this.DEFAULT_TTL,
     });
   }
 
@@ -62,49 +58,50 @@ class SimpleCache {
 export class AdminService {
   private static readonly BCRYPT_ROUNDS = 10;
   private static readonly DEFAULT_USER_STATUS = UserStatus.ACTIVE;
-  
+
   // Cache instances
   private readonly cache = new SimpleCache();
   private readonly adminRoleCache = new Map<number, boolean>();
-  
+
   // Performance monitoring
   private performanceLog = (operation: string, startTime: number) => {
     const duration = Date.now() - startTime;
-    if (duration > 1000) { // Log slow operations
+    if (duration > 1000) {
+      // Log slow operations
       console.warn(`🐌 Slow operation: ${operation} took ${duration}ms`);
     }
   };
 
   constructor(
-    private readonly adminRepository: AdminRepository, 
-    private readonly reportRepository: ReportRepository
+    private readonly adminRepository: AdminRepository,
+    private readonly reportRepository: ReportRepository,
   ) {}
 
   // =================== USER ===================
 
   async getAllUsers(query: GetUsersQuery) {
     const startTime = Date.now();
-    
+
     // Cache key based on query params
     const cacheKey = `users:all:${JSON.stringify(query)}`;
     const cached = this.cache.get(cacheKey);
     if (cached) {
-      console.log('📋 Cache hit: getAllUsers');
+      console.log("📋 Cache hit: getAllUsers");
       return cached;
     }
 
     const result = await this.adminRepository.findAll(query);
-    
+
     // Cache for 2 minutes (user data changes frequently)
     this.cache.set(cacheKey, result, 2 * 60 * 1000);
-    
-    this.performanceLog('getAllUsers', startTime);
+
+    this.performanceLog("getAllUsers", startTime);
     return result;
   }
 
   async getUserById(id: number) {
     const startTime = Date.now();
-    
+
     const cacheKey = `user:${id}`;
     const cached = this.cache.get(cacheKey);
     if (cached) {
@@ -113,49 +110,49 @@ export class AdminService {
     }
 
     const result = await this.adminRepository.findById(id);
-    
+
     // Cache for 5 minutes
     this.cache.set(cacheKey, result);
-    
+
     this.performanceLog(`getUserById(${id})`, startTime);
     return result;
   }
 
   async createUser(data: CreateUserDTO, adminId: number) {
     const startTime = Date.now();
-    console.time('CREATE_USER_TOTAL');
+    console.time("CREATE_USER_TOTAL");
 
     // Parallel validation for better performance
-    console.time('PARALLEL_VALIDATION');
+    console.time("PARALLEL_VALIDATION");
     const [existingUser, role] = await Promise.all([
       this.adminRepository.findByEmail(data.email),
-      this.adminRepository.findRoleByName(data.role)
+      this.adminRepository.findRoleByName(data.role),
     ]);
-    console.timeEnd('PARALLEL_VALIDATION');
+    console.timeEnd("PARALLEL_VALIDATION");
 
     if (existingUser) {
       throw new AppError(
-        'Email already in use',
-        [{ message: 'Error.EmailExists', path: ['email'] }],
+        "Email already in use",
+        [{ message: "Error.EmailExists", path: ["email"] }],
         { email: data.email },
-        400
+        400,
       );
     }
 
     if (!role) {
       throw new AppError(
-        'Role not found',
-        [{ message: `Error.RoleNotFound`, path: ['role'] }],
+        "Role not found",
+        [{ message: `Error.RoleNotFound`, path: ["role"] }],
         { role: data.role },
-        400
+        400,
       );
     }
 
-    console.time('HASH_PASSWORD');
+    console.time("HASH_PASSWORD");
     const hashedPassword = await this.hashPassword(data.password);
-    console.timeEnd('HASH_PASSWORD');
+    console.timeEnd("HASH_PASSWORD");
 
-    console.time('DB_CREATE_USER');
+    console.time("DB_CREATE_USER");
     const result = await this.adminRepository.create(
       {
         email: data.email,
@@ -163,119 +160,126 @@ export class AdminService {
         name: data.name,
         phone: data.phone,
         avatar: data.avatar,
-        status: data.status ?? UserStatus.ACTIVE, 
+        status: data.status ?? UserStatus.ACTIVE,
         roleIds: [role.id],
       },
-      adminId
+      adminId,
     );
-    console.timeEnd('DB_CREATE_USER');
+    console.timeEnd("DB_CREATE_USER");
 
     // Invalidate related caches
-    this.cache.invalidatePattern('users:all');
-    this.cache.invalidatePattern('user:');
-    
-    console.timeEnd('CREATE_USER_TOTAL');
-    this.performanceLog('createUser', startTime);
+    this.cache.invalidatePattern("users:all");
+    this.cache.invalidatePattern("user:");
+
+    console.timeEnd("CREATE_USER_TOTAL");
+    this.performanceLog("createUser", startTime);
     return result;
   }
 
   async updateUser(id: number, data: UpdateUserDTO, adminId: number) {
     const startTime = Date.now();
-    
+
     const result = await this.adminRepository.update(id, data, adminId);
-    
+
     // Invalidate caches
     this.cache.delete(`user:${id}`);
-    this.cache.invalidatePattern('users:all');
-    
+    this.cache.invalidatePattern("users:all");
+
     this.performanceLog(`updateUser(${id})`, startTime);
     return result;
   }
 
   async deleteUser(id: number, adminId: number) {
     const startTime = Date.now();
-    
+
     const result = await this.adminRepository.softDelete(id, adminId);
-    
+
     // Invalidate caches
     this.cache.delete(`user:${id}`);
-    this.cache.invalidatePattern('users:all');
+    this.cache.invalidatePattern("users:all");
     this.adminRoleCache.delete(id); // Remove from admin cache
-    
+
     this.performanceLog(`deleteUser(${id})`, startTime);
     return result;
   }
 
   async blockUser(id: number, adminId: number) {
     const startTime = Date.now();
-    
+
     const result = await this.adminRepository.blockUser(id, adminId);
-    
+
     // Invalidate caches
     this.cache.delete(`user:${id}`);
-    this.cache.invalidatePattern('users:all');
-    
+    this.cache.invalidatePattern("users:all");
+
     this.performanceLog(`blockUser(${id})`, startTime);
     return result;
   }
 
   async unblockUser(id: number, adminId: number) {
     const startTime = Date.now();
-    
+
     const result = await this.adminRepository.unblockUser(id, adminId);
-    
+
     // Invalidate caches
     this.cache.delete(`user:${id}`);
-    this.cache.invalidatePattern('users:all');
-    
+    this.cache.invalidatePattern("users:all");
+
     this.performanceLog(`unblockUser(${id})`, startTime);
     return result;
   }
 
   async activateUser(id: number, adminId: number) {
     const startTime = Date.now();
-    
+
     const result = await this.adminRepository.activateUser(id, adminId);
-    
+
     // Invalidate caches
     this.cache.delete(`user:${id}`);
-    this.cache.invalidatePattern('users:all');
-    
+    this.cache.invalidatePattern("users:all");
+
     this.performanceLog(`activateUser(${id})`, startTime);
     return result;
   }
 
   async resetUserPassword(id: number, newPassword: string, adminId: number) {
     const startTime = Date.now();
-    console.time('RESET_PASSWORD_TOTAL');
-    
-    console.time('HASH_PASSWORD');
+    console.time("RESET_PASSWORD_TOTAL");
+
+    console.time("HASH_PASSWORD");
     const hashedPassword = await this.hashPassword(newPassword);
-    console.timeEnd('HASH_PASSWORD');
-    
-    console.time('DB_RESET_PASSWORD');
-    const result = await this.adminRepository.resetUserPassword(id, hashedPassword, adminId);
-    console.timeEnd('DB_RESET_PASSWORD');
-    
+    console.timeEnd("HASH_PASSWORD");
+
+    console.time("DB_RESET_PASSWORD");
+    const result = await this.adminRepository.resetUserPassword(
+      id,
+      hashedPassword,
+      adminId,
+    );
+    console.timeEnd("DB_RESET_PASSWORD");
+
     // Invalidate user cache
     this.cache.delete(`user:${id}`);
-    
-    console.timeEnd('RESET_PASSWORD_TOTAL');
+
+    console.timeEnd("RESET_PASSWORD_TOTAL");
     this.performanceLog(`resetUserPassword(${id})`, startTime);
     return result;
   }
 
-  async assignRolesToUser(data: { userId: number; roleIds: number[] }, adminId: number) {
+  async assignRolesToUser(
+    data: { userId: number; roleIds: number[] },
+    adminId: number,
+  ) {
     const startTime = Date.now();
-    
+
     const result = await this.adminRepository.assignRolesToUser(data, adminId);
-    
+
     // Invalidate caches
     this.cache.delete(`user:${data.userId}`);
     this.cache.delete(`user:roles:${data.userId}`);
-    this.cache.invalidatePattern('users:all');
+    this.cache.invalidatePattern("users:all");
     this.adminRoleCache.delete(data.userId); // Remove from admin cache
-    
+
     this.performanceLog(`assignRolesToUser(${data.userId})`, startTime);
     return result;
   }
@@ -291,33 +295,34 @@ export class AdminService {
 
     console.time(`CHECK_ADMIN_${userId}`);
     const roles: { name: string }[] = await this.getUserRoles(userId);
-    const isAdmin = roles.some((r) => r.name === 'ADMIN');
+    const isAdmin = roles.some((r) => r.name === "ADMIN");
     console.timeEnd(`CHECK_ADMIN_${userId}`);
-    
+
     // Cache for 10 minutes (admin status doesn't change often)
     this.adminRoleCache.set(userId, isAdmin);
-    
+
     console.log(`💾 Admin status cached: user ${userId} = ${isAdmin}`);
     return isAdmin;
   }
 
   async getUserRoles(userId: number): Promise<{ name: string }[]> {
     const startTime = Date.now();
-    
+
     const cacheKey = `user:roles:${userId}`;
     const cached = this.cache.get<{ name: string }[]>(cacheKey);
     if (cached) {
-        console.log(`📋 Cache hit: getUserRoles(${userId})`);
-        return cached;
+      console.log(`📋 Cache hit: getUserRoles(${userId})`);
+      return cached;
     }
 
     console.time(`GET_USER_ROLES_${userId}`);
-    const result: { name: string }[] = await this.adminRepository.getUserRoles(userId);
+    const result: { name: string }[] =
+      await this.adminRepository.getUserRoles(userId);
     console.timeEnd(`GET_USER_ROLES_${userId}`);
-    
+
     // Cache for 10 minutes (roles don't change frequently)
     this.cache.set(cacheKey, result, 10 * 60 * 1000);
-    
+
     this.performanceLog(`getUserRoles(${userId})`, startTime);
     return result;
   }
@@ -326,26 +331,26 @@ export class AdminService {
 
   async getAllRoles(query?: PaginationParams) {
     const startTime = Date.now();
-    
+
     const cacheKey = `roles:all:${JSON.stringify(query || {})}`;
     const cached = this.cache.get(cacheKey);
     if (cached) {
-      console.log('📋 Cache hit: getAllRoles');
+      console.log("📋 Cache hit: getAllRoles");
       return cached;
     }
 
     const result = await this.adminRepository.getAllRoles(query);
-    
+
     // Cache for 10 minutes (roles are relatively static)
     this.cache.set(cacheKey, result, 10 * 60 * 1000);
-    
-    this.performanceLog('getAllRoles', startTime);
+
+    this.performanceLog("getAllRoles", startTime);
     return result;
   }
 
   async getRoleById(id: number) {
     const startTime = Date.now();
-    
+
     const cacheKey = `role:${id}`;
     const cached = this.cache.get(cacheKey);
     if (cached) {
@@ -354,55 +359,55 @@ export class AdminService {
     }
 
     const result = await this.adminRepository.getRoleById(id);
-    
+
     // Cache for 10 minutes
     this.cache.set(cacheKey, result, 10 * 60 * 1000);
-    
+
     this.performanceLog(`getRoleById(${id})`, startTime);
     return result;
   }
 
   async createRole(name: string, adminId: number) {
     const startTime = Date.now();
-    console.time('CREATE_ROLE_TOTAL');
-    
-    console.time('DB_CREATE_ROLE');
+    console.time("CREATE_ROLE_TOTAL");
+
+    console.time("DB_CREATE_ROLE");
     const result = await this.adminRepository.createRole({ name }, adminId);
-    console.timeEnd('DB_CREATE_ROLE');
-    
+    console.timeEnd("DB_CREATE_ROLE");
+
     // Invalidate role caches
-    this.cache.invalidatePattern('roles:all');
-    
-    console.timeEnd('CREATE_ROLE_TOTAL');
-    this.performanceLog('createRole', startTime);
+    this.cache.invalidatePattern("roles:all");
+
+    console.timeEnd("CREATE_ROLE_TOTAL");
+    this.performanceLog("createRole", startTime);
     return result;
   }
 
   async updateRole(id: number, name: string, adminId: number) {
     const startTime = Date.now();
-    
+
     const result = await this.adminRepository.updateRole(id, { name }, adminId);
-    
+
     // Invalidate caches
     this.cache.delete(`role:${id}`);
-    this.cache.invalidatePattern('roles:all');
-    this.cache.invalidatePattern('user:roles:'); // User roles might be affected
-    
+    this.cache.invalidatePattern("roles:all");
+    this.cache.invalidatePattern("user:roles:"); // User roles might be affected
+
     this.performanceLog(`updateRole(${id})`, startTime);
     return result;
   }
 
   async deleteRole(id: number, adminId: number) {
     const startTime = Date.now();
-    
+
     const result = await this.adminRepository.deleteRole(id, adminId);
-    
+
     // Invalidate caches
     this.cache.delete(`role:${id}`);
-    this.cache.invalidatePattern('roles:all');
-    this.cache.invalidatePattern('user:roles:'); // Clear all user roles cache
+    this.cache.invalidatePattern("roles:all");
+    this.cache.invalidatePattern("user:roles:"); // Clear all user roles cache
     this.adminRoleCache.clear(); // Clear admin cache as roles changed
-    
+
     this.performanceLog(`deleteRole(${id})`, startTime);
     return result;
   }
@@ -411,7 +416,7 @@ export class AdminService {
 
   async getPermissionsByRole(roleId: number, query?: PaginationParams) {
     const startTime = Date.now();
-    
+
     const cacheKey = `role:permissions:${roleId}:${JSON.stringify(query || {})}`;
     const cached = this.cache.get(cacheKey);
     if (cached) {
@@ -419,43 +424,54 @@ export class AdminService {
       return cached;
     }
 
-    const result = await this.adminRepository.getPermissionsByRole(roleId, query);
-    
+    const result = await this.adminRepository.getPermissionsByRole(
+      roleId,
+      query,
+    );
+
     // Cache for 15 minutes (permissions change rarely)
     this.cache.set(cacheKey, result, 15 * 60 * 1000);
-    
+
     this.performanceLog(`getPermissionsByRole(${roleId})`, startTime);
     return result;
   }
 
-  async assignPermissionToRole(roleId: number, permissionIds: number[], adminId: number) {
+  async assignPermissionToRole(
+    roleId: number,
+    permissionIds: number[],
+    adminId: number,
+  ) {
     const startTime = Date.now();
-    
-    const result = await this.adminRepository.assignPermissionToRole(roleId, permissionIds, adminId);
-    
+
+    const result = await this.adminRepository.assignPermissionToRole(
+      roleId,
+      permissionIds,
+      adminId,
+    );
+
     // Invalidate permission caches
     this.cache.invalidatePattern(`role:permissions:${roleId}`);
-    
+
     this.performanceLog(`assignPermissionToRole(${roleId})`, startTime);
     return result;
   }
 
   async getAllPermissions(query?: PaginationParams) {
     const startTime = Date.now();
-    
+
     const cacheKey = `permissions:all:${JSON.stringify(query || {})}`;
     const cached = this.cache.get(cacheKey);
     if (cached) {
-      console.log('📋 Cache hit: getAllPermissions');
+      console.log("📋 Cache hit: getAllPermissions");
       return cached;
     }
 
     const result = await this.adminRepository.getAllPermissions(query);
-    
+
     // Cache for 30 minutes (permissions are very static)
     this.cache.set(cacheKey, result, 30 * 60 * 1000);
-    
-    this.performanceLog('getAllPermissions', startTime);
+
+    this.performanceLog("getAllPermissions", startTime);
     return result;
   }
 
@@ -463,45 +479,45 @@ export class AdminService {
 
   async getUserStatistics() {
     const startTime = Date.now();
-    
-    const cacheKey = 'stats:users';
+
+    const cacheKey = "stats:users";
     const cached = this.cache.get(cacheKey);
     if (cached) {
-      console.log('📋 Cache hit: getUserStatistics');
+      console.log("📋 Cache hit: getUserStatistics");
       return cached;
     }
 
     const result = await this.adminRepository.getUserStatistics();
-    
+
     // Cache for 5 minutes (stats can be slightly stale)
     this.cache.set(cacheKey, result, 5 * 60 * 1000);
-    
-    this.performanceLog('getUserStatistics', startTime);
+
+    this.performanceLog("getUserStatistics", startTime);
     return result;
   }
 
   async getRoleStatistics() {
     const startTime = Date.now();
-    
-    const cacheKey = 'stats:roles';
+
+    const cacheKey = "stats:roles";
     const cached = this.cache.get(cacheKey);
     if (cached) {
-      console.log('📋 Cache hit: getRoleStatistics');
+      console.log("📋 Cache hit: getRoleStatistics");
       return cached;
     }
 
     const result = await this.adminRepository.getRoleStatistics();
-    
+
     // Cache for 10 minutes
     this.cache.set(cacheKey, result, 10 * 60 * 1000);
-    
-    this.performanceLog('getRoleStatistics', startTime);
+
+    this.performanceLog("getRoleStatistics", startTime);
     return result;
   }
 
   async getUserActivity(userId: number) {
     const startTime = Date.now();
-    
+
     const cacheKey = `user:activity:${userId}`;
     const cached = this.cache.get(cacheKey);
     if (cached) {
@@ -510,43 +526,43 @@ export class AdminService {
     }
 
     const result = await this.adminRepository.getUserActivity(userId);
-    
+
     // Cache for 2 minutes (activity data should be fresh)
     this.cache.set(cacheKey, result, 2 * 60 * 1000);
-    
+
     this.performanceLog(`getUserActivity(${userId})`, startTime);
     return result;
   }
 
   async getDeletedUsers(query?: PaginationParams) {
     const startTime = Date.now();
-    
+
     const cacheKey = `users:deleted:${JSON.stringify(query || {})}`;
     const cached = this.cache.get(cacheKey);
     if (cached) {
-      console.log('📋 Cache hit: getDeletedUsers');
+      console.log("📋 Cache hit: getDeletedUsers");
       return cached;
     }
 
     const result = await this.adminRepository.getDeletedUsers(query);
-    
+
     // Cache for 5 minutes
     this.cache.set(cacheKey, result, 5 * 60 * 1000);
-    
-    this.performanceLog('getDeletedUsers', startTime);
+
+    this.performanceLog("getDeletedUsers", startTime);
     return result;
   }
 
   async restoreDeletedUser(id: number, adminId: number) {
     const startTime = Date.now();
-    
+
     const result = await this.adminRepository.restoreUser(id, adminId);
-    
+
     // Invalidate caches
     this.cache.delete(`user:${id}`);
-    this.cache.invalidatePattern('users:all');
-    this.cache.invalidatePattern('users:deleted');
-    
+    this.cache.invalidatePattern("users:all");
+    this.cache.invalidatePattern("users:deleted");
+
     this.performanceLog(`restoreDeletedUser(${id})`, startTime);
     return result;
   }
@@ -556,7 +572,7 @@ export class AdminService {
   private async hashPassword(password: string): Promise<string> {
     const startTime = Date.now();
     const hashed = await bcrypt.hash(password, AdminService.BCRYPT_ROUNDS);
-    this.performanceLog('hashPassword', startTime);
+    this.performanceLog("hashPassword", startTime);
     return hashed;
   }
 
@@ -564,7 +580,7 @@ export class AdminService {
 
   async getMonthlyReport(month: number, year: number) {
     const startTime = Date.now();
-    
+
     const cacheKey = `report:monthly:${month}:${year}`;
     const cached = this.cache.get(cacheKey);
     if (cached) {
@@ -572,26 +588,45 @@ export class AdminService {
       return cached;
     }
 
-    const result = await this.reportRepository.getMonthlyReportData(month, year);
-    
+    const result = await this.reportRepository.getMonthlyReportData(
+      month,
+      year,
+    );
+
     // Cache for 1 hour (reports don't change often)
     this.cache.set(cacheKey, result, 60 * 60 * 1000);
-    
+
     this.performanceLog(`getMonthlyReport(${month}/${year})`, startTime);
     return result;
   }
 
   async exportMonthlyReportPDF(month: number, year: number) {
     const startTime = Date.now();
-    const result = await this.reportRepository.exportMonthlyReportPDF(month, year);
+    const result = await this.reportRepository.exportMonthlyReportPDF(
+      month,
+      year,
+    );
     this.performanceLog(`exportMonthlyReportPDF(${month}/${year})`, startTime);
     return result;
   }
 
-  async exportMultiMonthReportPDF(startMonth: number, startYear: number, endMonth: number, endYear: number) {
+  async exportMultiMonthReportPDF(
+    startMonth: number,
+    startYear: number,
+    endMonth: number,
+    endYear: number,
+  ) {
     const startTime = Date.now();
-    const result = await this.reportRepository.exportMultipleMonthsReportPDF(startMonth, startYear, endMonth, endYear);
-    this.performanceLog(`exportMultiMonthReportPDF(${startMonth}/${startYear}-${endMonth}/${endYear})`, startTime);
+    const result = await this.reportRepository.exportMultipleMonthsReportPDF(
+      startMonth,
+      startYear,
+      endMonth,
+      endYear,
+    );
+    this.performanceLog(
+      `exportMultiMonthReportPDF(${startMonth}/${startYear}-${endMonth}/${endYear})`,
+      startTime,
+    );
     return result;
   }
 
@@ -600,12 +635,12 @@ export class AdminService {
   clearCache(): void {
     this.cache.clear();
     this.adminRoleCache.clear();
-    console.log('🧹 All caches cleared');
+    console.log("🧹 All caches cleared");
   }
 
   getCacheStats(): object {
     return {
-      cacheSize: this.cache['cache'].size,
+      cacheSize: this.cache["cache"].size,
       adminCacheSize: this.adminRoleCache.size,
     };
   }
