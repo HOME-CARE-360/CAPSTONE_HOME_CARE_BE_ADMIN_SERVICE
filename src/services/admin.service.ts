@@ -1,10 +1,10 @@
-import bcrypt from "bcrypt";
 import { CreateUserDTO, UpdateUserDTO, GetUsersQuery } from "../schemas/type";
 import { AppError } from "../handlers/error";
 import { AdminRepository } from "../repositories/admin.repository";
 import { UserStatus } from "../generated/prisma";
 import { ReportRepository } from "../repositories/admin.report.repository";
 import { PaginationParams } from "../schemas/app.schema";
+import { hash } from 'bcryptjs';
 
 // ========= CACHE LAYER =========
 interface CacheItem<T> {
@@ -571,7 +571,7 @@ export class AdminService {
 
   private async hashPassword(password: string): Promise<string> {
     const startTime = Date.now();
-    const hashed = await bcrypt.hash(password, AdminService.BCRYPT_ROUNDS);
+    const hashed = await hash(password, AdminService.BCRYPT_ROUNDS);
     this.performanceLog("hashPassword", startTime);
     return hashed;
   }
