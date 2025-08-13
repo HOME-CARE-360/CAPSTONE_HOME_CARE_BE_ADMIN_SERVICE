@@ -571,7 +571,7 @@ export class AdminService {
 
   private async hashPassword(password: string): Promise<string> {
     const startTime = Date.now();
-    const hashed = await hash(password, AdminService.BCRYPT_ROUNDS);
+    const hashed = await hash(password, 10);
     this.performanceLog("hashPassword", startTime);
     return hashed;
   }

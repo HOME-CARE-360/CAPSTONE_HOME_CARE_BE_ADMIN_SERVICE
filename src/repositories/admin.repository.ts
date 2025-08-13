@@ -413,14 +413,10 @@ export class AdminRepository {
     await this._validateUserCreation(data);
 
     const now = new Date();
-    const hashedPassword = await bcrypt.hash(
-      data.password,
-      AdminRepository.BCRYPT_ROUNDS,
-    );
 
     const createData: Prisma.UserCreateInput = {
       email: data.email.toLowerCase().trim(),
-      password: hashedPassword,
+      password: data.password,
       name: data.name.trim(),
       phone: data.phone.trim(),
       avatar: data.avatar,
