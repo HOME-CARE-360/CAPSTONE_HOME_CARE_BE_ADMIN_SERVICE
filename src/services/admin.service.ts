@@ -189,19 +189,30 @@ export class AdminService {
     return result;
   }
 
-  async deleteUser(id: number, adminId: number) {
-    const startTime = Date.now();
-
-    const result = await this.adminRepository.softDelete(id, adminId);
-
-    // Invalidate caches
-    this.cache.delete(`user:${id}`);
-    this.cache.invalidatePattern("users:all");
-    this.adminRoleCache.delete(id); // Remove from admin cache
-
-    this.performanceLog(`deleteUser(${id})`, startTime);
-    return result;
+async deleteUser(id: number, adminId: number) {
+  if (id === adminId) {
+    throw new AppError(
+      "Cannot delete yourself",
+      [{ message: "Error.CannotDeleteSelf", path: ["id"] }],
+      { id, adminId },
+      400,
+    );
   }
+
+  const startTime = Date.now();
+
+  const result = await this.adminRepository.softDelete(id, adminId);
+
+  // Invalidate caches
+  this.cache.delete(`user:${id}`);
+  this.cache.invalidatePattern("users:all");
+  this.adminRoleCache.delete(id); // Remove from admin cache
+
+  this.performanceLog(`deleteUser(${id})`, startTime);
+
+  return result;
+}
+
 
   async blockUser(id: number, adminId: number) {
     const startTime = Date.now();
