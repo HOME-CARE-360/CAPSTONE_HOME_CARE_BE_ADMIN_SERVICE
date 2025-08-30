@@ -35,6 +35,8 @@ import { throwRpcAppError } from "./throwRpcAppError";
 import { AdminRepository } from "../repositories/admin.repository";
 import { AdminService } from "../services/admin.service";
 import { ReportRepository } from "../repositories/admin.report.repository";
+import { ListSystemConfigQuery, UpdateSystemConfigDTO } from "../repositories/systemConfig.repository";
+import { create, deleteById, getById, list, updateById } from "../services/systemConfig.service";
 
 interface TCPPayload {
   type: string;
@@ -433,6 +435,36 @@ async function handleExportMultiMonthsPDF(data: any): Promise<HandlerResult> {
   };
 }
 
+async function handleListSystemConfig(data: any): Promise<HandlerResult> {
+  const configs = await list(data);
+  return { message: "System configs fetched successfully", data: configs };
+}
+
+async function handleGetSystemConfigById(data: any): Promise<HandlerResult> {
+  const config = await getById(data.id);
+  return { message: "System config fetched successfully", data: config };
+}
+
+async function handleCreateSystemConfig(data: any): Promise<HandlerResult> {
+  const created = await create(data);
+  return { message: "System config created successfully", data: created };
+}
+
+async function handleUpdateSystemConfigById(data: any): Promise<HandlerResult> {
+  const updated = await updateById(data.id, data);
+  return { message: "System config updated successfully", data: updated };
+}
+
+async function handleDeleteSystemConfigById(data: any): Promise<HandlerResult> {
+  const parsed = parseWithSchema(IdParamSchema, data) as IdParamDTO;
+  await deleteById(parsed.id);
+  return { message: "System config deleted successfully", data: null };
+}
+
+
+
+
+
 const HANDLER_MAP = new Map<string, (data: any) => Promise<HandlerResult>>([
   ["ADMIN_CREATE_USER", handleCreateUser],
   ["ADMIN_UPDATE_USER", handleUpdateUser],
@@ -461,4 +493,9 @@ const HANDLER_MAP = new Map<string, (data: any) => Promise<HandlerResult>>([
   ["ADMIN_GET_MONTHLY_REPORT", handleGetMonthlyReport],
   ["ADMIN_EXPORT_MONTHLY_PDF", handleExportMonthlyPDF],
   ["ADMIN_EXPORT_MULTI_MONTHS_PDF", handleExportMultiMonthsPDF],
+    ["ADMIN_LIST_SYSTEM_CONFIG", handleListSystemConfig],
+  ["ADMIN_GET_SYSTEM_CONFIG_BY_ID", handleGetSystemConfigById],
+  ["ADMIN_CREATE_SYSTEM_CONFIG", handleCreateSystemConfig],
+  ["ADMIN_UPDATE_SYSTEM_CONFIG_BY_ID", handleUpdateSystemConfigById],
+  ["ADMIN_DELETE_SYSTEM_CONFIG_BY_ID", handleDeleteSystemConfigById]
 ]);
