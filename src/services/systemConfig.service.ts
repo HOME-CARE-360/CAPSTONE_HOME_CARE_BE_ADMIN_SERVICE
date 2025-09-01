@@ -64,18 +64,17 @@ const invalidateCaches = (keyStr?: string, id?: number) => {
 // ========== LIST ==========
 export async function list(query: ListSystemConfigQuery = {}) {
   const start = Date.now();
-  const key = `syscfg:list:${JSON.stringify(query)}`;
-  const cached = cache.get(key);
-  if (cached) {
-    console.log("📋 Cache hit: SystemConfig.list");
-    return cached;
+  
+  try {
+    const res = await repo.list(query);
+    performanceLog("SystemConfig.list", start);
+    return res;
+  } catch (error) {
+    console.error("Error fetching system config list:", error);
+    performanceLog("SystemConfig.list - FAILED", start);
+    throw error;
   }
-  const res = await repo.list(query);
-  cache.set(key, res, TTL_LIST);
-  performanceLog("SystemConfig.list", start);
-  return res;
 }
-
 // ========== GETTERS ==========
 export async function getById(id: number) {
   const start = Date.now();
