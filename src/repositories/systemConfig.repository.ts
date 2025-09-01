@@ -179,23 +179,29 @@ export class SystemConfigRepository {
     return created;
   }
 
-  // ====== UPDATE (by id) ======
-  async updateById(id: number, data: UpdateSystemConfigDTO) {
-    // đảm bảo tồn tại
-    await this.getById(id);
+// ====== UPDATE (by id) ======
+async updateById(id: number, data: UpdateSystemConfigDTO) {
+  const cfg = await this.getById(id);
+  console.log("Existing config:", cfg);
+  console.log("Updating config with data:", data);
 
-    const updated = await this.prisma.systemConfig.update({
-      where: { id },
-      data: {
-        value: data.value ?? undefined,
-        type: data.type ?? undefined,
-        expiresAt: data.expiresAt ?? undefined,
-      },
-    });
+  const updated = await this.prisma.systemConfig.update({
+    where: { id },
+    data: {
+      value: data.value ?? undefined,
+      type: data.type ?? undefined, // Fixed: removed extra parentheses
+      expiresAt:
+        data.expiresAt === undefined
+          ? undefined
+          : data.expiresAt === null
+          ? null
+          : new Date(data.expiresAt),
+    },
+  });
 
-    return updated;
-  }
-
+  console.log("Updated config:", updated);
+  return updated;
+}
   // ====== DELETE ======
   async deleteById(id: number) {
     // đảm bảo tồn tại

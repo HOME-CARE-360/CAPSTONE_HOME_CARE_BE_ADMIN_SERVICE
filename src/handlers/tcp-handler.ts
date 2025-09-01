@@ -450,9 +450,25 @@ async function handleCreateSystemConfig(data: any): Promise<HandlerResult> {
   return { message: "System config created successfully", data: created };
 }
 
-async function handleUpdateSystemConfigById(data: any): Promise<HandlerResult> {
-  const updated = await updateById(data.id, data);
-  return { message: "System config updated successfully", data: updated };
+async function handleUpdateSystemConfigById(data: any): Promise<HandlerResult> {  
+  try {
+    // Create update data object without the id field
+    const { id: _, ...updateData } = data;
+    
+    const updated = await updateById(data.id, updateData);
+    
+    return { 
+      message: "System config updated successfully", 
+      data: updated 
+    };
+  } catch (error) {
+    console.error("Error updating system config:", error);
+    return { 
+      message: "Failed to update system config", 
+      data: null, 
+      statusCode: 500 
+    };
+  }
 }
 
 async function handleDeleteSystemConfigById(data: any): Promise<HandlerResult> {

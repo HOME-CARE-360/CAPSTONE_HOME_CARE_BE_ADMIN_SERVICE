@@ -104,13 +104,36 @@ export async function create(data: CreateSystemConfigDTO) {
 }
 
 export async function updateById(id: number, data: UpdateSystemConfigDTO) {
-  const start = Date.now();
-  const updated = await repo.updateById(id, data);
-  invalidateCaches(updated.key, id);
-  performanceLog(`SystemConfig.updateById(${id})`, start);
-  return updated;
-}
+  console.log("Updating system config with data:", data);
+  console.log("ID:", id);
+  
+  // Validate input
+  if (!id || id <= 0) {
+    throw new Error("Invalid ID provided");
+  }
 
+  const start = Date.now();
+  
+  try {
+    const updated = await repo.updateById(id, data);
+    console.log("Updated config:", updated);
+    
+    // Only invalidate caches if update was successful
+    if (updated) {
+      invalidateCaches(updated.key, id);
+    }
+    
+    performanceLog(`SystemConfig.updateById(${id})`, start);
+    return updated;
+  } catch (error) {
+    // Log the error with context
+    console.error(`Failed to update SystemConfig with ID ${id}:`, error);
+    performanceLog(`SystemConfig.updateById(${id}) - FAILED`, start);
+    
+    // Re-throw the error to let the caller handle it
+    throw error;
+  }
+}
 export async function deleteById(id: number) {
   const start = Date.now();
   // Get the key before deleting to invalidate the cache correctly
